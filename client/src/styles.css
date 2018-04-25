@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+ *{
+     margin: 0;
+     padding: 0;
+     font-family: Helvetica;
+     
+ }
+
+ body {
+
+    
+        background-image:url('https://images.pexels.com/photos/18174/reflection-pad-gaming-gamepad.jpg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');
+        background-size: cover;
+        background-position: center;
+    
+
+ }
+
