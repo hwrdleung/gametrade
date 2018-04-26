@@ -6,8 +6,8 @@ const cors = require('cors');
 const path = require('path');
 const port = process.env.PORT || 3000;
 const router = express.Router();
-
-
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const user = require('./routes/user')(router);
 
@@ -17,9 +17,9 @@ mongoose.connect ('mongodb://noodles01:noodles01@ds253879.mlab.com:53879/gametra
 
 //Middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
 
 app.use(express.static(__dirname));
-app.use(bodyParser.urlencoded({extended:false}));
 app.use('/user', user);
 app.use(cors());
 

@@ -1,17 +1,17 @@
 <div class="container">
 
-  <form [formGroup]="loginForm" (ngSubmit)="test()">
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
   <div class="form-container">
     <div class="row columns">
 
       <h1>Log In</h1>
 
       <label>Name
-        <input type="text" formControlName="name">
+        <input type="text" formControlName="username" name="username">
       </label>
 
       <label>Password
-        <input type="password" formControlName="password">
+        <input type="password" formControlName="password" name="password">
       </label>
 
       <input type="submit" class="button expanded" value="Submit Form" [disabled]="!loginForm.valid">
