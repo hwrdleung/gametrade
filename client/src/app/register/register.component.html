@@ -1,18 +1,35 @@
 <div class="container">
+  <form [formGroup]="registrationForm" (ngSubmit)="register()">
 
-  <!-- <form id="register-form">
-    <label>First name:</label>
-    <input type="text">
-    <label>Last name:</label>
-    <input type="text">
-    <label>Email Address:</label>
-    <input type="email">
-    <label>Username:</label>
-    <input type="text">
-    <label>Password:</label>
-    <input type="password">
-    <button>Submit</button>
-    <nav>
-        <a routerLink="../login">Login</a></nav>
-  </form> -->
+    <label>First name:
+      <input type="text" formControlName="first" name="first">
+    </label>
+
+    <label>Last name:
+      <input type="text" formControlName="last" name="last">
+    </label>
+
+    <label>Username:
+      <input type="text" formControlName="username" name="username">
+    </label>
+
+    <label>Email Address:
+      <input type="email" formControlName="email" name="email">
+    </label>
+
+    <label>Re-type Email Address:
+      <input type="email" formControlName="email2" name="email2">
+    </label>
+
+    <label>Password:
+      <input type="password" formControlName="password" name="password">
+    </label>
+
+    <label>Re-type Password:
+      <input type="password" formControlName="password2" name="password2">
+    </label>
+
+    <input type="submit" [disabled]="!registrationForm.valid">
+
+  </form>
 </div>
