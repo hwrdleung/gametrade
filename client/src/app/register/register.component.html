@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="registrationForm" (ngSubmit)="register()">
+  <form [formGroup]="registrationForm" (ngSubmit)="this.dataService.register(registrationForm.value)">
 
     <label>First name:
       <input type="text" formControlName="first" name="first">
@@ -11,6 +11,18 @@
 
     <label>Username:
       <input type="text" formControlName="username" name="username">
+    </label>
+
+    <label>City:
+      <input type="text" formControlName="city" name="city">
+    </label>
+
+    <label>State:
+      <input type="text" formControlName="state" name="state">
+    </label>
+
+    <label>Country:
+      <input type="text" formControlName="country" name="country">
     </label>
 
     <label>Email Address:

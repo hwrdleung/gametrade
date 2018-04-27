@@ -1,6 +1,6 @@
 <div class="container">
 
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
+  <form [formGroup]="loginForm" (ngSubmit)="this.dataService.login(loginForm.value)">
   <div class="form-container">
     <div class="row columns">
 

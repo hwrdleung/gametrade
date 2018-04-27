@@ -1,14 +1,30 @@
 <nav class="nav-bar">
     <ul>
+
         <li>
             <a routerLink="/">Home</a>
         </li>
-        <li>
+
+        <li *ngIf="!this.dataService.currentUser">
             <a routerLink="/register">Register</a>
         </li>
-        <li>
+
+        <li *ngIf="!this.dataService.currentUser">
             <a routerLink="/login">Log In</a>
         </li>
+
+        <li *ngIf="this.dataService.currentUser">
+            <a routerLink="/dashboard">Dashboard</a>
+        </li>
+
+        <li *ngIf="this.dataService.currentUser">
+            <a (click)="this.dataService.logout()">Log Out</a>
+        </li>
+
+        <li>
+            <a (click)="this.dataService.test()">test</a>
+        </li>
+
     </ul>
 </nav>
 

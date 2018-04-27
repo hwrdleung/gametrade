@@ -1,0 +1,121 @@
+<div class="wrapper">
+  <ul id="tab-menu">
+    <li>
+      <a (click)="displayContent('Account')">Account</a>
+    </li>
+    <li>
+      <a (click)="displayContent('Trade Requests')">Trade Requests</a>
+    </li>
+    <li>
+      <a (click)="displayContent('Trade History')">Trade History</a>
+    </li>
+    <li>
+      <a (click)="displayContent('Active Trades')">Active Trades</a>
+    </li>
+  </ul>
+</div>
+
+<div class="wrapper">
+  <div *ngIf="displayAccount" class="tab-content">
+    <h3>Account</h3>
+
+    <ul id="account-data">
+
+      <li>
+        <p>{{ this.dataService.userData.first }} {{ this.dataService.userData.last }}</p>
+        <a (click)="test()">View Public Profile</a>
+      </li>
+
+      <li>
+        <p>Location: {{ this.dataService.userData.city }}, {{ this.dataService.userData.state }}, {{ this.dataService.userData.country }}</p>
+        <a (click)="displayForm('location')">Change Location</a>
+      </li>
+
+      <li>
+        <p>Email Address: {{ this.dataService.userData.email }}</p>
+        <a (click)="displayForm('email')">Change Email Address</a>
+      </li>
+
+      <li>
+        <p>Password: ********</p>
+        <a (click)="displayForm('password')">Change Password</a>
+      </li>
+    </ul>
+
+    <div>
+      <form *ngIf="displayChangeLocationForm" [formGroup]="changeLocationForm" (ngSubmit)="this.dataService.changeLocation(changeLocationForm.value)">
+        <h3>Update Your Location</h3>
+
+        <label>City:
+          <input type="text" formControlName="newCity" name="newCity">
+        </label>
+
+        <label>State:
+          <input type="text" formControlName="newState" name="newState">
+        </label>
+
+        <label>Country:
+          <input type="text" formControlName="newCountry" name="newCountry">
+        </label>
+
+        <input type="submit" [disabled]="!changeLocationForm.valid">
+      </form>
+
+      <form *ngIf="displayChangeEmailForm" [formGroup]="changeEmailForm" (ngSubmit)="this.dataService.changeEmail(changeEmailForm.value)">
+        <h3>Update your email address</h3>
+
+        <label>
+          Enter your new email address:
+          <input type="email" formControlName="newEmail" name="newEmail">
+        </label>
+
+        <label>
+          Re-type your new email address:
+          <input type="email" formControlName="newEmail2" name="newEmail2">
+        </label>
+
+        <input type="submit" [disabled]="!changeEmailForm.valid">
+
+      </form>
+
+      <form *ngIf="displayChangePasswordForm" [formGroup]="changePasswordForm" (ngSubmit)="this.dataService.changePassword(changePasswordForm.value)">
+        <h3>Change your password</h3>
+
+        <label>
+          Enter your old password:
+          <input type="password" formControlName="oldPassword" name="oldPassword">
+        </label>
+
+        <label>
+          Enter your new password:
+          <input type="password" formControlName="newPassword" name="newPassword">
+        </label>
+
+        <label>
+          Re-type your new password:
+          <input type="password" formControlName="newPassword2" name="newPassword2">
+        </label>
+
+        <input type="submit" [disabled]="!changePasswordForm.valid">
+      </form>
+    </div>
+
+  </div>
+
+  <div *ngIf="displayTradeRequests" class="tab-content">
+    <h3>Trade Requests</h3>
+  </div>
+
+  <div *ngIf="displayTradeHistory" class="tab-content">
+    <h3>Trade History</h3>
+  </div>
+
+  <div *ngIf="displayActiveTrades" class="tab-content">
+    <h3>Active Trades</h3>
+  </div>
+</div>
+
+<div id="my-games">
+  <h3>My Games</h3>
+  <p>Get list of user's games from db, display here</p>
+</div>
