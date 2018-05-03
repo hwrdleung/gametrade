@@ -6,23 +6,35 @@
         </li>
 
         <li *ngIf="!this.dataService.currentUser">
-            <a routerLink="/register">Register</a>
+            <a routerLink="/register">Sign Up</a>
         </li>
 
         <li *ngIf="!this.dataService.currentUser">
-            <a routerLink="/login">Log In</a>
+            <a routerLink="/login">Sign In</a>
         </li>
 
         <li *ngIf="this.dataService.currentUser">
-            <a routerLink="/dashboard">Dashboard</a>
+            <a routerLink="/myGames">My Games</a>
         </li>
 
         <li *ngIf="this.dataService.currentUser">
-            <a (click)="this.dataService.logout()">Log Out</a>
+            <a routerLink="/myTrades">My Trades</a>
+        </li>
+
+        <li *ngIf="this.dataService.currentUser">
+            <a routerLink="/dashboard">Account</a>
+        </li>
+
+        <li *ngIf="this.dataService.currentUser">
+            <a (click)="this.dataService.logout()">Sign Out</a>
         </li>
 
         <li>
-            <a (click)="this.dataService.test()">test</a>
+            <a (click)="this.dataService.test()">dataService test</a>
+        </li>
+
+        <li>
+            <a (click)="this.gamesDataService.test()">gamesDataService test</a>
         </li>
 
     </ul>

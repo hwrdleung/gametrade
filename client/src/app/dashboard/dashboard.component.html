@@ -1,33 +1,19 @@
-<div class="wrapper">
-  <ul id="tab-menu">
-    <li>
-      <a (click)="displayContent('Account')">Account</a>
-    </li>
-    <li>
-      <a (click)="displayContent('Trade Requests')">Trade Requests</a>
-    </li>
-    <li>
-      <a (click)="displayContent('Trade History')">Trade History</a>
-    </li>
-    <li>
-      <a (click)="displayContent('Active Trades')">Active Trades</a>
-    </li>
-  </ul>
-</div>
+<div class="container">
+<h1 class="component-title">Account</h1>
 
-<div class="wrapper">
   <div *ngIf="displayAccount" class="tab-content">
-    <h3>Account</h3>
+
 
     <ul id="account-data">
 
       <li>
-        <p>{{ this.dataService.userData.first }} {{ this.dataService.userData.last }}</p>
+        <h2>{{ this.dataService.userData.first }} {{ this.dataService.userData.last }}</h2>
         <a (click)="test()">View Public Profile</a>
       </li>
 
       <li>
-        <p>Location: {{ this.dataService.userData.city }}, {{ this.dataService.userData.state }}, {{ this.dataService.userData.country }}</p>
+        <p>Location: {{ this.dataService.userData.city }}, {{ this.dataService.userData.state }}, {{ this.dataService.userData.country
+          }}</p>
         <a (click)="displayForm('location')">Change Location</a>
       </li>
 
@@ -113,9 +99,5 @@
   <div *ngIf="displayActiveTrades" class="tab-content">
     <h3>Active Trades</h3>
   </div>
-</div>
 
-<div id="my-games">
-  <h3>My Games</h3>
-  <p>Get list of user's games from db, display here</p>
 </div>

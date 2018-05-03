@@ -5,7 +5,7 @@
     width: 100%;
     background: blue;
     color: #FFF;
-    font-size: 1.5rem;
+    font-size: 1rem;
     display: flex;
     justify-content: flex-end;
 }
@@ -25,7 +25,7 @@
 .nav-bar ul li a{
     text-decoration: none;
     color: #FFF;
-    padding: 10px;
+    padding: 10px 15px;
     display: inline-block;
 }
 

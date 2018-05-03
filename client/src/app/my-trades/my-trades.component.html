@@ -1,0 +1,31 @@
+
+
+<div class="container">
+  <ul id="tab-menu">
+    <li>
+      <a (click)="displayContent('Trade Requests')">Trade Requests</a>
+    </li>
+    <li>
+      <a (click)="displayContent('Trade History')">Trade History</a>
+    </li>
+    <li>
+      <a (click)="displayContent('Active Trades')">Active Trades</a>
+    </li>
+  </ul>
+
+<div *ngIf="displayTradeRequests" class="tab-content">
+  <h3>Trade Requests</h3>
+  <p>Pending trade requests will be displayed here, where user can accept or deny.</p>
+</div>
+
+<div *ngIf="displayTradeHistory" class="tab-content">
+  <h3>Trade History</h3>
+  <p>Complete trade request history will be displayed here.</p>
+</div>
+
+<div *ngIf="displayActiveTrades" class="tab-content">
+  <h3>Active Trades</h3>
+  <p>A list of active trades will help users track who has their games, and when they can expect to get their games back.</p>
+</div>
+
+</div>

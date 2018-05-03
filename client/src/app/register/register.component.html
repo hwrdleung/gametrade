@@ -1,4 +1,6 @@
 <div class="container">
+
+<h1 class="component-title">Sign Up</h1>
   <form [formGroup]="registrationForm" (ngSubmit)="this.dataService.register(registrationForm.value)">
 
     <label>First name:
@@ -41,7 +43,8 @@
       <input type="password" formControlName="password2" name="password2">
     </label>
 
-    <input type="submit" [disabled]="!registrationForm.valid">
+    <input type="submit" value="Submit" [disabled]="!registrationForm.valid">
 
   </form>
+
 </div>

@@ -12,12 +12,17 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { DataService } from './data.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { MyGamesComponent } from './my-games/my-games.component';
+import { MyTradesComponent } from './my-trades/my-trades.component';
+import { GamesDataService } from './games-data.service';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'dashboard', component: DashboardComponent }
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'myGames', component: MyGamesComponent },
+  { path: 'myTrades', component: MyTradesComponent }
 ];
 
 
@@ -28,7 +33,9 @@ const appRoutes: Routes = [
     LoginComponent,
     RegisterComponent,
     HomeComponent,
-    DashboardComponent
+    DashboardComponent,
+    MyGamesComponent,
+    MyTradesComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +46,7 @@ const appRoutes: Routes = [
       { enableTracing: false } // <-- debugging purposes only
     )
   ],
-  providers: [DataService],
+  providers: [DataService, GamesDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DataService } from './data.service';
+import { GamesDataService } from './games-data.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { DataService } from './data.service';
 export class AppComponent {
   title = 'app';
 
-  constructor(private dataService:DataService) { }
+  constructor(private dataService:DataService, private gamesDataService:GamesDataService) { }
 
 
   

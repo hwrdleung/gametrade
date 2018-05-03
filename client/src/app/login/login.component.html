@@ -1,10 +1,7 @@
-<div class="container">
-
+  <div class="container">
+  
+  <h1 class="component-title">Sign In</h1>
   <form [formGroup]="loginForm" (ngSubmit)="this.dataService.login(loginForm.value)">
-  <div class="form-container">
-    <div class="row columns">
-
-      <h1>Log In</h1>
 
       <label>Name
         <input type="text" formControlName="username" name="username">
@@ -14,10 +11,8 @@
         <input type="password" formControlName="password" name="password">
       </label>
 
-      <input type="submit" class="button expanded" value="Submit Form" [disabled]="!loginForm.valid">
-
-    </div>
-  </div>
+      <input type="submit" class="button expanded" value="Submit" [disabled]="!loginForm.valid">
 </form>
+
 </div>
 

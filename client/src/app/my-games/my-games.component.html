@@ -1,0 +1,21 @@
+<div class="container">
+
+<h1 class="component-title">My Games</h1>
+
+<h1 class="component-title">Add Games</h1>
+
+<form [formGroup]="searchForm" (ngSubmit)="this.gamesDataService.searchGame(searchForm.value)">
+    <label>Search for a game:
+        <input type="text" formControlName="query" name="query">
+    </label>
+
+    <input type="submit" value="Search" [disabled]="!searchForm.valid">
+
+</form>
+
+<div id="search-results">
+    <p *ngFor="let game of this.gamesDataService.searchResults">
+        {{game.name}}
+    </p>
+</div>
+</div>
