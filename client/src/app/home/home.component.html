@@ -1,3 +1,19 @@
-<div class="container">
-  
+
+<div *ngIf="this.dataService.currentUser; else loggedOut">
+
+<h1>Logged in.  Games will be displayed here.</h1>
+
 </div>
+
+<ng-template #loggedOut>
+        <div class="splash-text">
+                <h1>GameTrader</h1>
+                <h2>A club for gamers.</h2>
+                <h2>Trade console games with other gamers in your city.</h2>
+                <a id="sign-up-link" routerLink="register">Sign up for free!</a>
+            </div>
+            
+            <!-- TOP RIGHT CORNER OF SCREEN -->
+            <a id="sign-in-link" routerLink="login">Sign in</a>
+</ng-template>
+

@@ -33,7 +33,7 @@
  input[type="email"]{
      font-size: 1.5rem;
      padding: 10px 5px 0 5px;
-     background: #000;
+     background: none;
      color: #FFF;
      border: 0;
      border-bottom: 1px #FFF solid;
@@ -41,6 +41,7 @@
      outline: none;
  }
 
+ button,
  input[type="submit"]{
      width: 100px;
      padding: 7px;
@@ -63,7 +64,8 @@
 
  body {
      background: #000;
- }
+
+    }
 
  .container {
      margin: 0 auto;
@@ -71,13 +73,32 @@
      width: 100%;
      max-width: 1000px;
      height: auto;
-    background: #000;
  }
 
  .component-title {
      text-align: center;
      margin: 0 auto;
  }
+
+ #tab-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    border-bottom: 1px #FFF solid;
+}
+
+#tab-menu li {
+    padding: 10px 10px 5px 10px;
+    list-style-type: none;
+}
+
+.tab-content {
+    padding: 20px 0;
+}
+
+
+
+
 
 
 

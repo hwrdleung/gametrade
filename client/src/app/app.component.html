@@ -1,31 +1,20 @@
-<nav class="nav-bar">
+<a id="home-link" routerLink="/">GameTrader</a>
+
+<nav *ngIf="this.dataService.currentUser" class="nav-bar">
     <ul>
-
         <li>
-            <a routerLink="/">Home</a>
-        </li>
-
-        <li *ngIf="!this.dataService.currentUser">
-            <a routerLink="/register">Sign Up</a>
-        </li>
-
-        <li *ngIf="!this.dataService.currentUser">
-            <a routerLink="/login">Sign In</a>
-        </li>
-
-        <li *ngIf="this.dataService.currentUser">
             <a routerLink="/myGames">My Games</a>
         </li>
 
-        <li *ngIf="this.dataService.currentUser">
+        <li>
             <a routerLink="/myTrades">My Trades</a>
         </li>
 
-        <li *ngIf="this.dataService.currentUser">
+        <li>
             <a routerLink="/dashboard">Account</a>
         </li>
 
-        <li *ngIf="this.dataService.currentUser">
+        <li>
             <a (click)="this.dataService.logout()">Sign Out</a>
         </li>
 

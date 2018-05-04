@@ -1,10 +1,16 @@
 <div class="container">
 <h1 class="component-title">Account</h1>
 
-  <div *ngIf="displayAccount" class="tab-content">
+{{ this.dataService.userData }}
+
+  <div class="tab-content">
 
 
     <ul id="account-data">
+
+      <li>
+        <h2>{{ this.dataService.userData.username }}</h2>
+      </li>
 
       <li>
         <h2>{{ this.dataService.userData.first }} {{ this.dataService.userData.last }}</h2>
@@ -29,7 +35,7 @@
     </ul>
 
     <div>
-      <form *ngIf="displayChangeLocationForm" [formGroup]="changeLocationForm" (ngSubmit)="this.dataService.changeLocation(changeLocationForm.value)">
+      <form *ngIf="displayChangeLocationForm" [formGroup]="changeLocationForm" (ngSubmit)="this.dataService.changeLocation(changeLocationForm.value); hideAllForms()">
         <h3>Update Your Location</h3>
 
         <label>City:

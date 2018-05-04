@@ -13,11 +13,6 @@ export class DashboardComponent implements OnInit {
 
   userData;
 
-  displayAccount = true; //Show this when the page loads
-  displayTradeRequests = false;
-  displayTradeHistory = false;
-  displayActiveTrades = false;
-
   changeLocationForm: FormGroup;
   changeEmailForm: FormGroup;
   changePasswordForm: FormGroup;
@@ -64,7 +59,6 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataService.userData = JWT(this.dataService.currentUser).user[0];
   }
 
 
@@ -72,20 +66,10 @@ export class DashboardComponent implements OnInit {
     console.log('test');
   }
 
-  displayContent(tab) {
-
-    this.displayAccount = false;
-    this.displayTradeRequests = false;
-    this.displayTradeHistory = false;
-    this.displayActiveTrades = false;
-
-    switch (tab) {
-      case 'Account': this.displayAccount = true; break;
-      case 'Trade Requests': this.displayTradeRequests = true; break;
-      case 'Trade History': this.displayTradeHistory = true; break;
-      case 'Active Trades': this.displayActiveTrades = true; break;
-    }
-
+  hideAllForms(){
+    this.displayChangeLocationForm = false;
+    this.displayChangeEmailForm = false;
+    this.displayChangePasswordForm = false;
   }
 
   displayForm(form) {

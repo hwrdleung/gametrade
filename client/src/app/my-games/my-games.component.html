@@ -1,21 +1,45 @@
 <div class="container">
+    <ul id="tab-menu">
+        <li>
+            <a (click)="displayContent('My Games')">My Games</a>
+        </li>
+        <li>
+            <a (click)="displayContent('Add Games')">Add Games</a>
+        </li>
+    </ul>
 
-<h1 class="component-title">My Games</h1>
+    <div *ngIf="displayMyGames" class="tab-content">
+        <h1 class="component-title">My Games</h1>
+        <p>Games added here will be displayed as available for trade.</p>
+        <div class="game-grid">
+            <div class="game-card" *ngFor="let game of this.dataService.userData.games">
+                <img style="height:130px; width: 90px;" src="..\assets\square-placeholder.jpg"> 
+                {{game}}
+                <button (click)="this.dataService.deleteGame(game)">Delete</button>
+            </div>
+        </div>
 
-<h1 class="component-title">Add Games</h1>
+    </div>
 
-<form [formGroup]="searchForm" (ngSubmit)="this.gamesDataService.searchGame(searchForm.value)">
-    <label>Search for a game:
-        <input type="text" formControlName="query" name="query">
-    </label>
+    <div *ngIf="displayAddGames" class="tab-content">
+        <h1 class="component-title">Add Games</h1>
 
-    <input type="submit" value="Search" [disabled]="!searchForm.valid">
+        <form [formGroup]="searchForm" (ngSubmit)="this.gamesDataService.searchGame(searchForm.value)">
+            <label>Search for a game:
+                <input type="text" formControlName="query" name="query">
+            </label>
 
-</form>
+            <input type="submit" value="Search" [disabled]="!searchForm.valid">
 
-<div id="search-results">
-    <p *ngFor="let game of this.gamesDataService.searchResults">
-        {{game.name}}
-    </p>
-</div>
+        </form>
+
+        <div class="game-grid">
+            <div class="game-card" *ngFor="let game of this.gamesDataService.searchResults">
+                <img style="height:130px; width: 90px;" src="..\assets\square-placeholder.jpg"> {{game.name}}
+                <button (click)="this.dataService.addGame(game)">Add Game</button>
+            </div>
+        </div>
+    </div>
+
+
 </div>

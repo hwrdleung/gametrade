@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { GamesDataService } from '../games-data.service';
+import { DataService } from '../data.service';
+
 
 @Component({
   selector: 'app-my-games',
@@ -11,14 +13,33 @@ import { GamesDataService } from '../games-data.service';
 export class MyGamesComponent implements OnInit {
 
   searchForm: FormGroup;
+  displayMyGames = true; //Default view on load
+  displayAddGames = false;
 
-  constructor(private gamesDataService:GamesDataService, private formBuilder:FormBuilder) {
+  constructor(private dataService:DataService, private gamesDataService:GamesDataService, private formBuilder:FormBuilder) {
     this.searchForm = formBuilder.group({
       'query':[null, Validators.required]
     });
   }
 
   ngOnInit() {
+  }
+
+  test(){
+    console.log('test');
+    }
+
+  displayContent(tabName){
+    switch(tabName){
+      case 'My Games': 
+        this.displayMyGames = true;
+        this.displayAddGames = false;
+        break;
+      case 'Add Games': 
+        this.displayMyGames = false;
+        this.displayAddGames = true;
+        break;
+    }
   }
 
 

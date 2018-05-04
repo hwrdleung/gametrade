@@ -1,0 +1,62 @@
+
+
+
+.splash-text {
+    height:100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    background: url('https://images.pexels.com/photos/159204/game-controller-joystick-joypad-gamepad-159204.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.splash-text h1 {
+    font-size: 5rem;
+    padding-left: 50px;
+}
+
+.splash-text h2 {
+    font-size: 2rem;
+    padding-left: 50px;
+}
+
+#sign-up-link {
+    width: auto;
+    padding: 10px 20px;
+    margin: 10px 0 0 50px;
+    font-size: 0.8rem;
+    text-align: center;
+    background: blue;
+    color: #FFF;
+    border: 0;
+    border-radius: 5px;
+    outline: none;
+    text-decoration: none;
+    text-transform: uppercase;
+    
+}
+
+#sign-in-link {
+    position: absolute;
+    top: 20px;
+    right: 50px;
+    width: auto;
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-size: 0.8rem;
+    text-align: center;
+    background: blue;
+    color: #FFF;
+    border: 0;
+    border-radius: 5px;
+    outline: none;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+
+

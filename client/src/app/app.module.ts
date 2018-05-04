@@ -23,8 +23,8 @@ const appRoutes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'myGames', component: MyGamesComponent },
   { path: 'myTrades', component: MyTradesComponent }
-];
 
+];
 
 
 @NgModule({

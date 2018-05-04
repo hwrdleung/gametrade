@@ -3,7 +3,7 @@
 .nav-bar {
     height: auto;
     width: 100%;
-    background: blue;
+    background: none;
     color: #FFF;
     font-size: 1rem;
     display: flex;
@@ -31,4 +31,13 @@
 
 .nav-bar ul li a:hover {
     background: Green;
+}
+
+#home-link {
+    font-size: 2rem;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    color: #FFF;
+    text-decoration: none;
 }

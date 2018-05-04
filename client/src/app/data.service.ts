@@ -17,28 +17,33 @@ export class DataService {
   changeEmailEndpoint = 'http://localhost:3000/user/email';
   changeLocationEndpoint = 'http://localhost:3000/user/location';
   changePasswordEndpoint = 'http://localhost:3000/user/password';
+  addGameEndpoint = 'http://localhost:3000/user/add_game';
+  deleteGameEndpoint = 'http://localhost:3000/user/delete_game';
 
   constructor(private router: Router, private http: HttpClient) { }
 
   register(formData) {
     this.http.post(this.registerEndpoint, formData).subscribe((res) => {
       console.log(res);
+      if(res['success']){
+        this.router.navigate(['login']);
+      }
     });
   }
 
   login(formData) {
+    console.log('login()');
     this.http.post(this.loginEndpoint, formData).subscribe((res) => {
-      console.log(res);
 
       if (!res['success']) {
         console.log(res['msg']);
       } else if (res['success']) {
         console.log('JWT saved to session storage as "currentUser"');
         this.currentUser = res['token'];
-
-        console.log(res['token']);
+        
         sessionStorage.setItem('currentUser', res['token']);
-
+        this.userData = JWT(this.currentUser).user;
+        console.log('!!!', this.userData);
         this.router.navigate(['dashboard']);
 
       }
@@ -72,6 +77,8 @@ export class DataService {
     });
   }
 
+
+  // DASHBOARD FUNCTIONS
   changePassword(formData){
 
     let token = sessionStorage.getItem('currentUser');
@@ -112,10 +119,56 @@ export class DataService {
     });
   }
 
+  //MY GAMES FUNCTIONS
+  addGame(gameData){
+    console.log(gameData);
+    // let token = sessionStorage.getItem('currentUser');
+    let token = this.currentUser;
+
+    let data = {
+      token: token,
+      gameData: gameData
+    }
+
+    this.http.post(this.addGameEndpoint, data).subscribe((res)=>{
+      console.log(res);
+
+      let token = res['token'];
+      sessionStorage.setItem('currentUser', token);
+      this.currentUser = res['token'];
+      this.userData = JWT(sessionStorage.getItem('currentUser')).user;
+      console.log(this.userData);
+    });
+  }
+
+  deleteGame(gameName){
+
+    console.log('gameName', gameName);
+    // let token = sessionStorage.getItem('currentUser');
+    let token = this.currentUser;
+    console.log(token);
+    console.log(JWT(token));
+    let data = {
+      token: token,
+      gameName: gameName
+    }
+
+    this.http.post(this.deleteGameEndpoint, data).subscribe((res)=>{
+      console.log(res);
+
+      let token = res['token'];
+      sessionStorage.setItem('currentUser', token);
+      this.currentUser = res['token'];
+      this.userData = JWT(sessionStorage.getItem('currentUser')).user;
+      console.log(this.userData);
+    });
+  }
+
   test() {
     console.log('test() from dataservice');
     console.log(this.currentUser);
     console.log(JWT(this.currentUser));
+    console.log('!!!', this.userData);
   }
 
 }
