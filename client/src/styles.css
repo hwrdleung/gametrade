@@ -13,6 +13,11 @@
      color: rgb(192, 192, 192);
  }
 
+ a:hover{
+     color:#FFF;
+     cursor: pointer;
+ }
+
  form {
      max-width: 350px;
      display: flex;
@@ -69,7 +74,7 @@
 
  .container {
      margin: 0 auto;
-     padding: 50px 0;
+     padding: 100px 0;
      width: 100%;
      max-width: 1000px;
      height: auto;
@@ -92,11 +97,62 @@
     list-style-type: none;
 }
 
+#tab-menu li a:hover{
+    color:#FFF;
+    cursor: pointer;
+}
+
 .tab-content {
     padding: 20px 0;
 }
 
 
+
+
+
+.game-grid {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.game-card {
+    width: 120px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #FFF;
+    font-size: 0.8rem;
+    margin: 40px 20px;
+}
+
+.game-card * {
+    margin: 5px 0;
+}
+
+.game-card img {
+    height:160px; 
+    width: 120px;
+}
+
+.game-card button {
+    width: 100%;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+.game-card button:hover {
+    background: rgb(81, 81, 255);
+}
+
+.game-card button:active {
+    background: rgb(108, 153, 250);
+}
 
 
 

@@ -1,9 +1,23 @@
+<div id="splash" *ngIf="this.dataService.currentUser">
+        <!-- SPLASH -->
+        <form class="main-search-form" [formGroup]="searchForm">
+                <input type="text" formControlName="query" name="query">
+                <input type="submit" value="Search">
+        </form>
+</div>
 
-<div *ngIf="this.dataService.currentUser; else loggedOut">
-
-<h1>Logged in.  Games will be displayed here.</h1>
+<div class="container" *ngIf="this.dataService.currentUser; else loggedOut">
+        <div class="game-grid">
+                <div class="game-card" *ngFor="let game of this.homeGames">
+                        <img src="{{game.cover}}">
+                        <p>{{game.title}}</p>
+                        <p>{{game.owner}}</p>
+                        <button *ngIf="dataService.currentUser" (click)="test()">Request Trade</button>
+                </div>
+        </div>
 
 </div>
+
 
 <ng-template #loggedOut>
         <div class="splash-text">
@@ -11,9 +25,8 @@
                 <h2>A club for gamers.</h2>
                 <h2>Trade console games with other gamers in your city.</h2>
                 <a id="sign-up-link" routerLink="register">Sign up for free!</a>
-            </div>
-            
-            <!-- TOP RIGHT CORNER OF SCREEN -->
-            <a id="sign-in-link" routerLink="login">Sign in</a>
-</ng-template>
+        </div>
 
+        <!-- TOP RIGHT CORNER OF SCREEN -->
+        <a id="sign-in-link" routerLink="login">Sign in</a>
+</ng-template>

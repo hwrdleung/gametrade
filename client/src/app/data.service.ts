@@ -3,22 +3,21 @@ import * as JWT from 'jwt-decode';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-
 @Injectable()
 export class DataService {
-  //The main purpose of this service is to communicate with the backend
+  //This service handles calls pertaining to user account.
 
   currentUser = sessionStorage.getItem('currentUser');
   userData;
 
-  registerEndpoint = 'http://localhost:3000/user/register';
-  loginEndpoint = 'http://localhost:3000/user/login';
-  //These api's have not been built yet
-  changeEmailEndpoint = 'http://localhost:3000/user/email';
-  changeLocationEndpoint = 'http://localhost:3000/user/location';
-  changePasswordEndpoint = 'http://localhost:3000/user/password';
-  addGameEndpoint = 'http://localhost:3000/user/add_game';
-  deleteGameEndpoint = 'http://localhost:3000/user/delete_game';
+  serverEndpoint = 'http://localhost:3000';
+  registerEndpoint = this.serverEndpoint +'/user/register';
+  loginEndpoint = this.serverEndpoint + '/user/login';
+  changeEmailEndpoint = this.serverEndpoint + '/user/email';
+  changeLocationEndpoint = this.serverEndpoint + '/user/location';
+  changePasswordEndpoint = this.serverEndpoint + '/user/password';
+  addGameEndpoint = this.serverEndpoint + '/user/add_game';
+  deleteGameEndpoint = this.serverEndpoint + '/user/delete_game';
 
   constructor(private router: Router, private http: HttpClient) { }
 
@@ -44,7 +43,7 @@ export class DataService {
         sessionStorage.setItem('currentUser', res['token']);
         this.userData = JWT(this.currentUser).user;
         console.log('!!!', this.userData);
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['/']);
 
       }
     });
@@ -55,7 +54,7 @@ export class DataService {
     //clear currentUser
     this.currentUser = '';
     sessionStorage.removeItem('currentUser');
-    this.router.navigate(['login']);
+    this.router.navigate(['/']);
   }
 
   changeEmail(formData){
@@ -122,7 +121,6 @@ export class DataService {
   //MY GAMES FUNCTIONS
   addGame(gameData){
     console.log(gameData);
-    // let token = sessionStorage.getItem('currentUser');
     let token = this.currentUser;
 
     let data = {
@@ -166,9 +164,10 @@ export class DataService {
 
   test() {
     console.log('test() from dataservice');
-    console.log(this.currentUser);
-    console.log(JWT(this.currentUser));
-    console.log('!!!', this.userData);
+    console.log('currentUser', this.currentUser);
+    console.log('currentUser decoded', JWT(this.currentUser));
+    console.log('userData', this.userData);
+    console.log('Router.url', this.router.url);
   }
 
 }

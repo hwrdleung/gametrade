@@ -1,4 +1,14 @@
 
+.dev-tools {
+    position: fixed;
+    right: 10px;
+    top: 50%;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    display: flex;
+    flex-direction: column;
+}
 
 .nav-bar {
     height: auto;
@@ -7,7 +17,10 @@
     color: #FFF;
     font-size: 1rem;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .nav-bar ul {
@@ -33,11 +46,14 @@
     background: Green;
 }
 
+.selected {
+    border-bottom: 3px blue solid;
+}
+
 #home-link {
     font-size: 2rem;
-    position: absolute;
-    left: 20px;
-    top: 20px;
+    padding: 10px 25px;
+    font-family: 'Orbitron';
     color: #FFF;
     text-decoration: none;
 }

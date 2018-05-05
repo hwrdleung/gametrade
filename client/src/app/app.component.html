@@ -1,32 +1,37 @@
-<a id="home-link" routerLink="/">GameTrader</a>
+
 
 <nav *ngIf="this.dataService.currentUser" class="nav-bar">
+
+        <a id="home-link" routerLink="/">GameTrader</a>
+
     <ul>
         <li>
             <a routerLink="/myGames">My Games</a>
         </li>
 
         <li>
-            <a routerLink="/myTrades">My Trades</a>
+            <a id="my-trades-link" routerLink="/myTrades">My Trades</a>
         </li>
 
         <li>
-            <a routerLink="/dashboard">Account</a>
+            <a id="account-link" routerLink="/dashboard">{{this.dataService.userData.username}}</a>
         </li>
 
         <li>
             <a (click)="this.dataService.logout()">Sign Out</a>
         </li>
 
-        <li>
-            <a (click)="this.dataService.test()">dataService test</a>
-        </li>
-
-        <li>
-            <a (click)="this.gamesDataService.test()">gamesDataService test</a>
-        </li>
 
     </ul>
 </nav>
+
+
+<div class="dev-tools">
+    <h3>Dev Tools</h3>
+        <a (click)="this.dataService.test()">dataService test()</a>
+        <a (click)="this.gamesDataService.test()">gamesDataService test()</a>
+</div>
+
+
 
 <router-outlet></router-outlet>

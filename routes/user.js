@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Game = require('../models/game');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -261,13 +262,33 @@ module.exports = (router) => {
                 console.log(err);
             }
 
+            //2.  Save a record of this game to the game collection
+            let newGame = new Game({
+                title: gameData.name,
+                cover: gameData.cover,
+                owner: payload.user.username
+            });
+            
+            newGame.save((err=>{
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log('A record for ' + gameData.name + ' has been added to the game collection.');
+                }
+            }));
+
             //2.  Find user's record according to username from JWT payload
             User.findOne({ username: payload.user.username }, (err, user) => {
                 if (err) {
                     console.log(err);
                 }
 
-                user.games.push(gameData.name);
+                let game = {
+                    name: gameData.name,
+                    cover: gameData.cover
+                }
+
+                user.games.push(game);
                 user.save((err) => {
                     if (err) {
                         console.log(err);
@@ -303,6 +324,18 @@ module.exports = (router) => {
                 console.log(err);
             }
             console.log('payload', payload);
+
+            //2.  Find this game in game collection and delete it.
+            Game.findOneAndRemove({
+                title: gameName,
+                owner: payload.user.username
+            }, (err)=>{
+                if(err){
+                    console.log(err);
+                }
+                console.log( gameName + ' has been removed from game collection.');
+            });
+
             //2.  Find user's record according to username from JWT payload
             User.findOne({ username: payload.user.username }, (err, user) => {
                 if (err) {
