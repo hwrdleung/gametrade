@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { TradeService } from '../trade.service';
+import { DataService } from '../data.service';
+
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-my-trades',
@@ -7,13 +11,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyTradesComponent implements OnInit {
 
+
+
+  //UI stuff
   displayTradeRequests = true;
   displayTradeHistory = false;
   displayActiveTrades = false;
 
-  constructor() { }
+  constructor(private dataService:DataService, private http:HttpClient, private tradeService:TradeService) { }
 
   ngOnInit() {
+    this.tradeService.getTradeData();
   }
 
   displayContent(tab) {

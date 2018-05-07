@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from './data.service';
 import { GamesDataService } from './games-data.service';
+import { TradeService } from './trade.service';
 import * as JWT from 'jwt-decode';
 import { Router } from '@angular/router';
 
@@ -13,12 +14,16 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'app';
 
-  constructor(private dataService:DataService, private gamesDataService:GamesDataService) { }
+  constructor(private tradeService:TradeService, private dataService:DataService, private gamesDataService:GamesDataService) { }
 
 ngOnInit(){
   this.dataService.userData = JWT(sessionStorage.getItem('currentUser')).user;
 }
 
+
+ngOnDestroy(){
+  this.gamesDataService.searchResults = [];
+}
 
   
 }

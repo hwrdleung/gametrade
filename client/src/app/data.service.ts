@@ -119,13 +119,15 @@ export class DataService {
   }
 
   //MY GAMES FUNCTIONS
-  addGame(gameData){
+  addGame(gameData, platform){
     console.log(gameData);
+    console.log('PLATFORM', platform);
     let token = this.currentUser;
 
     let data = {
       token: token,
-      gameData: gameData
+      gameData: gameData,
+      platform: platform
     }
 
     this.http.post(this.addGameEndpoint, data).subscribe((res)=>{

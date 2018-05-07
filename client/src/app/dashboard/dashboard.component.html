@@ -14,7 +14,7 @@
 
       <li>
         <h2>{{ this.dataService.userData.first }} {{ this.dataService.userData.last }}</h2>
-        <a (click)="test()">View Public Profile</a>
+        <a routerLink="/profile/{{this.dataService.userData.username}}">View Public Profile</a>
       </li>
 
       <li>

@@ -50,11 +50,9 @@ module.exports = (router) => {
                             });
                         });
                     }
-
                 });
             }
         });
-
     });
 
     //POST request from registration form
@@ -85,7 +83,6 @@ module.exports = (router) => {
                     msg: 'Registration successful'
                 });
             });
-
         });
     });
 
@@ -127,7 +124,6 @@ module.exports = (router) => {
                                 token: token
                             });
                         });
-
                     }
                 });
             });
@@ -176,7 +172,6 @@ module.exports = (router) => {
                                 token: token
                             });
                         });
-
                     }
                 });
             });
@@ -253,6 +248,7 @@ module.exports = (router) => {
         console.log(req.body.gameData.name);
         var token = req.body.token;
         var gameData = req.body.gameData;
+        var platform = req.body.platform;
 
         //1.  Verify web token
         jwt.verify(token, 'secret', (err, payload) => {
@@ -266,13 +262,14 @@ module.exports = (router) => {
             let newGame = new Game({
                 title: gameData.name,
                 cover: gameData.cover,
-                owner: payload.user.username
+                owner: payload.user.username,
+                platform: platform
             });
-            
-            newGame.save((err=>{
-                if(err){
+
+            newGame.save((err => {
+                if (err) {
                     console.log(err);
-                }else{
+                } else {
                     console.log('A record for ' + gameData.name + ' has been added to the game collection.');
                 }
             }));
@@ -285,7 +282,8 @@ module.exports = (router) => {
 
                 let game = {
                     name: gameData.name,
-                    cover: gameData.cover
+                    cover: gameData.cover,
+                    platform: platform
                 }
 
                 user.games.push(game);
@@ -313,8 +311,8 @@ module.exports = (router) => {
         });
     });
 
-     //Client requests to delete game from user's record
-     router.post('/delete_game', (req, res) => {
+    //Client requests to delete game from user's record
+    router.post('/delete_game', (req, res) => {
         var token = req.body.token;
         var gameName = req.body.gameName;
 
@@ -329,11 +327,11 @@ module.exports = (router) => {
             Game.findOneAndRemove({
                 title: gameName,
                 owner: payload.user.username
-            }, (err)=>{
-                if(err){
+            }, (err) => {
+                if (err) {
                     console.log(err);
                 }
-                console.log( gameName + ' has been removed from game collection.');
+                console.log(gameName + ' has been removed from game collection.');
             });
 
             //2.  Find user's record according to username from JWT payload
@@ -342,9 +340,15 @@ module.exports = (router) => {
                     console.log(err);
                 }
 
-                let i = user.games.indexOf(gameName);        
-                user.games.splice(i, 1);
-                console.log(user.games);
+                // let i = user.games.indexOf(gameName);        
+                // user.games.splice(i, 1);
+                // console.log(user.games)
+
+                for (let i = 0; i < user.games.length; i++) {
+                    if (user.games[i].name === gameName) {
+                        user.games.splice(i, 1);
+                    }
+                }
 
                 user.save((err) => {
                     if (err) {
@@ -369,5 +373,230 @@ module.exports = (router) => {
             });
         });
     });
+
+    //Client requests to get public userdata for profile page
+    router.get('/profile/*', (req, res) => {
+        console.log(req.params['0']);
+
+        let username = req.params['0'];
+
+        User.findOne({ username: username }, (err, user) => {
+            if (err) {
+                console.log(err);
+            }
+            res.json(user);
+        });
+    });
+
+    //Client requests to get trade data for username in parameter
+    router.get('/get_trade_data', (req, res) => {
+        console.log(req.query.username);
+        let username = req.query.username;
+
+        User.findOne({ username: username }, (err, user) => {
+            if (err) {
+                console.log(err);
+            }
+            let tradeData = {
+                username: username,
+                incoming: user.incoming,
+                outgoing: user.outgoing,
+                active: user.active,
+                history: user.history
+            }
+            res.json(tradeData);
+        });
+    });
+
+    //Client requests to trade with another user
+    router.post('/trade_request', (req, res) => {
+        console.log(req.body);
+        let initiator = req.body.initiator;
+        let title = req.body.title;
+        let platform = req.body.platform;
+        let owner = req.body.owner;
+
+        let tradeDetails = {
+            initiator: initiator,
+            title: title,
+            platform: platform,
+            owner: owner
+        }
+
+        //Create an outoing trade request for initiator
+        User.findOne({ username: initiator }, (err, user) => {
+            if (err) {
+                console.log(err);
+            }
+            user.outgoing.push(tradeDetails);
+            user.save((err) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+            //Create an incoming trade requests for owner
+            User.findOne({ username: owner }, (err, user) => {
+                if (err) {
+                    console.log(err);
+                }
+                user.incoming.push(tradeDetails);
+                user.save((err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    res.json({
+                        success: true,
+                        msg: 'Trade request sent'
+                    });
+                });
+            });
+        });
+    });
+
+    //Client requests to deny an incoming trade request
+    router.post('/deny_trade_request', (req, res) => {
+        console.log(req.body.username)
+        console.log(req.body.initiator)
+        console.log(req.body.gameTitle)
+        console.log(req.body.gamePlatform)
+
+        let username = req.body.username;
+        let initiator = req.body.initiator;
+        let gameTitle = req.body.gameTitle;
+        let gamePlatform = req.body.gamePlatform;
+
+        let tradeObject = {
+            initiator: initiator,
+            title: gameTitle,
+            platform: gamePlatform,
+            username: username
+        }
+
+        User.findOne({ username: username }, (err, user) => {
+            if (err) {
+                console.log(err);
+            }
+
+            //Remove from username's incoming trade requests
+            for (var i = 0; i < user.incoming.length; i++) {
+                if (user.incoming[i].owner === username &&
+                    user.incoming[i].title === gameTitle &&
+                    user.incoming[i].platform === gamePlatform &&
+                    user.incoming[i].initiator === initiator) {
+                    user.incoming.splice(i, 1);
+                }
+            }
+
+            //Add record to history array
+            user.history.push({
+                date: new Date(),
+                msg: 'Denied trade request with ' + initiator + '.'
+            });
+
+            user.save((err) => {
+                if (err) {
+                    console.log(err);
+                }
+
+                //Find initiator's record. Remove outgoing trade request
+                User.findOne({ username: initiator }, (err, user) => {
+
+                    console.log(user.outgoing);
+                    for (var i = 0; i < user.outgoing.length; i++) {
+                        if (user.outgoing[i].owner === username &&
+                            user.outgoing[i].title === gameTitle &&
+                            user.outgoing[i].platform === gamePlatform &&
+                            user.outgoing[i].initiator === initiator) {
+                            user.outgoing.splice(i, 1);
+                        }
+                    }
+
+                    //Add record to history array
+                    user.history.push({
+                        date: new Date(),
+                        msg: username + ' denied your trade request.'
+                    });
+
+                    user.save((err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        res.json({
+                            success: true,
+                            msg: 'Denied trade request with ' + initiator + '.'
+                        });
+                    });
+                });
+            });
+        });
+    });
+
+    //Client requests to cancel an outgoing trade request
+    router.post('/cancel_trade_request', (req, res) => {
+
+        console.log(req.body.username)
+        console.log(req.body.gameOwner)
+        console.log(req.body.gameTitle)
+        console.log(req.body.gamePlatform)
+
+
+        let username = req.body.username;
+        let gameOwner = req.body.gameOwner;
+        let gameTitle = req.body.gameTitle;
+        let gamePlatform = req.body.gamePlatform;
+
+        let tradeObject = {
+            initiator: username,
+            title: gameTitle,
+            platform: gamePlatform,
+            owner: gameOwner
+        }
+
+        console.log(tradeObject);
+
+        //Find username's record and remove this trade request from username's outgoing array
+        User.findOne({ username: username }, (err, user) => {
+
+            console.log(user.outgoing);
+            for (var i = 0; i < user.outgoing.length; i++) {
+                if (user.outgoing[i].owner === gameOwner &&
+                    user.outgoing[i].title === gameTitle &&
+                    user.outgoing[i].platform === gamePlatform &&
+                    user.outgoing[i].initiator === username) {
+                    user.outgoing.splice(i, 1);
+                }
+            }
+
+            user.save((err) => {
+                if (err) {
+                    console.log(err);
+                }
+
+                //Find gameOwner's record and remove this trade request from gameOwner's incoming array
+                User.findOne({ username: gameOwner }, (err, user) => {
+
+                    for (var i = 0; i < user.incoming.length; i++) {
+                        if (user.incoming[i].owner === gameOwner &&
+                            user.incoming[i].title === gameTitle &&
+                            user.incoming[i].platform === gamePlatform &&
+                            user.incoming[i].initiator === username) {
+                            user.incoming.splice(i, 1);
+                        }
+                    }
+
+                    user.save((err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        res.json({
+                            successs: true,
+                            msg: 'Trade request canceled'
+                        });
+                    });
+                });
+            });
+        });
+    });
+
     return router;
 }

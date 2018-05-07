@@ -2,19 +2,20 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
-
-import { HttpClientModule } from '@angular/common/http';
-
-import { DataService } from './data.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MyGamesComponent } from './my-games/my-games.component';
 import { MyTradesComponent } from './my-trades/my-trades.component';
+import { ProfileComponent } from './profile/profile.component';
+
+import { DataService } from './data.service';
 import { GamesDataService } from './games-data.service';
+import { TradeService }  from './trade.service';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,10 +23,9 @@ const appRoutes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'myGames', component: MyGamesComponent },
-  { path: 'myTrades', component: MyTradesComponent }
-
+  { path: 'myTrades', component: MyTradesComponent },
+  { path: 'profile/:username', component: ProfileComponent }
 ];
-
 
 @NgModule({
   declarations: [
@@ -36,8 +36,10 @@ const appRoutes: Routes = [
     DashboardComponent,
     MyGamesComponent,
     MyTradesComponent,
+    ProfileComponent,
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -46,7 +48,7 @@ const appRoutes: Routes = [
       { enableTracing: false } // <-- debugging purposes only
     )
   ],
-  providers: [DataService, GamesDataService],
+  providers: [DataService, GamesDataService, TradeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

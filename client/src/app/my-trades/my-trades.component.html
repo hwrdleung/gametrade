@@ -1,31 +1,69 @@
-
-
 <div class="container">
   <ul id="tab-menu">
     <li>
       <a (click)="displayContent('Trade Requests')">Trade Requests</a>
     </li>
     <li>
-        <a (click)="displayContent('Active Trades')">Active Trades</a>
-      </li>
+      <a (click)="displayContent('Active Trades')">Active Trades</a>
+    </li>
     <li>
       <a (click)="displayContent('Trade History')">Trade History</a>
     </li>
   </ul>
 
-<div *ngIf="displayTradeRequests" class="tab-content">
-  <h3>Trade Requests</h3>
-  <p>Pending trade requests will be displayed here, where user can accept or deny.</p>
-</div>
+  <div *ngIf="displayTradeRequests" class="tab-content">
+    <h3>Trade Requests</h3>
+    <p>Pending trade requests will be displayed here, where user can accept or deny.</p>
 
-<div *ngIf="displayTradeHistory" class="tab-content">
-  <h3>Trade History</h3>
-  <p>Complete trade request history will be displayed here.</p>
-</div>
+    <h1>Incoming trade requests: {{this.tradeService.incoming.length}}</h1>
+    <div *ngFor="let tradeRequest of this.tradeService.incoming">
+      <h2>{{tradeRequest.initiator}}</h2>
+      <h2>{{tradeRequest.owner}}</h2>
+      <h2>{{tradeRequest.platform}}</h2>
+      <h2>{{tradeRequest.title}}</h2>
+      <button>Accept</button>
+      <button (click)="this.tradeService.denyTradeRequest(
+        tradeRequest.owner, 
+        tradeRequest.initiator,
+        tradeRequest.title,
+        tradeRequest.platform)">Deny</button>
+    </div>
+    <hr>
+    <h1>Outgoing trade requests: {{this.tradeService.outgoing.length}}</h1>
+    <div *ngFor="let tradeRequest of this.tradeService.outgoing">
+      <h2>{{tradeRequest.initiator}}</h2>
+      <h2>{{tradeRequest.owner}}</h2>
+      <h2>{{tradeRequest.platform}}</h2>
+      <h2>{{tradeRequest.title}}</h2>
+      <button (click)="this.tradeService.cancelTradeRequest(
+        tradeRequest.initiator, 
+        tradeRequest.owner, 
+        tradeRequest.title, 
+        tradeRequest.platform)">Cancel</button>
+    </div>
 
-<div *ngIf="displayActiveTrades" class="tab-content">
-  <h3>Active Trades</h3>
-  <p>A list of active trades will help users track who has their games, and when they can expect to get their games back.</p>
-</div>
+  </div>
+
+
+  <div *ngIf="displayActiveTrades" class="tab-content">
+    <h3>Active Trades</h3>
+    <p>A list of active trades will help users track who has their games.</p>
+
+  </div>
+
+
+  <div *ngIf="displayTradeHistory" class="tab-content">
+    <h3>Trade History</h3>
+    <p>Complete trade request history will be displayed here.</p>
+
+
+    <div *ngFor="let record of this.tradeService.history">
+        <h3>
+            {{record.date}} {{record.msg}}
+
+          </h3>
+    </div>
+
+  </div>
 
 </div>

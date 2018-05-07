@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
+import { TradeService } from '../trade.service';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
@@ -15,7 +16,7 @@ export class HomeComponent implements OnInit {
   serverEndpoint = 'http://localhost:3000';
   getAllEndPoint = this.serverEndpoint + '/games/get_all';
 
-  constructor(private formBuilder:FormBuilder, private http:HttpClient, private dataService:DataService) {
+  constructor(private formBuilder:FormBuilder, private http:HttpClient, private dataService:DataService, private tradeService:TradeService) {
       this.searchForm = formBuilder.group({
         query: [null, Validators.required]
       });

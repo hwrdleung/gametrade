@@ -1,7 +1,7 @@
 <div id="splash" *ngIf="this.dataService.currentUser">
         <!-- SPLASH -->
         <form class="main-search-form" [formGroup]="searchForm">
-                <input type="text" formControlName="query" name="query">
+                <input type="text" formControlName="query" name="query" placeholder="this does not work yet.">
                 <input type="submit" value="Search">
         </form>
 </div>
@@ -11,8 +11,10 @@
                 <div class="game-card" *ngFor="let game of this.homeGames">
                         <img src="{{game.cover}}">
                         <p>{{game.title}}</p>
-                        <p>{{game.owner}}</p>
-                        <button *ngIf="dataService.currentUser" (click)="test()">Request Trade</button>
+                        <p>{{game.platform}}</p>
+                        <p><a [routerLink]="['/profile', game.owner]">{{game.owner}}</a></p>
+                        <button *ngIf="dataService.currentUser" 
+                                (click)="this.tradeService.requestTrade(this.dataService.userData.username, game.owner, game.title, game.platform)">Request Trade</button>
                 </div>
         </div>
 
