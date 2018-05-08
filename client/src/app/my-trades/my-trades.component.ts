@@ -12,8 +12,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class MyTradesComponent implements OnInit {
 
-
-
   //UI stuff
   displayTradeRequests = true;
   displayTradeHistory = false;

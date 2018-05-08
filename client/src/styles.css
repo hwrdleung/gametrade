@@ -121,32 +121,38 @@
 }
 
 .game-card {
-    width: 120px;
-    height: 310px;
+    width: 170px;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     color: #FFF;
     font-size: 0.8rem;
-    margin: 40px 20px;
+    margin: 40px 10px;   
+    background: rgb(39, 39, 39);
 }
 
-.game-card * {
-    margin: 5px 0;
-}
 
 .game-card img {
     display: block;
-    max-width: 120px;
-    max-height: 160px;
+    max-width: 100%;
     width: auto;
     height: auto;
+}
+
+.game-card p {
+    margin: 4px 10px;
+}
+
+.game-card select {
+    margin: 10px;
 }
 
 .game-card button {
     width: 100%;
     font-size: 0.7rem;
     text-transform: uppercase;
+    border-radius: 0;
 }
 
 .game-card button:hover {

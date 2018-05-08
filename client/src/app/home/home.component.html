@@ -12,12 +12,12 @@
                         <img src="{{game.cover}}">
                         <p>{{game.title}}</p>
                         <p>{{game.platform}}</p>
-                        <p><a [routerLink]="['/profile', game.owner]">{{game.owner}}</a></p>
-                        <button *ngIf="dataService.currentUser" 
-                                (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
+                        <p>
+                                <a [routerLink]="['/profile', game.owner]">{{game.owner}}</a>
+                        </p>
+                        <button *ngIf="dataService.currentUser" (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
                 </div>
         </div>
-
 </div>
 
 

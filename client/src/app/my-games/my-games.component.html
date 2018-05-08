@@ -36,7 +36,8 @@
 
         <div class="game-grid">
             <div class="game-card" *ngFor="let game of this.gamesDataService.searchResults">
-                <img src={{game.cover}}> {{game.name}}
+                <img src={{game.cover}}> 
+                <p>{{game.name}}</p>
                 <select [(ngModel)]="selectedOption">
                     <option>Select a platform</option>
                     <option value="PlayStation 2">PlayStation 2</option>

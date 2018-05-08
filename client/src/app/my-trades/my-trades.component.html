@@ -21,6 +21,11 @@
       <img src="{{tradeRequest.game.cover}}">
       <p>{{tradeRequest.game.platform}}</p>
       <p>{{tradeRequest.game.title}}</p>
+
+      <div *ngIf="!tradeRequest.game2">
+      <a href="#"><img src="../../assets/square-placeholder.jpg"></a>
+    </div>
+
       <button>Accept</button>
       <button (click)="this.tradeService.denyTradeRequest(tradeRequest)">Deny</button>
     </div>

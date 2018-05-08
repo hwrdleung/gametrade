@@ -18,6 +18,13 @@ export class TradeService {
 
   constructor(private dataService:DataService, private http:HttpClient) { }
 
+  test(){
+    console.log('Incoming: ', this.incoming);
+    console.log('Outgoing: ', this.outgoing);
+    console.log('Active: ', this.active);
+    console.log('History: ', this.history);
+  }
+
   getTradeData(){
     let username = this.dataService.userData.username;
     let params = new HttpParams().set('username', username);
