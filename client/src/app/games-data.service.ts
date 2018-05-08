@@ -8,12 +8,25 @@ export class GamesDataService {
   IGDB_API_KEY = '09f049c49c43481b21812a91f6559298';
   IGDB_API_KEYWORD_SEARCH_ENDPOINT = 'https://api-endpoint.igdb.com/games/?search=';
   IDGB_API_GAME_ID_SEARCH_ENDPOINT = 'https://api-endpoint.igdb.com/games/';
+  serverEndpoint = 'http://localhost:3000';
+  getCoverEndpoint = this.serverEndpoint + '/user/get_cover_url';
   searchResults = [];
 
   constructor(private http: HttpClient) { }
 
   test() {
     console.log(this.searchResults);
+  }
+
+  getCoverUrl(gameOwner, gameName){
+    //Get and return game cover url from gameOwner's record
+    this.http.get(this.getCoverEndpoint, {params: {
+      gameOwner: gameOwner,
+      gameName: gameName
+    }}).subscribe((res)=>{
+      console.log(res['cover']);
+      return res['cover'];
+    });
   }
 
   searchGame(searchFormValue) {

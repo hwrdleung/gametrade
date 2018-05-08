@@ -136,8 +136,11 @@
 }
 
 .game-card img {
-    height:160px; 
-    width: 120px;
+    display: block;
+    max-width: 120px;
+    max-height: 160px;
+    width: auto;
+    height: auto;
 }
 
 .game-card button {
@@ -151,6 +154,33 @@
 }
 
 .game-card button:active {
+    background: rgb(108, 153, 250);
+}
+
+.trade-card {
+    background: rgb(39, 39, 39);
+    margin: 20px auto;
+    padding: 10px;
+}
+
+.trade-card img {
+    display: block;
+    max-width: 120px;
+    max-height: 160px;
+    width: auto;
+    height: auto;
+}
+
+.trade-card button {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+.trade-card button:hover {
+    background: rgb(81, 81, 255);
+}
+
+.trade-card button:active {
     background: rgb(108, 153, 250);
 }
 

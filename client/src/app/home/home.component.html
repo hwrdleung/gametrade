@@ -14,7 +14,7 @@
                         <p>{{game.platform}}</p>
                         <p><a [routerLink]="['/profile', game.owner]">{{game.owner}}</a></p>
                         <button *ngIf="dataService.currentUser" 
-                                (click)="this.tradeService.requestTrade(this.dataService.userData.username, game.owner, game.title, game.platform)">Request Trade</button>
+                                (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
                 </div>
         </div>
 

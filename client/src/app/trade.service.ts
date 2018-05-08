@@ -32,53 +32,36 @@ export class TradeService {
     });
   }
 
-  denyTradeRequest(username, initiator, gameTitle, gamePlatform){
+  denyTradeRequest(tradeRequest){
 
-    let data = {
-      username: username,
-      initiator: initiator,
-      gameTitle: gameTitle, 
-      gamePlatform: gamePlatform
-    }
-
-    this.http.post(this.denyTradeRequestEndpoint, data).subscribe((res)=>{
+    this.http.post(this.denyTradeRequestEndpoint, tradeRequest).subscribe((res)=>{
       console.log(res);
       this.getTradeData();
     });
 
   }
 
-  cancelTradeRequest(username, gameOwner, gameTitle, gamePlatform){
-
-    let data = {
-      username: username,
-      gameOwner: gameOwner,
-      gameTitle: gameTitle,
-      gamePlatform: gamePlatform
-    };
-
-    this.http.post(this.cancelTradeRequestEndpoint, data).subscribe((res)=>{
+  cancelTradeRequest(tradeRequest){
+    //username is currentUser that RECIEVED the trade request from another user
+    this.http.post(this.cancelTradeRequestEndpoint, tradeRequest).subscribe((res)=>{
       console.log(res);
       this.getTradeData();
     });
   }
 
-  requestTrade(username, gameOwner, gameTitle, gamePlatform){
-    console.log(
-      username + ' requests to trade with ' + gameOwner + ' for ' + gameTitle + ' ' + gamePlatform)
+  requestTrade(username, game){
 
-      let tradeDetails = {
+    console.log(username);
+    console.log(game);
+    // console.log(
+    //   username + ' requests to trade with ' + gameOwner + ' for ' + gameTitle + ' ' + gamePlatform)
+
+      let tradeData = {
         initiator: username,
-        title: gameTitle,
-        platform: gamePlatform,
-        owner: gameOwner
+        game: game
       };
 
-      //create document for username's outgoing trade requests
-      //create document for gameOwner's incoming trade requests
-
-
-      this.http.post(this.requestTradeEndpoint, tradeDetails).subscribe((res)=>{
+      this.http.post(this.requestTradeEndpoint, tradeData).subscribe((res)=>{
         console.log(res);
       });
 

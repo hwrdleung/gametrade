@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TradeService } from '../trade.service';
 import { DataService } from '../data.service';
+import { GamesDataService } from '../games-data.service';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 
@@ -18,7 +19,7 @@ export class MyTradesComponent implements OnInit {
   displayTradeHistory = false;
   displayActiveTrades = false;
 
-  constructor(private dataService:DataService, private http:HttpClient, private tradeService:TradeService) { }
+  constructor(private gamesDataService: GamesDataService, private dataService:DataService, private http:HttpClient, private tradeService:TradeService) { }
 
   ngOnInit() {
     this.tradeService.getTradeData();

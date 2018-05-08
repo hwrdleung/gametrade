@@ -266,13 +266,13 @@ module.exports = (router) => {
                 platform: platform
             });
 
-            newGame.save((err => {
+            newGame.save((err) => {
                 if (err) {
                     console.log(err);
                 } else {
                     console.log('A record for ' + gameData.name + ' has been added to the game collection.');
                 }
-            }));
+            });
 
             //2.  Find user's record according to username from JWT payload
             User.findOne({ username: payload.user.username }, (err, user) => {
@@ -412,34 +412,33 @@ module.exports = (router) => {
     router.post('/trade_request', (req, res) => {
         console.log(req.body);
         let initiator = req.body.initiator;
-        let title = req.body.title;
-        let platform = req.body.platform;
-        let owner = req.body.owner;
+        let game = req.body.game;
 
-        let tradeDetails = {
+        let newTrade = {
             initiator: initiator,
-            title: title,
-            platform: platform,
-            owner: owner
+            game: game,
+            date: new Date()
         }
+
+        console.log(newTrade);
 
         //Create an outoing trade request for initiator
         User.findOne({ username: initiator }, (err, user) => {
             if (err) {
                 console.log(err);
             }
-            user.outgoing.push(tradeDetails);
+            user.outgoing.push(newTrade);
             user.save((err) => {
                 if (err) {
                     console.log(err);
                 }
             });
             //Create an incoming trade requests for owner
-            User.findOne({ username: owner }, (err, user) => {
+            User.findOne({ username: game.owner }, (err, user) => {
                 if (err) {
                     console.log(err);
                 }
-                user.incoming.push(tradeDetails);
+                user.incoming.push(newTrade);
                 user.save((err) => {
                     if (err) {
                         console.log(err);
@@ -455,38 +454,25 @@ module.exports = (router) => {
 
     //Client requests to deny an incoming trade request
     router.post('/deny_trade_request', (req, res) => {
-        console.log(req.body.username)
-        console.log(req.body.initiator)
-        console.log(req.body.gameTitle)
-        console.log(req.body.gamePlatform)
 
-        let username = req.body.username;
+        //Delete this trade request from initiator's outgoing trade requests
+        //Delete this trade request from game owner's incoming trade requests
+        console.log(req.body);
         let initiator = req.body.initiator;
-        let gameTitle = req.body.gameTitle;
-        let gamePlatform = req.body.gamePlatform;
+        let game = req.body.game;
 
-        let tradeObject = {
-            initiator: initiator,
-            title: gameTitle,
-            platform: gamePlatform,
-            username: username
-        }
-
-        User.findOne({ username: username }, (err, user) => {
+        User.findOne({ username: game.owner }, (err, user) => {
             if (err) {
                 console.log(err);
             }
 
-            //Remove from username's incoming trade requests
+            //Remove from game owner's incoming trade requests
             for (var i = 0; i < user.incoming.length; i++) {
-                if (user.incoming[i].owner === username &&
-                    user.incoming[i].title === gameTitle &&
-                    user.incoming[i].platform === gamePlatform &&
-                    user.incoming[i].initiator === initiator) {
+                if (user.incoming[i].game._id === game._id) {
                     user.incoming.splice(i, 1);
                 }
             }
-
+            
             //Add record to history array
             user.history.push({
                 date: new Date(),
@@ -503,10 +489,7 @@ module.exports = (router) => {
 
                     console.log(user.outgoing);
                     for (var i = 0; i < user.outgoing.length; i++) {
-                        if (user.outgoing[i].owner === username &&
-                            user.outgoing[i].title === gameTitle &&
-                            user.outgoing[i].platform === gamePlatform &&
-                            user.outgoing[i].initiator === initiator) {
+                        if (user.outgoing[i].game._id === game._id) {
                             user.outgoing.splice(i, 1);
                         }
                     }
@@ -514,7 +497,7 @@ module.exports = (router) => {
                     //Add record to history array
                     user.history.push({
                         date: new Date(),
-                        msg: username + ' denied your trade request.'
+                        msg: game.owner + ' denied your trade request.'
                     });
 
                     user.save((err) => {
@@ -534,35 +517,20 @@ module.exports = (router) => {
     //Client requests to cancel an outgoing trade request
     router.post('/cancel_trade_request', (req, res) => {
 
-        console.log(req.body.username)
-        console.log(req.body.gameOwner)
-        console.log(req.body.gameTitle)
-        console.log(req.body.gamePlatform)
+        //Delete outgoing trade request for initiator
+        //Delete incoming trade request for game owner
+        console.log(req.body);
+
+        let initiator = req.body.initiator;
+        let game = req.body.game;
 
 
-        let username = req.body.username;
-        let gameOwner = req.body.gameOwner;
-        let gameTitle = req.body.gameTitle;
-        let gamePlatform = req.body.gamePlatform;
-
-        let tradeObject = {
-            initiator: username,
-            title: gameTitle,
-            platform: gamePlatform,
-            owner: gameOwner
-        }
-
-        console.log(tradeObject);
-
-        //Find username's record and remove this trade request from username's outgoing array
-        User.findOne({ username: username }, (err, user) => {
+        // //Find initiator's record and remove this trade request from username's outgoing array
+        User.findOne({ username: initiator }, (err, user) => {
 
             console.log(user.outgoing);
             for (var i = 0; i < user.outgoing.length; i++) {
-                if (user.outgoing[i].owner === gameOwner &&
-                    user.outgoing[i].title === gameTitle &&
-                    user.outgoing[i].platform === gamePlatform &&
-                    user.outgoing[i].initiator === username) {
+                if (user.outgoing[i].game._id === game._id) {
                     user.outgoing.splice(i, 1);
                 }
             }
@@ -573,13 +541,10 @@ module.exports = (router) => {
                 }
 
                 //Find gameOwner's record and remove this trade request from gameOwner's incoming array
-                User.findOne({ username: gameOwner }, (err, user) => {
+                User.findOne({ username: game.owner }, (err, user) => {
 
                     for (var i = 0; i < user.incoming.length; i++) {
-                        if (user.incoming[i].owner === gameOwner &&
-                            user.incoming[i].title === gameTitle &&
-                            user.incoming[i].platform === gamePlatform &&
-                            user.incoming[i].initiator === username) {
+                        if (user.incoming[i].game._id === game._id) {
                             user.incoming.splice(i, 1);
                         }
                     }
@@ -596,6 +561,22 @@ module.exports = (router) => {
                 });
             });
         });
+    });
+
+    router.get('/get_cover_url', (req, res)=>{
+        console.log(req.query);
+        let gameOwner = req.query.gameOwner;
+        let gameName = req.query.gameName;
+
+        Game.findOne({
+            title: gameName,
+            owner: gameOwner
+        }, (err, game)=>{
+            if(err){
+                console.log(err);
+            }
+            res.json(game);
+        })
     });
 
     return router;
