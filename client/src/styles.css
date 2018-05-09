@@ -125,7 +125,8 @@
     height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-between; 
+    display: inline-block;
     color: #FFF;
     font-size: 0.8rem;
     margin: 40px 10px;   
@@ -164,17 +165,8 @@
 }
 
 .trade-card {
-    background: rgb(39, 39, 39);
     margin: 20px auto;
     padding: 10px;
-}
-
-.trade-card img {
-    display: block;
-    max-width: 120px;
-    max-height: 160px;
-    width: auto;
-    height: auto;
 }
 
 .trade-card button {

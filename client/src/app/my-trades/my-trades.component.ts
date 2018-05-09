@@ -23,6 +23,10 @@ export class MyTradesComponent implements OnInit {
     this.tradeService.getTradeData();
   }
 
+test(){
+  console.log('test()');
+}
+
   displayContent(tab) {
 
     this.displayTradeRequests = false;

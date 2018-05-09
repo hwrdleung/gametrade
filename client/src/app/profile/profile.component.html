@@ -1,6 +1,5 @@
 <div class="container">
 
-
   <h1>{{username}}</h1>
 
   <h1>{{profileData.first}} {{profileData.last}}</h1>
@@ -14,7 +13,7 @@
       <img src="{{game.cover}}">
       <p>{{game.title}}</p>
       <p>{{game.platform}}</p>
-      <button (click)="this.tradeService.requestTrade(this.dataService.userData.username, username, game.name, game.platform)">Request Trade</button>
+      <button (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
     </div>
   </div>
 
