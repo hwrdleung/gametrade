@@ -141,16 +141,15 @@ export class DataService {
     });
   }
 
-  deleteGame(gameName){
+  deleteGame(game){
 
-    console.log('gameName', gameName);
     // let token = sessionStorage.getItem('currentUser');
     let token = this.currentUser;
     console.log(token);
     console.log(JWT(token));
     let data = {
       token: token,
-      gameName: gameName
+      game: game
     }
 
     this.http.post(this.deleteGameEndpoint, data).subscribe((res)=>{

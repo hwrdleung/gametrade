@@ -18,16 +18,33 @@
       <p>{{tradeRequest.date}}</p>
       <p>{{tradeRequest.initiator}} has requested to trade with you.</p>
       <p>Select a game from {{tradeRequest.initiator}} to complete the trade.</p>
-      <img src="{{tradeRequest.game.cover}}">
-      <p>{{tradeRequest.game.platform}}</p>
-      <p>{{tradeRequest.game.title}}</p>
-      <button>Accept</button>
+
+      <div class="trade-match">
+        <div class="game-card">
+          <img src="{{tradeRequest.game.cover}}">
+          <p>{{tradeRequest.game.title}}</p>
+          <p>{{tradeRequest.game.platform}}</p>
+          <p>{{tradeRequest.game.owner}}</p>
+        </div>
+
+        <div class="game-card">
+          <a *ngIf="!tradeRequest.game2" [routerLink]="['/profile', tradeRequest.initiator]">
+            <img src="../../assets/square-placeholder.jpg">
+          </a>
+          <img src="{{tradeRequest.game2.cover}}">
+          <p>{{tradeRequest.game2.title}}</p>
+          <p>{{tradeRequest.game2.platform}}</p>
+          <p>{{tradeRequest.game2.owner}}</p>
+        </div>
+      </div>
+
+      <button (click)="test()" [disabled]="!tradeRequest.game2">Accept</button>
       <button (click)="this.tradeService.denyTradeRequest(tradeRequest)">Deny</button>
     </div>
     <hr>
     <h1>Outgoing trade requests: {{this.tradeService.outgoing.length}}</h1>
     <div class="trade-card" *ngFor="let tradeRequest of this.tradeService.outgoing">
-        <p>{{tradeRequest.date}}</p>
+      <p>{{tradeRequest.date}}</p>
       <p>{{tradeRequest.initiator}}</p>
       <img src="{{tradeRequest.game.cover}}">
       <p>{{tradeRequest.owner}}</p>
@@ -35,14 +52,12 @@
       <p>{{tradeRequest.game.title}}</p>
       <button (click)="this.tradeService.cancelTradeRequest(tradeRequest)">Cancel</button>
     </div>
-
   </div>
 
 
   <div *ngIf="displayActiveTrades" class="tab-content">
     <h3>Active Trades</h3>
     <p>A list of active trades will help users track who has their games.</p>
-
   </div>
 
 
@@ -52,12 +67,9 @@
 
 
     <div *ngFor="let record of this.tradeService.history">
-        <h3>
-            {{record.date}} {{record.msg}}
-
-          </h3>
+      <h3>
+        {{record.date}} {{record.msg}}
+      </h3>
     </div>
-
   </div>
-
 </div>

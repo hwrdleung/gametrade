@@ -280,13 +280,7 @@ module.exports = (router) => {
                     console.log(err);
                 }
 
-                let game = {
-                    name: gameData.name,
-                    cover: gameData.cover,
-                    platform: platform
-                }
-
-                user.games.push(game);
+                user.games.push(newGame);
                 user.save((err) => {
                     if (err) {
                         console.log(err);
@@ -314,7 +308,11 @@ module.exports = (router) => {
     //Client requests to delete game from user's record
     router.post('/delete_game', (req, res) => {
         var token = req.body.token;
-        var gameName = req.body.gameName;
+        var game = req.body.game;
+
+        console.log(token);
+        console.log(game);
+
 
         //1.  Verify web token
         jwt.verify(token, 'secret', (err, payload) => {
@@ -324,14 +322,11 @@ module.exports = (router) => {
             console.log('payload', payload);
 
             //2.  Find this game in game collection and delete it.
-            Game.findOneAndRemove({
-                title: gameName,
-                owner: payload.user.username
-            }, (err) => {
+            Game.findOneAndRemove({_id: game._id}, (err) => {
                 if (err) {
                     console.log(err);
                 }
-                console.log(gameName + ' has been removed from game collection.');
+                console.log(game.title + ' has been removed from game collection.');
             });
 
             //2.  Find user's record according to username from JWT payload
@@ -340,12 +335,8 @@ module.exports = (router) => {
                     console.log(err);
                 }
 
-                // let i = user.games.indexOf(gameName);        
-                // user.games.splice(i, 1);
-                // console.log(user.games)
-
                 for (let i = 0; i < user.games.length; i++) {
-                    if (user.games[i].name === gameName) {
+                    if (user.games[i].title === game.title) {
                         user.games.splice(i, 1);
                     }
                 }
@@ -354,7 +345,7 @@ module.exports = (router) => {
                     if (err) {
                         console.log(err);
                     } else if (!err) {
-                        console.log(gameName + " has been deleted.");
+                        console.log(game.title + " has been deleted.");
 
                         //User's game has been successfuly deleted.
                         //5.  Send new JWT back to client
