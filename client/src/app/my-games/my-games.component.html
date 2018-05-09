@@ -14,9 +14,9 @@
         <div class="game-grid">
             <div class="game-card" *ngFor="let game of this.dataService.userData.games">
                 <img src="{{game.cover}}"> 
-                <p>{{game.name}}</p>
+                <p>{{game.title}}</p>
                 <p>{{game.platform}}</p>
-                <button (click)="this.dataService.deleteGame(game.name)">Delete</button>
+                <button (click)="this.dataService.deleteGame(game)">Delete</button>
             </div>
         </div>
 
@@ -37,7 +37,7 @@
         <div class="game-grid">
             <div class="game-card" *ngFor="let game of this.gamesDataService.searchResults">
                 <img src={{game.cover}}> 
-                <p>{{game.name}}</p>
+                <p>{{game.title}}</p>
                 <select [(ngModel)]="selectedOption">
                     <option>Select a platform</option>
                     <option value="PlayStation 2">PlayStation 2</option>
@@ -50,7 +50,7 @@
                     <option value="X Box 360">X Box 360</option>
                     <option value="X Box">X Box</option>
                 </select>
-                <button (click)="this.dataService.addGame(game, selectedOption)">Add Game</button>
+                <button (click)="this.dataService.addGame(game, selectedOption)" [disabled]="!selectedOption">Add Game</button>
             </div>
         </div>
     </div>

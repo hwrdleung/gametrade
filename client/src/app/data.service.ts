@@ -119,18 +119,17 @@ export class DataService {
   }
 
   //MY GAMES FUNCTIONS
-  addGame(gameData, platform){
-    console.log(gameData);
-    console.log('PLATFORM', platform);
+  addGame(game, platform){
+
+    game.platform = platform;
     let token = this.currentUser;
 
-    let data = {
+    let secureData = {
       token: token,
-      gameData: gameData,
-      platform: platform
+      game: game,
     }
 
-    this.http.post(this.addGameEndpoint, data).subscribe((res)=>{
+    this.http.post(this.addGameEndpoint, secureData).subscribe((res)=>{
       console.log(res);
 
       let token = res['token'];
@@ -141,19 +140,18 @@ export class DataService {
     });
   }
 
-  deleteGame(gameName){
+  deleteGame(game){
 
-    console.log('gameName', gameName);
     // let token = sessionStorage.getItem('currentUser');
     let token = this.currentUser;
     console.log(token);
     console.log(JWT(token));
-    let data = {
+    let secureData = {
       token: token,
-      gameName: gameName
+      game: game
     }
 
-    this.http.post(this.deleteGameEndpoint, data).subscribe((res)=>{
+    this.http.post(this.deleteGameEndpoint, secureData).subscribe((res)=>{
       console.log(res);
 
       let token = res['token'];

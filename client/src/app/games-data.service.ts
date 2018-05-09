@@ -55,7 +55,7 @@ export class GamesDataService {
         let gameId = searchResults[game].id
         this.http.get(this.IDGB_API_GAME_ID_SEARCH_ENDPOINT + gameId, httpOptions).subscribe((res) => {
 
-          let name = res[0].name;
+          let title = res[0].name;
           let cover = '';
 
           if (res[0].cover) {
@@ -64,12 +64,12 @@ export class GamesDataService {
             cover = '/assets/square-placeholder.jpg';
           }
 
-          let gameData = {
-            name: name,
+          let game = {
+            title: title,
             cover: cover
           }
 
-          this.searchResults.push(gameData);
+          this.searchResults.push(game);
         });
       }
 

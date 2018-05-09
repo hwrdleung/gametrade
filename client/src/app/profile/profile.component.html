@@ -11,7 +11,9 @@
 
   <div class="game-grid">
     <div *ngFor="let game of profileData.games" class="game-card">
-      <img src="{{game.cover}}"> {{game.name}} {{game.platform}}
+      <img src="{{game.cover}}">
+      <p>{{game.title}}</p>
+      <p>{{game.platform}}</p>
       <button (click)="this.tradeService.requestTrade(this.dataService.userData.username, username, game.name, game.platform)">Request Trade</button>
     </div>
   </div>

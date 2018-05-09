@@ -23,7 +23,7 @@
       <p>{{tradeRequest.game.title}}</p>
 
       <div *ngIf="!tradeRequest.game2">
-      <a href="#"><img src="../../assets/square-placeholder.jpg"></a>
+      <a [routerLink]="['/profile', tradeRequest.game.owner]"><img src="../../assets/square-placeholder.jpg"></a>
     </div>
 
       <button>Accept</button>

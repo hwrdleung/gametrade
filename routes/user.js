@@ -245,14 +245,11 @@ module.exports = (router) => {
 
     //Client requests to add game to user's record
     router.post('/add_game', (req, res) => {
-        console.log(req.body.gameData.name);
         var token = req.body.token;
-        var gameData = req.body.gameData;
-        var platform = req.body.platform;
+        var game = req.body.game;
 
         //1.  Verify web token
         jwt.verify(token, 'secret', (err, payload) => {
-            console.log('payload', payload);
 
             if (err) {
                 console.log(err);
@@ -260,52 +257,57 @@ module.exports = (router) => {
 
             //2.  Save a record of this game to the game collection
             let newGame = new Game({
-                title: gameData.name,
-                cover: gameData.cover,
-                owner: payload.user.username,
-                platform: platform
+                title: game.title,
+                cover: game.cover,
+                platform: game.platform,
+                owner: payload.user.username
             });
 
             newGame.save((err) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    console.log('A record for ' + gameData.name + ' has been added to the game collection.');
-                }
-            });
-
-            //2.  Find user's record according to username from JWT payload
-            User.findOne({ username: payload.user.username }, (err, user) => {
-                if (err) {
-                    console.log(err);
+                    console.log('A record for ' + game.title + ' has been added to the game collection.');
                 }
 
-                let game = {
-                    name: gameData.name,
-                    cover: gameData.cover,
-                    platform: platform
-                }
 
-                user.games.push(game);
-                user.save((err) => {
+                Game.findOne({
+                    title: game.title,
+                    cover: game.cover,
+                    platform: game.platform,
+                    owner: payload.user.username
+                }, (err, game) => {
                     if (err) {
                         console.log(err);
-                    } else if (!err) {
-                        console.log("User's new game has been added.");
-
-                        //User's new game has been successfuly added.
-                        //5.  Send new JWT back to client
-                        jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
-                            if (err) {
-                                console.log(token);
-                            }
-                            res.json({
-                                success: true,
-                                msg: 'New Game Added',
-                                token: token
-                            });
-                        });
                     }
+                    console.log('find', game);
+                    //2.  Find user's record according to username from JWT payload
+                    User.findOne({ username: payload.user.username }, (err, user) => {
+                        if (err) {
+                            console.log(err);
+                        }
+
+                        user.games.push(game);
+                        user.save((err) => {
+                            if (err) {
+                                console.log(err);
+                            } else if (!err) {
+                                console.log("User's new game has been saved.");
+
+                                //5.  Send new JWT back to client so that UI will display new data.
+                                jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
+                                    if (err) {
+                                        console.log(token);
+                                    }
+                                    res.json({
+                                        success: true,
+                                        msg: 'New Game Added',
+                                        token: token
+                                    });
+                                });
+                            }
+                        });
+                    });
                 });
             });
         });
@@ -314,24 +316,21 @@ module.exports = (router) => {
     //Client requests to delete game from user's record
     router.post('/delete_game', (req, res) => {
         var token = req.body.token;
-        var gameName = req.body.gameName;
+        var game = req.body.game;
+        console.log('game', game._id);
 
         //1.  Verify web token
         jwt.verify(token, 'secret', (err, payload) => {
             if (err) {
                 console.log(err);
             }
-            console.log('payload', payload);
 
             //2.  Find this game in game collection and delete it.
-            Game.findOneAndRemove({
-                title: gameName,
-                owner: payload.user.username
-            }, (err) => {
+            Game.findOneAndRemove({_id:game._id}, (err) => {
                 if (err) {
                     console.log(err);
                 }
-                console.log(gameName + ' has been removed from game collection.');
+                console.log(game.title + ' has been removed from game collection.');
             });
 
             //2.  Find user's record according to username from JWT payload
@@ -340,21 +339,17 @@ module.exports = (router) => {
                     console.log(err);
                 }
 
-                // let i = user.games.indexOf(gameName);        
-                // user.games.splice(i, 1);
-                // console.log(user.games)
-
                 for (let i = 0; i < user.games.length; i++) {
-                    if (user.games[i].name === gameName) {
-                        user.games.splice(i, 1);
-                    }
+                        if(user.games[i]._id.toString() === game._id){
+                            user.games.splice(i, 1);
+                        }
                 }
 
                 user.save((err) => {
                     if (err) {
                         console.log(err);
                     } else if (!err) {
-                        console.log(gameName + " has been deleted.");
+                        console.log(game.title + " has been deleted.");
 
                         //User's game has been successfuly deleted.
                         //5.  Send new JWT back to client
@@ -472,7 +467,7 @@ module.exports = (router) => {
                     user.incoming.splice(i, 1);
                 }
             }
-            
+
             //Add record to history array
             user.history.push({
                 date: new Date(),
@@ -563,7 +558,7 @@ module.exports = (router) => {
         });
     });
 
-    router.get('/get_cover_url', (req, res)=>{
+    router.get('/get_cover_url', (req, res) => {
         console.log(req.query);
         let gameOwner = req.query.gameOwner;
         let gameName = req.query.gameName;
@@ -571,8 +566,8 @@ module.exports = (router) => {
         Game.findOne({
             title: gameName,
             owner: gameOwner
-        }, (err, game)=>{
-            if(err){
+        }, (err, game) => {
+            if (err) {
                 console.log(err);
             }
             res.json(game);
