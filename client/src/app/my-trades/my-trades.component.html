@@ -11,6 +11,17 @@
     </li>
   </ul>
 
+  <div *ngIf="displaySelectGameWindow" id="select-game-window">
+    <h3>Select a game from {{initiator}} to complete the trade:</h3>
+    <a (click)="closeSelectGameWindow()">CLOSE</a>
+    <div *ngFor="let game of initiatorGames" class="game-card">
+      <img src="{{game.cover}}">
+      <p>{{game.title}}</p>
+      <p>{{game.platform}}</p>
+      <button (click)="selectGame(tradeRequest, game)">Select this game</button>
+    </div>
+  </div>
+
   <div *ngIf="displayTradeRequests" class="tab-content">
 
     <h1>Incoming trade requests: {{this.tradeService.incoming.length}}</h1>
@@ -28,13 +39,16 @@
         </div>
 
         <div class="game-card">
-          <a *ngIf="!tradeRequest.game2" [routerLink]="['/profile', tradeRequest.initiator]">
+          <a *ngIf="!tradeRequest.game2; else hasGame2" (click)="selectGameWindow(tradeRequest)">
             <img src="../../assets/square-placeholder.jpg">
           </a>
+
+          <ng-template #hasGame2>
           <img src="{{tradeRequest.game2.cover}}">
           <p>{{tradeRequest.game2.title}}</p>
           <p>{{tradeRequest.game2.platform}}</p>
           <p>{{tradeRequest.game2.owner}}</p>
+        </ng-template>
         </div>
       </div>
 
