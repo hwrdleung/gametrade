@@ -32,6 +32,11 @@
         <p>Password: ********</p>
         <a (click)="displayForm('password')">Change Password</a>
       </li>
+
+      <li>
+          <p>Delete Account</p>
+          <a (click)="this.dataService.deleteAccount()">Delete Account</a>
+        </li>
     </ul>
 
     <div>

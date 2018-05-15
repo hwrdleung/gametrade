@@ -129,7 +129,7 @@
     display: inline-block;
     color: #FFF;
     font-size: 0.8rem;
-    margin: 40px 10px;   
+    margin: 20px 10px;   
     background: rgb(39, 39, 39);
 }
 
@@ -164,9 +164,52 @@
     background: rgb(108, 153, 250);
 }
 
-.trade-card {
-    margin: 20px auto;
+.incoming-trades {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.outgoing-trades{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.trade-match{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.active-trade-card {
+    background: rgb(10, 10, 10);
+    margin: 10px;
     padding: 10px;
+}
+
+.incoming-trade-card {
+    margin: 10px;
+    padding: 10px;
+    background: rgb(10, 10, 10);
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+hr {
+    margin: 50px auto;
+}
+
+.outgoing-trade-card {
+    max-width: 250px;
+    margin: 20px 0;
 }
 
 .trade-card button {
@@ -180,6 +223,35 @@
 
 .trade-card button:active {
     background: rgb(108, 153, 250);
+}
+
+#select-game-window {
+    min-height: 300px;
+    height: auto;
+    width: 100%;
+    box-sizing: border-box;
+    border: 10px rgb(49, 49, 49) solid;
+    background: #000;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.trade-request-placeholder{
+    height: 340px;
+    width: 170px;
+    border: 5px rgb(43, 43, 43) dashed;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    margin: 20px 10px;   
+}
+
+.trade-request-placeholder a {
+    display: block;
 }
 
 

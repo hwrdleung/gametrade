@@ -10,6 +10,8 @@ export class TradeService {
   getTradeDataEndpoint = this.serverEndpoint + '/user/get_trade_data';
   cancelTradeRequestEndpoint = this.serverEndpoint + '/user/cancel_trade_request';
   denyTradeRequestEndpoint = this.serverEndpoint + '/user/deny_trade_request';
+  acceptTradeRequestEndpoint = this.serverEndpoint + '/user/accept_trade_request';
+
 
   incoming = [];
   outgoing = [];
@@ -37,23 +39,6 @@ export class TradeService {
       this.active = res['active'];
       this.history = res['history'];
 
-      //Check if any incoming initiators match outgoing game owners
-      //If match, save that outgoing game to corresponding incoming game as game2
-      //Delete fom outgoing array
-      for(let i=0; i<this.incoming.length; i++){
-        let initiator = this.incoming[i].initiator;
-        
-        for(let j=0; j<this.outgoing.length; j++){
-          let gameOwner = this.outgoing[j].game.owner;
-
-          if(initiator === gameOwner && !this.incoming[i].game2){
-            this.incoming[i].game2 = this.outgoing[j].game;
-            this.outgoing.splice(j, 1);
-          }
-
-        }
-      }
-
     });
   }
 
@@ -64,6 +49,13 @@ export class TradeService {
       this.getTradeData();
     });
 
+  }
+
+  acceptTradeRequest(tradeRequest){
+    this.http.post(this.acceptTradeRequestEndpoint, tradeRequest).subscribe((res)=>{
+      console.log(res);
+      this.getTradeData();
+    });
   }
 
   cancelTradeRequest(tradeRequest){

@@ -1,3 +1,18 @@
+<div *ngIf="displaySelectGameWindow" id="select-game-window">
+  <a (click)="closeSelectGameWindow()">CLOSE</a>
+
+  <h3>Choose a game from {{selectGameWindowInitiator}} to complete the trade:</h3>
+  <div class="game-card" *ngFor="let game of selectGameWindowGames">
+    <div *ngIf="game.available">
+      <img src="{{game.cover}}">
+      <p>{{game.title}}</p>
+      <p>{{game.platform}}</p>
+      <p>{{game.owner}}</p>
+      <button (click)="selectGame(game)">Select Game</button>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <ul id="tab-menu">
     <li>
@@ -14,51 +29,83 @@
   <div *ngIf="displayTradeRequests" class="tab-content">
 
     <h1>Incoming trade requests: {{this.tradeService.incoming.length}}</h1>
-    <div class="trade-card" *ngFor="let tradeRequest of this.tradeService.incoming">
-      <p>{{tradeRequest.date}}</p>
-      <p>{{tradeRequest.initiator}} has requested to trade with you.</p>
-      <p>Select a game from {{tradeRequest.initiator}} to complete the trade.</p>
+    <div class="incoming-trades">
+      <div class="incoming-trade-card" *ngFor="let tradeRequest of this.tradeService.incoming">
+        <p>{{tradeRequest.date}}</p>
+        <p>{{tradeRequest.initiator}} has requested to trade with you.</p>
 
-      <div class="trade-match">
+        <div class="trade-match">
+          <div class="game-card">
+            <img src="{{tradeRequest.game.cover}}">
+            <p>{{tradeRequest.game.title}}</p>
+            <p>{{tradeRequest.game.platform}}</p>
+            <p>{{tradeRequest.game.owner}}</p>
+          </div>
+
+          <div *ngIf="tradeRequest.game2; else noGame2" class="game-card">
+            <img src="{{tradeRequest.game2.cover}}">
+            <p>{{tradeRequest.game2.title}}</p>
+            <p>{{tradeRequest.game2.platform}}</p>
+            <p>{{tradeRequest.game2.owner}}</p>
+            <button (click)="openSelectGameWindow(tradeRequest)">Change Selection</button>
+          </div>
+          <ng-template #noGame2>
+            <div class="trade-request-placeholder">
+              <a (click)="openSelectGameWindow(tradeRequest)">
+                Select a game from {{tradeRequest.initiator}} to complete the trade.
+              </a>
+            </div>
+          </ng-template>
+        </div>
+
+        <div>
+          <button (click)="this.tradeService.acceptTradeRequest(tradeRequest)" [disabled]="!tradeRequest.game2">Accept</button>
+          <button (click)="this.tradeService.denyTradeRequest(tradeRequest)">Deny</button>
+        </div>
+      </div>
+
+    </div>
+    <hr>
+    <h1>Outgoing trade requests: {{this.tradeService.outgoing.length}}</h1>
+
+    <div class="outgoing-trades">
+      <div class="outgoing-trade-card" *ngFor="let tradeRequest of this.tradeService.outgoing">
         <div class="game-card">
+          <p>{{tradeRequest.date}}</p>
           <img src="{{tradeRequest.game.cover}}">
           <p>{{tradeRequest.game.title}}</p>
           <p>{{tradeRequest.game.platform}}</p>
           <p>{{tradeRequest.game.owner}}</p>
-        </div>
-
-        <div class="game-card">
-          <a *ngIf="!tradeRequest.game2" [routerLink]="['/profile', tradeRequest.initiator]">
-            <img src="../../assets/square-placeholder.jpg">
-          </a>
-          <img src="{{tradeRequest.game2.cover}}">
-          <p>{{tradeRequest.game2.title}}</p>
-          <p>{{tradeRequest.game2.platform}}</p>
-          <p>{{tradeRequest.game2.owner}}</p>
+          <button (click)="this.tradeService.cancelTradeRequest(tradeRequest)">Cancel</button>
         </div>
       </div>
-
-      <button (click)="test()" [disabled]="!tradeRequest.game2">Accept</button>
-      <button (click)="this.tradeService.denyTradeRequest(tradeRequest)">Deny</button>
-    </div>
-    <hr>
-    <h1>Outgoing trade requests: {{this.tradeService.outgoing.length}}</h1>
-    <div class="trade-card" *ngFor="let tradeRequest of this.tradeService.outgoing">
-      <p>{{tradeRequest.date}}</p>
-      <p>{{tradeRequest.initiator}}</p>
-      <img src="{{tradeRequest.game.cover}}">
-      <p>{{tradeRequest.owner}}</p>
-      <p>{{tradeRequest.game.platform}}</p>
-      <p>{{tradeRequest.game.title}}</p>
-      <button (click)="this.tradeService.cancelTradeRequest(tradeRequest)">Cancel</button>
     </div>
   </div>
+
 
 
   <div *ngIf="displayActiveTrades" class="tab-content">
     <h3>Active Trades</h3>
     <p>A list of active trades will help users track who has their games.</p>
+
+    <div class="active-trade-card" *ngFor="let trade of this.tradeService.active">
+      <p>{{trade.date}}</p>
+      <div class="game-card">
+        <img src="{{trade.game.cover}}">
+        <p>{{trade.game.title}}</p>
+        <p>{{trade.game.platform}}</p>
+        <p>{{trade.game.owner}}</p>
+      </div>
+
+      <div class="game-card">
+        <img src="{{trade.game2.cover}}">
+        <p>{{trade.game2.title}}</p>
+        <p>{{trade.game2.platform}}</p>
+        <p>{{trade.game2.owner}}</p>
+      </div>
+    </div>
   </div>
+
 
 
   <div *ngIf="displayTradeHistory" class="tab-content">

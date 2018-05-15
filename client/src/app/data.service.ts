@@ -19,6 +19,8 @@ export class DataService {
   addGameEndpoint = this.serverEndpoint + '/user/add_game';
   deleteGameEndpoint = this.serverEndpoint + '/user/delete_game';
 
+  deleteAllEndpoint = this.serverEndpoint + '/user/delete_all';
+
   constructor(private router: Router, private http: HttpClient) { }
 
   register(formData) {
@@ -76,8 +78,34 @@ export class DataService {
     });
   }
 
+  deleteAllGames(){
+
+    let data = {
+      lol: 'lol'
+    }
+
+    this.http.post(this.deleteAllEndpoint, data).subscribe((res)=>{
+      console.log(res);
+    });
+  }
 
   // DASHBOARD FUNCTIONS
+
+  deleteAccount(){
+    let token = sessionStorage.getItem('currentUser');
+
+    let data = {
+      token: token
+    }
+
+    this.http.post(this.serverEndpoint + '/user/delete', data).subscribe((res)=>{
+      console.log(res);
+      if(res['success']){
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
   changePassword(formData){
 
     let token = sessionStorage.getItem('currentUser');

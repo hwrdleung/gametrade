@@ -8,14 +8,16 @@
 
 <div class="container" *ngIf="this.dataService.currentUser; else loggedOut">
         <div class="game-grid">
-                <div class="game-card" *ngFor="let game of this.homeGames">
-                        <img src="{{game.cover}}">
-                        <p>{{game.title}}</p>
-                        <p>{{game.platform}}</p>
-                        <p>
-                                <a [routerLink]="['/profile', game.owner]">{{game.owner}}</a>
-                        </p>
-                        <button *ngIf="dataService.currentUser" (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
+                <div *ngFor="let game of this.homeGames">
+                        <div class="game-card" *ngIf="game.available">
+                                <img src="{{game.cover}}">
+                                <p>{{game.title}}</p>
+                                <p>{{game.platform}}</p>
+                                <p>
+                                  <a [routerLink]="['/profile', game.owner]">{{game.owner}}</a>
+                                </p>
+                                <button *ngIf="dataService.currentUser" (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
+                        </div>
                 </div>
         </div>
 </div>

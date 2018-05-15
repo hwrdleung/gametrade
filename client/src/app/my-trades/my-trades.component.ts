@@ -12,10 +12,17 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class MyTradesComponent implements OnInit {
 
+  serverEndpoint = 'http://localhost:3000';
+
   //UI stuff
   displayTradeRequests = true;
   displayTradeHistory = false;
   displayActiveTrades = false;
+  displaySelectGameWindow = false;
+
+  selectGameWindowGames = [];
+  selectGameWindowInitiator = '';
+  selectGameWindowTradeRequest;
 
   constructor(private gamesDataService: GamesDataService, private dataService:DataService, private http:HttpClient, private tradeService:TradeService) { }
 
@@ -25,6 +32,50 @@ export class MyTradesComponent implements OnInit {
 
 test(){
   console.log('test()');
+}
+
+selectGame(game){
+  console.log('select game');
+  let secureData = {
+    token: this.dataService.currentUser,
+    game: game,
+    tradeRequest: this.selectGameWindowTradeRequest
+  }
+  //Add game as game2 to this traderequest in gameOwner's incoming array
+  let selectGameForTradeEndpoint = this.serverEndpoint + '/user/select_game_for_trade';
+  this.http.post(selectGameForTradeEndpoint, secureData).subscribe((res)=>{
+    console.log(res);
+    this.tradeService.getTradeData();
+    this.closeSelectGameWindow();
+  });
+}
+
+openSelectGameWindow(tradeRequest){
+  this.selectGameWindowGames = [];
+  this.selectGameWindowInitiator = '';
+  this.selectGameWindowTradeRequest = tradeRequest;
+  this.displaySelectGameWindow = true;
+  let initiator = tradeRequest.initiator;
+  let getAllGamesEndpoint = this.serverEndpoint + '/games/get_all/';
+  //This would not be okay with a large number of games in the database
+  this.http.get(getAllGamesEndpoint).subscribe((res)=>{
+    console.log(res);
+
+    for(let game in res){
+      console.log(res[game]);
+
+      if(res[game]['owner'] === initiator){
+        this.selectGameWindowGames.push(res[game]);
+      }
+
+    }
+
+    this.selectGameWindowInitiator = initiator;
+  });
+}
+
+closeSelectGameWindow(){
+  this.displaySelectGameWindow = false;
 }
 
   displayContent(tab) {
