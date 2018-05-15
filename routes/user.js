@@ -65,7 +65,7 @@ module.exports = (router) => {
                         //Password matches hash, assign JWT and send to client
                         jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
                             if (err) {
-                                console.log(token);
+                                console.log(err);
                             }
                             res.json({
                                 success: true,
@@ -149,7 +149,6 @@ module.exports = (router) => {
                 }
 
                 //3.  Save new data to user's record in database
-                console.log('user found', user);
                 user.email = newEmail;
                 user.save((err) => {
                     if (err) {
@@ -161,7 +160,7 @@ module.exports = (router) => {
                         //4.  Send new JWT back to client
                         jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
                             if (err) {
-                                console.log(token);
+                                console.log(err);
                             }
                             res.json({
                                 success: true,
@@ -209,7 +208,7 @@ module.exports = (router) => {
                         //4.  Send new JWT back to client
                         jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
                             if (err) {
-                                console.log(token);
+                                console.log(err);
                             }
                             res.json({
                                 success: true,
@@ -241,8 +240,6 @@ module.exports = (router) => {
                     console.log(err);
                 }
 
-                console.log(user);
-
                 // 3.  Check oldPassword from formData against hash stored in DB before updating password
                 bcrypt.compare(oldPassword, user.password, (err, isValid) => {
                     if (err) {
@@ -259,7 +256,6 @@ module.exports = (router) => {
                             if (err) {
                                 console.log(err);
                             }
-                            console.log('hash', hash);
                             user.password = hash;
                             user.save((err) => {
                                 if (err) {
@@ -271,7 +267,7 @@ module.exports = (router) => {
                                     //5.  Send new JWT back to client
                                     jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
                                         if (err) {
-                                            console.log(token);
+                                            console.log(err);
                                         }
                                         res.json({
                                             success: true,
@@ -343,7 +339,7 @@ module.exports = (router) => {
                                 //5.  Send new JWT back to client so that UI will display new data.
                                 jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
                                     if (err) {
-                                        console.log(token);
+                                        console.log(err);
                                     }
                                     res.json({
                                         success: true,
@@ -363,7 +359,6 @@ module.exports = (router) => {
     router.post('/delete_game', (req, res) => {
         var token = req.body.token;
         var game = req.body.game;
-        console.log('game', game._id);
 
         //1.  Verify web token
         jwt.verify(token, 'secret', (err, payload) => {
@@ -401,7 +396,7 @@ module.exports = (router) => {
                         //5.  Send new JWT back to client
                         jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
                             if (err) {
-                                console.log(token);
+                                console.log(err);
                             }
                             res.json({
                                 success: true,
@@ -417,8 +412,6 @@ module.exports = (router) => {
 
     //Client requests to get public userdata for profile page
     router.get('/profile/*', (req, res) => {
-        console.log(req.params['0']);
-
         let username = req.params['0'];
 
         User.findOne({ username: username }, (err, user) => {
@@ -431,7 +424,6 @@ module.exports = (router) => {
 
     //Client requests to get trade data for username in parameter
     router.get('/get_trade_data', (req, res) => {
-        console.log(req.query.username);
         let username = req.query.username;
 
         User.findOne({ username: username }, (err, user) => {
@@ -458,6 +450,7 @@ module.exports = (router) => {
         let newTrade = {
             initiator: initiator,
             game: game,
+            game2: null,
             date: new Date()
         }
 
@@ -540,7 +533,6 @@ module.exports = (router) => {
                 //Find initiator's record. Remove outgoing trade request
                 User.findOne({ username: initiator }, (err, user) => {
 
-                    console.log(user.outgoing);
                     for (var i = 0; i < user.outgoing.length; i++) {
                         if (user.outgoing[i].game._id === game._id) {
                             user.outgoing.splice(i, 1);
@@ -670,16 +662,12 @@ module.exports = (router) => {
 
         //Delete outgoing trade request for initiator
         //Delete incoming trade request for game owner
-        console.log(req.body);
-
         let initiator = req.body.initiator;
         let game = req.body.game;
 
 
         // //Find initiator's record and remove this trade request from username's outgoing array
         User.findOne({ username: initiator }, (err, user) => {
-
-            console.log(user.outgoing);
             for (var i = 0; i < user.outgoing.length; i++) {
                 if (user.outgoing[i].game._id === game._id) {
                     user.outgoing.splice(i, 1);
@@ -715,7 +703,6 @@ module.exports = (router) => {
     });
 
     router.get('/get_cover_url', (req, res) => {
-        console.log(req.query);
         let gameOwner = req.query.gameOwner;
         let gameName = req.query.gameName;
 

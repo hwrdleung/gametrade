@@ -26,6 +26,17 @@
     </li>
   </ul>
 
+  <div *ngIf="displaySelectGameWindow" id="select-game-window">
+    <h3>Select a game from {{initiator}} to complete the trade:</h3>
+    <a (click)="closeSelectGameWindow()">CLOSE</a>
+    <div *ngFor="let game of initiatorGames" class="game-card">
+      <img src="{{game.cover}}">
+      <p>{{game.title}}</p>
+      <p>{{game.platform}}</p>
+      <button (click)="selectGame(tradeRequest, game)">Select this game</button>
+    </div>
+  </div>
+
   <div *ngIf="displayTradeRequests" class="tab-content">
 
     <h1>Incoming trade requests: {{this.tradeService.incoming.length}}</h1>

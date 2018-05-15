@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { TradeService } from '../trade.service';
 import { DataService } from '../data.service';
 import { GamesDataService } from '../games-data.service';
-
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Component({
@@ -23,11 +22,29 @@ export class MyTradesComponent implements OnInit {
   selectGameWindowGames = [];
   selectGameWindowInitiator = '';
   selectGameWindowTradeRequest;
+  tradeRequest; //For selectGameWindow
+  initiator = '';
+  initiatorGames = [];
 
   constructor(private gamesDataService: GamesDataService, private dataService:DataService, private http:HttpClient, private tradeService:TradeService) { }
 
   ngOnInit() {
     this.tradeService.getTradeData();
+  }
+
+  selectGameWindow(tradeRequest){
+    this.displaySelectGameWindow = true;
+    this.initiator = tradeRequest.initiator;
+    this.tradeRequest = tradeRequest;
+    let getProfileDataEndpoint = this.serverEndpoint + '/user/profile/' + tradeRequest.initiator;
+
+    this.http.get(getProfileDataEndpoint).subscribe((res)=>{
+      console.log(res);
+      console.log(res['games']);
+
+      this.initiatorGames = res['games'];
+    });
+
   }
 
 test(){
