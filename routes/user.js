@@ -7,29 +7,29 @@ const saltRounds = 10;
 
 module.exports = (router) => {
 
-    
-  router.post('/delete_all', (req, res)=>{
-    //This will be changed to find games that match
-    //criteria specified by the client
-    Game.find({}, (err, data)=>{
-        if(err){
-            console.log(err);
-        }
-        console.log(data);
-        
-        for(let i=0; i<data.length; i++){
-            let game_id = data[i]._id;
 
-            Game.findByIdAndRemove({_id:game_id}, (err)=>{
-                if(err){
-                    console.log(err);
-                }
-                console.log('Game Removed', data[i].title);
-            });
-        }
+    router.post('/delete_all', (req, res) => {
+        //This will be changed to find games that match
+        //criteria specified by the client
+        Game.find({}, (err, data) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log(data);
 
+            for (let i = 0; i < data.length; i++) {
+                let game_id = data[i]._id;
+
+                Game.findByIdAndRemove({ _id: game_id }, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log('Game Removed', data[i].title);
+                });
+            }
+
+        });
     });
-});
 
     //POST request from login form
     router.post('/login', (req, res) => {
@@ -110,24 +110,60 @@ module.exports = (router) => {
         });
     });
 
-    router.post('/delete', (req, res)=>{
+    router.post('/delete', (req, res) => {
+
         let token = req.body.token;
-        console.log(token);
+        let password = req.body.password;
+
+        console.log(password);
+
         jwt.verify(token, 'secret', (err, payload) => {
             if (err) {
                 console.log(err);
             }
 
-            User.findOneAndRemove({_id: payload.user._id}, (err)=>{
-                if(err){
+            User.findOne({ _id: payload.user._id }, (err, user) => {
+                if (err) {
                     console.log(err);
                 }
-                res.json({
-                    success: true,
-                    msg: 'Account has been deleted'
+
+                console.log('USER FOUND');
+
+                bcrypt.compare(password, user.password, (err, isValid) => {
+                    //res is a bool
+                    if (err) {
+                        console.log(err);
+                    }
+
+                    if (!isValid) {
+                        //Password does not match hash, return error msg to client
+                        res.json({
+                            success: false,
+                            msg: 'Invalid password.'
+                        });
+                    } else if (isValid) {
+                        //Password matches hash, delete account and send msg back to client
+                        //Remove all games owned by this user from games collection
+
+                        console.log(payload.user.username);
+                        Game.find({owner: payload.user.username}, (err, games)=>{
+                            if(err){
+                                console.log(err);
+                            }
+
+                            games.forEach(function(game){
+                                game.remove();
+                            });
+
+                            user.remove();
+                            res.json({
+                                success: true,
+                                msg: 'Account has been deleted.',
+                            });
+                        });
+                    }
                 });
             });
-
         });
     });
 
@@ -607,54 +643,52 @@ module.exports = (router) => {
             }
             let query = JSON.stringify(game._id);
 
-
             for (let i = 0; i < data.incoming.length; i++) {
                 let id = JSON.stringify(data.incoming[i].game._id);
 
                 if (id === query) {
                     console.log('INCOMING GAME FOUND');
                     data.incoming.splice(i, 1);
-                }
-                data.active.push(trade);
-                data.save((err) => {
-                    if (err) {
-                        console.log(err);
-                    }
 
-
-                    User.findOne({ username: game2.owner }, (err, data) => {
+                    data.active.push(trade);
+                    data.save((err) => {
                         if (err) {
                             console.log(err);
-                        }
-                        let query = JSON.stringify(game._id);
-
-                        for (let i = 0; i < data.outgoing.length; i++) {
-                            let id = JSON.stringify(data.outgoing[i].game._id);
-
-                            if (id === query) {
-                                console.log('INCOMING GAME FOUND');
-                                data.outgoing.splice(i, 1);
-                            }
-                            data.active.push(trade);
-                            data.save((err) => {
+                        } else {
+                            console.log('reached');
+                            User.findOne({ username: game2.owner }, (err, data2) => {
                                 if (err) {
                                     console.log(err);
                                 }
-                                res.json({
-                                    success: true,
-                                    msg: 'Saved to active trades'
-                                });
+                                let query = JSON.stringify(game._id);
+
+                                for (let i = 0; i < data2.outgoing.length; i++) {
+                                    let id = JSON.stringify(data2.outgoing[i].game._id);
+
+                                    if (id === query) {
+                                        console.log('INCOMING GAME FOUND');
+                                        data2.outgoing.splice(i, 1);
+
+                                        data2.active.push(trade);
+                                        data2.save((err) => {
+                                            if (err) {
+                                                console.log(err);
+                                            }
+                                            else {
+                                                res.json({
+                                                    success: true,
+                                                    msg: 'Saved to active trades'
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
                             });
                         }
                     });
-                });
+                }
             }
         });
-
-        //Remove trade request from game2.owner.outgoing
-        //Save trade to game.owner.active
-        //Save trade to initiator.active
-
     });
 
     //Client requests to cancel an outgoing trade request
@@ -702,6 +736,110 @@ module.exports = (router) => {
         });
     });
 
+    router.post('/mark_returned', (req, res) => {
+        let key = req.body.key;
+        let trade = req.body.trade;
+
+        let otherKey = '';
+        switch (key) {
+            case 'game': otherKey = 'game2'; break;
+            case 'game2': otherKey = 'game'; break;
+        }
+
+        let game_id = trade[key]._id;
+        let game2_id = trade[otherKey]._id;
+
+        if (trade[otherKey + 'Returned']) {
+            //Delete this trade from both users' active arrays.            
+            User.findOne({ username: trade[key].owner }).exec()
+
+                //Find this trade in this user's 'active' array.  
+                .then(function (user) {
+                    for (let i = 0; i < user.active.length; i++) {
+                        if (JSON.stringify(user.active[i]) === JSON.stringify(trade)) {
+
+                            user.active.splice(i, 1);
+                        }
+                    }
+                    user.save();
+                    return User.findOne({ username: trade[otherKey].owner }).exec();
+                })
+
+                .then(function (user2) {
+                    for (let i = 0; i < user2.active.length; i++) {
+                        if (JSON.stringify(user2.active[i]) === JSON.stringify(trade)) {
+
+                            user2.active.splice(i, 1);
+                        }
+                    }
+                    user2.save();
+                    return Game.findOne({ '_id': trade[key]['_id'] }).exec();
+                })
+
+                .then(function (game) {
+
+                    game.available = true;
+                    game.save();
+                    return;
+                })
+
+                .then(function () {
+                    res.json({
+                        success: true,
+                        msg: 'Both games have been returned.'
+                    });
+                })
+
+                .catch(error => { console.log('Error:', error.message); });
+
+        } else if (!trade[otherKey + 'Returned']) {
+            //Set this game to show as 'returned' for both users' active arrays.
+
+            User.findOne({ username: trade[key].owner }).exec()
+
+                //Find this trade in this user's 'active' array.  
+                .then(function (user) {
+                    for (let i = 0; i < user.active.length; i++) {
+
+                        if (JSON.stringify(user.active[i][key]) === JSON.stringify(trade[key])) {
+                            trade[key.toString() + 'Returned'] = true;
+                            user.active.splice(i, 1, trade);
+                        }
+                    }
+                    user.save();
+                    return User.findOne({ username: trade[otherKey].owner }).exec();
+                })
+
+                .then(function (user2) {
+                    for (let i = 0; i < user2.active.length; i++) {
+                        if (JSON.stringify(user2.active[i][key]) === JSON.stringify(trade[key])) {
+                            trade[key.toString() + 'Returned'] = true;
+                            user2.active.splice(i, 1, trade);
+                        }
+                    }
+                    user2.save();
+                    return Game.findOne({ _id: trade[key]['_id'] });
+                })
+
+                .then(function (game) {
+
+                    game.available = true;
+                    game.save();
+                    return;
+                })
+
+                .then(function () {
+                    res.json({
+                        success: true,
+                        msg: 'Game saved as returned.'
+                    });
+                })
+
+                .catch(error => { console.log('Error:', error.message); });
+        }
+
+    });
+
     router.get('/get_cover_url', (req, res) => {
         let gameOwner = req.query.gameOwner;
         let gameName = req.query.gameName;
@@ -746,8 +884,7 @@ module.exports = (router) => {
                         tradeRequest.game2 = req.body.game;
                         //This is a work-around because I wans't able to directly modify the 
                         //nested object
-                        user.incoming.splice(i, 1);
-                        user.incoming.push(tradeRequest);
+                        user.incoming.splice(i, 1, tradeRequest);
 
                         user.save((err) => {
                             if (err) {
@@ -770,3 +907,44 @@ module.exports = (router) => {
 
     return router;
 }
+
+//----------------Promises example---------------------------
+
+// function enrollStudent(req, res, next) {
+//     var student;
+
+//     //Load the user
+//     Student.findById(req.body.studentId).exec()
+
+//     //Capture student and load the course 
+//     .then(function(studentFromDb){
+//       student = studentFromDb
+//       return Course.findById(req.body.courseId).exec();
+//     })
+
+//     //Check if there are available seats in the course
+//     .then(function(course){
+//       if(course.isSeatAvailable()){
+//         //Enroll student into the course
+//         course.enrolledStudents.push(student.id);
+//         return course;
+//       } else {
+//         //throw an error
+//         throw new Error('No seats available');
+//       }
+//     })
+
+//     //Save the course
+//     .then(function(course){
+//       return course.save();
+//     })
+
+//     //Send the response back
+//     .then(function(course){
+//       return res.json({message : 'Enrollment successful'})
+//     });
+
+//     //Catch all errors and call the error handler;
+//     .then(null, next);
+
+//   }

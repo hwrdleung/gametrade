@@ -11,6 +11,7 @@ export class TradeService {
   cancelTradeRequestEndpoint = this.serverEndpoint + '/user/cancel_trade_request';
   denyTradeRequestEndpoint = this.serverEndpoint + '/user/deny_trade_request';
   acceptTradeRequestEndpoint = this.serverEndpoint + '/user/accept_trade_request';
+  markReturnedEndpoint = this.serverEndpoint + '/user/mark_returned';
 
 
   incoming = [];
@@ -21,6 +22,7 @@ export class TradeService {
   constructor(private dataService:DataService, private http:HttpClient) { }
 
   test(){
+    this.getTradeData();
     console.log('Incoming: ', this.incoming);
     console.log('Outgoing: ', this.outgoing);
     console.log('Active: ', this.active);
@@ -38,12 +40,46 @@ export class TradeService {
       this.outgoing = res['outgoing'];
       this.active = res['active'];
       this.history = res['history'];
-
     });
   }
 
-  denyTradeRequest(tradeRequest){
+  markReturned(date, key){
+    let username = this.dataService.userData.username;
+    let params = new HttpParams().set('username', username);
 
+    this.http.get(this.getTradeDataEndpoint, {params: params}).subscribe((res)=>{
+      console.log(res);
+
+      this.incoming = res['incoming'];
+      this.outgoing = res['outgoing'];
+      this.active = res['active'];
+      this.history = res['history'];
+
+      //Find the index of this trade after refreshing trade data
+      let index;
+      for(let i=0; i<this.active.length; i++){
+        console.log(this.active[i].date);
+        console.log(date);
+        if(this.active[i].date === date){
+          index = i;
+        }
+      }
+      
+      let data = {
+        trade: this.active[index],
+        key: key
+      }
+  
+      this.http.post(this.markReturnedEndpoint, data).subscribe((res)=>{
+        console.log(res);
+        this.getTradeData();
+      });
+    });
+
+ 
+  }
+
+  denyTradeRequest(tradeRequest){
     this.http.post(this.denyTradeRequestEndpoint, tradeRequest).subscribe((res)=>{
       console.log(res);
       this.getTradeData();
@@ -70,8 +106,6 @@ export class TradeService {
 
     console.log(username);
     console.log(game);
-    // console.log(
-    //   username + ' requests to trade with ' + gameOwner + ' for ' + gameTitle + ' ' + gamePlatform)
 
       let tradeData = {
         initiator: username,
@@ -80,24 +114,32 @@ export class TradeService {
 
       this.http.post(this.requestTradeEndpoint, tradeData).subscribe((res)=>{
         console.log(res);
+        this.getTradeData();
       });
 
+  }
 
+  alreadyRequested(game){
+    //Check outgoing requests for game
+    let outgoingArr = this.outgoing;
+    for(let i=0; i<outgoingArr.length; i++){
+      if(JSON.stringify(outgoingArr[i].game) === JSON.stringify(game)){
+        return true;
+      }
+    }
 
-    //Create trade request document and save to gameOwner's record
-    //Create trade request document and save to username's record
-    
-    //If gameOwner denies:
-      //Notify username that gameOwner has denied the trade request
-      //Save record to trade history for both gameOwner and username
-      //Delete trade request for both gameOwner and username
+    //Check incoming requests for game
+    let incomingArr = this.incoming;
+    for(let i=0; i<incomingArr.length; i++){
+      if(JSON.stringify(incomingArr[i].game2) === JSON.stringify(game)){
+        return true;
+      }
+    }
 
-    //If gameOwner accepts:
-      //Remove game from games collection in DB so that it no longer shows up on home page
-      //gameOwner wil be shown a list of all games that username owns.  
-      //When gameOwner chooses a game, the trade is complete:
-          //Save a record to 'active trades' for both gameOnwer and username
-          //Remove trade request for both gameOwner and username
+    return false;
+
 
   }
+ 
+
 }

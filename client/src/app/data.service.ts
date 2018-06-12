@@ -78,29 +78,23 @@ export class DataService {
     });
   }
 
-  deleteAllGames(){
-
-    let data = {
-      lol: 'lol'
-    }
-
-    this.http.post(this.deleteAllEndpoint, data).subscribe((res)=>{
-      console.log(res);
-    });
-  }
-
   // DASHBOARD FUNCTIONS
 
-  deleteAccount(){
+  deleteAccount(formData){
     let token = sessionStorage.getItem('currentUser');
 
     let data = {
+      password: formData.password,
       token: token
     }
+
+    console.log(data);
 
     this.http.post(this.serverEndpoint + '/user/delete', data).subscribe((res)=>{
       console.log(res);
       if(res['success']){
+        this.currentUser = '';
+        sessionStorage.removeItem('currentUser');
         this.router.navigate(['/']);
       }
     });
@@ -170,7 +164,6 @@ export class DataService {
 
   deleteGame(game){
 
-    // let token = sessionStorage.getItem('currentUser');
     let token = this.currentUser;
     console.log(token);
     console.log(JWT(token));

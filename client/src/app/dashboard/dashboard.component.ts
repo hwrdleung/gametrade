@@ -16,19 +16,21 @@ export class DashboardComponent implements OnInit {
   changeLocationForm: FormGroup;
   changeEmailForm: FormGroup;
   changePasswordForm: FormGroup;
+  deleteAccountForm: FormGroup;
 
   displayChangeLocationForm = false;
   displayChangeEmailForm = false;
   displayChangePasswordForm = false;
+  displayDeleteAccountForm = false;
 
-    //Custom validator functions
-    passwordMatchValidator = function(fg:FormGroup){
-      return fg.get('newPassword').value === fg.get('newPassword2').value ? null : { 'mismatch': true};
-    }
-  
-    emailMatchValidator = function(fg:FormGroup){
-      return fg.get('newEmail').value === fg.get('newEmail2').value ? null : { 'mismatch': true};
-    }
+  //Custom validator functions
+  passwordMatchValidator = function (fg: FormGroup) {
+    return fg.get('newPassword').value === fg.get('newPassword2').value ? null : { 'mismatch': true };
+  }
+
+  emailMatchValidator = function (fg: FormGroup) {
+    return fg.get('newEmail').value === fg.get('newEmail2').value ? null : { 'mismatch': true };
+  }
 
 
   constructor(private dataService: DataService, private formBuilder: FormBuilder) {
@@ -48,13 +50,17 @@ export class DashboardComponent implements OnInit {
         Validators.required,
         Validators.email
       ])],
-    }, {validator: this.emailMatchValidator});
+    }, { validator: this.emailMatchValidator });
 
     this.changePasswordForm = formBuilder.group({
       'oldPassword': [null, Validators.required],
       'newPassword': [null, Validators.required],
       'newPassword2': [null, Validators.required]
-    }, {validator: this.passwordMatchValidator});
+    }, { validator: this.passwordMatchValidator });
+
+    this.deleteAccountForm = formBuilder.group({
+      'password': [null, Validators.required],
+    });
 
   }
 
@@ -66,10 +72,11 @@ export class DashboardComponent implements OnInit {
     console.log('test');
   }
 
-  hideAllForms(){
+  hideAllForms() {
     this.displayChangeLocationForm = false;
     this.displayChangeEmailForm = false;
     this.displayChangePasswordForm = false;
+    this.displayDeleteAccountForm = false;
   }
 
   displayForm(form) {
@@ -78,16 +85,25 @@ export class DashboardComponent implements OnInit {
         this.displayChangeLocationForm = !this.displayChangeLocationForm;
         this.displayChangeEmailForm = false;
         this.displayChangePasswordForm = false;
+        this.displayDeleteAccountForm = false;
         break;
       case 'email':
         this.displayChangeEmailForm = !this.displayChangeEmailForm;
         this.displayChangeLocationForm = false;
         this.displayChangePasswordForm = false;
+        this.displayDeleteAccountForm = false;
         break;
       case 'password':
         this.displayChangePasswordForm = !this.displayChangePasswordForm;
         this.displayChangeLocationForm = false;
         this.displayChangeEmailForm = false;
+        this.displayDeleteAccountForm = false;
+        break;
+      case 'delete account':
+        this.displayChangePasswordForm = false;
+        this.displayChangeLocationForm = false;
+        this.displayChangeEmailForm = false;
+        this.displayDeleteAccountForm = !this.displayDeleteAccountForm;
         break;
     }
   }

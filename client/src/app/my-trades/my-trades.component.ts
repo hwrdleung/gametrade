@@ -44,12 +44,7 @@ export class MyTradesComponent implements OnInit {
 
       this.initiatorGames = res['games'];
     });
-
   }
-
-test(){
-  console.log('test()');
-}
 
 selectGame(game){
   console.log('select game');
@@ -81,10 +76,9 @@ openSelectGameWindow(tradeRequest){
     for(let game in res){
       console.log(res[game]);
 
-      if(res[game]['owner'] === initiator){
+      if(res[game]['owner'] === initiator && !this.tradeService.alreadyRequested(res[game]) && res[game].available){
         this.selectGameWindowGames.push(res[game]);
       }
-
     }
 
     this.selectGameWindowInitiator = initiator;
@@ -96,7 +90,6 @@ closeSelectGameWindow(){
 }
 
   displayContent(tab) {
-
     this.displayTradeRequests = false;
     this.displayTradeHistory = false;
     this.displayActiveTrades = false;
@@ -106,7 +99,5 @@ closeSelectGameWindow(){
       case 'Trade History': this.displayTradeHistory = true; break;
       case 'Active Trades': this.displayActiveTrades = true; break;
     }
-
   }
-
 }

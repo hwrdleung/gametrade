@@ -35,7 +35,7 @@
 
       <li>
           <p>Delete Account</p>
-          <a (click)="this.dataService.deleteAccount()">Delete Account</a>
+          <a (click)="displayForm('delete account')">Delete Account</a>
         </li>
     </ul>
 
@@ -96,6 +96,14 @@
         <input type="submit" [disabled]="!changePasswordForm.valid">
       </form>
     </div>
+
+    <form *ngIf="displayDeleteAccountForm" [formGroup]="deleteAccountForm" (ngSubmit)="this.dataService.deleteAccount(deleteAccountForm.value)">
+      <h3>Delete your account</h3>
+      <br>
+      <p>Warning:  You are about to delete your account.  This is irreversible and all of your data will be lost.  To proceed, please enter your password.</p>
+      <input type="password" formControlName="password" name="password">
+      <input type="submit" [disabled]="!deleteAccountForm.valid">
+    </form>
 
   </div>
 

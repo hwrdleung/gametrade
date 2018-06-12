@@ -16,7 +16,9 @@
                                 <p>
                                   <a [routerLink]="['/profile', game.owner]">{{game.owner}}</a>
                                 </p>
-                                <button *ngIf="dataService.currentUser" (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
+                                <p *ngIf="this.tradeService.alreadyRequested(game)">Request pending</p>
+                                <button *ngIf="dataService.currentUser && !this.tradeService.alreadyRequested(game)" 
+                                (click)=" this.tradeService.getTradeData(); this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
                         </div>
                 </div>
         </div>

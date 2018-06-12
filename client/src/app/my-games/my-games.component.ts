@@ -26,6 +26,10 @@ export class MyGamesComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy() {
+    this.gamesDataService.searchResults = [];
+  }
+
   test(){
     console.log('test');
     }
