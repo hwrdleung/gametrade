@@ -14,7 +14,8 @@ export class MyTradesComponent implements OnInit {
   serverEndpoint = 'http://localhost:3000';
 
   //UI stuff
-  displayTradeRequests = true;
+  displayIncomingTradeRequests = true;
+  displayOutgoingTradeRequests = false;
   displayTradeHistory = false;
   displayActiveTrades = false;
   displaySelectGameWindow = false;
@@ -90,12 +91,14 @@ closeSelectGameWindow(){
 }
 
   displayContent(tab) {
-    this.displayTradeRequests = false;
+    this.displayIncomingTradeRequests = false;
+    this.displayOutgoingTradeRequests = false;
     this.displayTradeHistory = false;
     this.displayActiveTrades = false;
 
     switch (tab) {
-      case 'Trade Requests': this.displayTradeRequests = true; break;
+      case 'Incoming Trade Requests': this.displayIncomingTradeRequests = true; break;
+      case 'Outgoing Trade Requests': this.displayOutgoingTradeRequests = true; break;
       case 'Trade History': this.displayTradeHistory = true; break;
       case 'Active Trades': this.displayActiveTrades = true; break;
     }

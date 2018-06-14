@@ -90,7 +90,7 @@ export class DataService {
 
     console.log(data);
 
-    this.http.post(this.serverEndpoint + '/user/delete', data).subscribe((res)=>{
+    this.http.post(this.serverEndpoint + '/user/delete_account', data).subscribe((res)=>{
       console.log(res);
       if(res['success']){
         this.currentUser = '';

@@ -7,84 +7,63 @@ const saltRounds = 10;
 
 module.exports = (router) => {
 
-
-    router.post('/delete_all', (req, res) => {
-        //This will be changed to find games that match
-        //criteria specified by the client
-        Game.find({}, (err, data) => {
-            if (err) {
-                console.log(err);
-            }
-            console.log(data);
-
-            for (let i = 0; i < data.length; i++) {
-                let game_id = data[i]._id;
-
-                Game.findByIdAndRemove({ _id: game_id }, (err) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                    console.log('Game Removed', data[i].title);
-                });
-            }
-
-        });
-    });
-
-    //POST request from login form
     router.post('/login', (req, res) => {
-        console.log('login request');
-        //Get user record from DB
-        User.findOne({ username: req.body.username }, (err, user) => {
-            console.log(user);
-            //user is an array of objects
-            if (err) {
-                console.log(err);
-            }
+        let username = req.body.username;
+        let password = req.body.password;
+        let currentUser;
 
-            if (!user) { //No record with this username
-                res.json({
-                    success: false,
-                    msg: 'User not found.'
-                });
-            } else if (user) { //User found. 
-                //Check password from login form against user's stored hash
-                bcrypt.compare(req.body.password, user.password, (err, isValid) => {
-                    //res is a bool
-                    if (err) {
-                        console.log(err);
-                    }
+        console.log('Login request for', username);
+        User.findOne({ username: username }).exec()
+            //Check password
+            .then(function (user) {
+                if (!user) {
+                    console.log('User not found.  Sending error message to client.');
+                    res.json({
+                        success: false,
+                        msg: 'User not found.'
+                    });
+                    throw 'End promise chain';
+                } else if (user) {
+                    console.log('User found.  Authenticating password.');
+                    currentUser = user;
+                    return bcrypt.compare(password, user.password);
+                }
+            })
 
-                    if (!isValid) {
-                        //Password does not match hash, return error msg to client
-                        res.json({
-                            success: false,
-                            msg: 'Invalid password.'
-                        });
-                    } else if (isValid) {
-                        //Password matches hash, assign JWT and send to client
-                        jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
-                            if (err) {
-                                console.log(err);
-                            }
-                            res.json({
-                                success: true,
-                                msg: 'Password accepted',
-                                token: token
-                            });
-                        });
-                    }
+            //Generate token
+            .then(function (isValid) {
+                if (!isValid) {
+                    console.log('Invalid password.  Sending error message to client.');
+                    res.json({
+                        success: false,
+                        msg: 'Invalid password.'
+                    });
+                    throw 'End promise chain';
+                } else if (isValid) {
+                    console.log('Password accepted.');
+                    return jwt.sign({ user: currentUser }, 'secret', { expiresIn: '3h' });
+                }
+            })
+
+            //Send token to client
+            .then(function (token) {
+                console.log('Authentication successful. \nSending token to client for user session. Duration: 3h.');
+                return res.json({
+                    success: true,
+                    msg: 'Password accepted',
+                    token: token
                 });
-            }
-        });
+            })
+
+            .catch(error => { console.log('Error:', error.message); });
     });
 
-    //POST request from registration form
     router.post('/register', (req, res) => {
+        //Data validation is handled client-side.
+        console.log('Data received for new user registration.');
 
-        //Hash Password with bcrypt
         bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
-            //Create new user
+            //Hash password and create new user 
             var newUser = new User({
                 first: req.body.first,
                 last: req.body.last,
@@ -96,117 +75,116 @@ module.exports = (router) => {
                 password: hash,
             });
 
-            //Save new user to DB
+            //Save new user to database
             newUser.save((err) => {
                 if (err) {
                     console.log(err);
+                    console.log('New user registration unsuccessful.  Sending error message to client.');
+                    res.json({
+                        success: false,
+                        msg: 'An error occured while registering.  Please try again.'
+                    });
+                } else {
+                    console.log('New user registration successful.  ' + newUser.username + ' is now registered.  Sending success message to client.');
+                    res.json({
+                        success: true,
+                        msg: 'Registration successful.'
+                    });
                 }
-                console.log('New user registered');
-                res.json({
-                    success: true,
-                    msg: 'Registration successful'
-                });
             });
         });
     });
 
-    router.post('/delete', (req, res) => {
+    router.post('/delete_account', (req, res) => {
 
         let token = req.body.token;
         let password = req.body.password;
 
-        console.log(password);
-
+        //Verify token
         jwt.verify(token, 'secret', (err, payload) => {
             if (err) {
                 console.log(err);
             }
 
-            User.findOne({ _id: payload.user._id }, (err, user) => {
-                if (err) {
-                    console.log(err);
-                }
+            //Retrieve user data
+            User.findOne({ _id: payload.user._id }).exec()
 
-                console.log('USER FOUND');
+                //Verify password
+                .then(function (user) {
+                    console.log('Found document for ' + payload.user.username + '.  Verifying password.');
+                    return bcrypt.compare(password, user.password);
+                })
 
-                bcrypt.compare(password, user.password, (err, isValid) => {
-                    //res is a bool
-                    if (err) {
-                        console.log(err);
-                    }
-
+                //Delete data for this user from the 'user' collection in the database
+                .then(function (isValid) {
                     if (!isValid) {
-                        //Password does not match hash, return error msg to client
+                        //Invalid password.
+                        console.log('Invalid password.  Sending error message to client.');
                         res.json({
                             success: false,
                             msg: 'Invalid password.'
                         });
+                        throw 'End promise chain';
                     } else if (isValid) {
-                        //Password matches hash, delete account and send msg back to client
-                        //Remove all games owned by this user from games collection
-
-                        console.log(payload.user.username);
-                        Game.find({owner: payload.user.username}, (err, games)=>{
-                            if(err){
-                                console.log(err);
-                            }
-
-                            games.forEach(function(game){
-                                game.remove();
-                            });
-
-                            user.remove();
-                            res.json({
-                                success: true,
-                                msg: 'Account has been deleted.',
-                            });
-                        });
+                        //Password accepted.  Delete account
+                        console.log('Password accepted.  Deleting user account for ' + payload.user.username + '.');
+                        return User.findOneAndRemove({ _id: payload.user._id })
                     }
-                });
-            });
+                })
+
+                //Delete all games owned by this user from the 'game' collection in the database
+                .then(function () {
+                    Game.find({ owner: payload.user.username }, (err, games) => {
+                        games.forEach(function (game) {
+                            return game.remove();
+                        });
+
+                        res.json({
+                            success: true,
+                            msg: 'Account has been deleted.',
+                        });
+                    })
+                })
+                .catch(error => { console.log('Error:', error.message); });
         });
     });
 
-    //I used numbers to indicate the layers of callback-hell
+    //Change email address
     router.post('/email', (req, res) => {
 
         let token = req.body.token;
         let newEmail = req.body.formData.newEmail;
 
-        //1.  Verify web token
+        //Verify token
         jwt.verify(token, 'secret', (err, payload) => {
             if (err) {
                 console.log(err);
             }
-            //2.  Find user's record according to username from JWT payload
-            User.findOne({ username: payload.user.username }, (err, user) => {
-                if (err) {
-                    console.log(err);
-                }
 
-                //3.  Save new data to user's record in database
-                user.email = newEmail;
-                user.save((err) => {
-                    if (err) {
-                        console.log(err);
-                    } else if (!err) {
-                        console.log("User's new email address has been saved.");
+            if (payload) {
+                //Find record for user specified in token
+                User.findOne({ username: payload.user.username }).exec()
+                    //Save new data to user's record in database
+                    .then(function (user) {
+                        console.log('Saving new email address for ' + payload.user.username + '.');
+                        user.email = newEmail;
+                        user.save();
+                        console.log('Email address for ' + payload.user.username + ' has been updated.');
 
-                        //User's new location has been successfuly saved.
-                        //4.  Send new JWT back to client
-                        jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
-                            if (err) {
-                                console.log(err);
-                            }
-                            res.json({
-                                success: true,
-                                msg: 'New Email Address Saved',
-                                token: token
-                            });
+                        return jwt.sign({ user: user }, 'secret', { expiresIn: '1h' });
+                    })
+
+                    //Send new token with updated data back to client
+                    .then(function (token) {
+                        console.log('Sending new token back to client.');
+                        return res.json({
+                            success: true,
+                            msg: 'New Email Address Saved',
+                            token: token
                         });
-                    }
-                });
-            });
+                    })
+                    .catch(error => { console.log('Error:', error.message); });
+            }
         });
     });
 
@@ -218,45 +196,37 @@ module.exports = (router) => {
         let newState = req.body.formData.newState;
         let newCountry = req.body.formData.newCountry;
 
-        //1.  Verify web token
+        //Verify token
         jwt.verify(token, 'secret', (err, payload) => {
             if (err) {
                 console.log(err);
             }
-            //2.  Find user's record according to username from JWT payload
-            User.findOne({ username: payload.user.username }, (err, user) => {
-                if (err) {
-                    console.log(err);
-                }
+            //Find record for user specified in token
+            User.findOne({ username: payload.user.username }).exec()
 
-                //3.  Save new data to user's record in database
-                console.log('user found', user);
-                user.city = newCity;
-                user.state = newState;
-                user.country = newCountry;
-                user.save((err) => {
-                    if (err) {
-                        console.log(err);
-                    } else if (!err) {
-                        console.log("User's new location has been saved.");
+                .then(function (user) {
+                    //Save new data to user's record in database
+                    user.city = newCity;
+                    user.state = newState;
+                    user.country = newCountry;
+                    user.save();
+                    console.log('Location for ' + payload.user.username + ' has been updated.');
 
-                        //User's new location has been successfuly saved.
-                        //4.  Send new JWT back to client
-                        jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
-                            if (err) {
-                                console.log(err);
-                            }
-                            res.json({
-                                success: true,
-                                msg: 'New Location Saved',
-                                token: token
-                            });
-                        });
-                    }
-                });
-            });
+                    return jwt.sign({ user: user }, 'secret', { expiresIn: '1h' });
+                })
+
+                //Send new token with updated data back to client
+                .then(function (token) {
+                    return res.json({
+                        success: true,
+                        msg: 'New Location Saved',
+                        token: token
+                    });
+                })
+                .catch(error => { console.log('Error:', error.message); });
         });
     });
+
 
     //Client requests to change user's password
     router.post('/password', (req, res) => {
@@ -264,59 +234,57 @@ module.exports = (router) => {
         let token = req.body.token;
         let oldPassword = req.body.formData.oldPassword;
         let newPassword = req.body.formData.newPassword;
+        let currentUser;
 
-        //1.  Verify web token
+        //Verify token
         jwt.verify(token, 'secret', (err, payload) => {
             if (err) {
                 console.log(err);
             }
-            //2.  Find user's record according to username from JWT payload
-            User.findOne({ username: payload.user.username }, (err, user) => {
-                if (err) {
-                    console.log(err);
-                }
+            //Find record for user specified in token
+            User.findOne({ username: payload.user.username }).exec()
+                //Check old password
+                .then(function (user) {
+                    console.log('Validating password.');
+                    currentUser = user;
+                    return bcrypt.compare(oldPassword, user.password);
+                })
 
-                // 3.  Check oldPassword from formData against hash stored in DB before updating password
-                bcrypt.compare(oldPassword, user.password, (err, isValid) => {
-                    if (err) {
-                        console.log(err);
-                    }
+                //Hash new password
+                .then(function (isValid) {
                     if (!isValid) {
+                        console.log('Invalid password.  Sending error message back to client.');
                         res.json({
                             success: false,
                             msg: 'Invalid password, please re-enter old password'
                         });
+                        throw 'End promise chain';
                     } else if (isValid) {
-                        //4.  Hash new password
-                        bcrypt.hash(newPassword, saltRounds, function (err, hash) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            user.password = hash;
-                            user.save((err) => {
-                                if (err) {
-                                    console.log(err);
-                                } else if (!err) {
-                                    console.log("User's new password has been saved.");
-
-                                    //User's new location has been successfuly saved.
-                                    //5.  Send new JWT back to client
-                                    jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
-                                        if (err) {
-                                            console.log(err);
-                                        }
-                                        res.json({
-                                            success: true,
-                                            msg: 'New Password Saved',
-                                            token: token
-                                        });
-                                    });
-                                }
-                            });
-                        });
+                        console.log('Password accepted.  Saving new password for ' + payload.user.username + '.');
+                        return bcrypt.hash(newPassword, saltRounds);
                     }
-                });
-            });
+                })
+
+                //Save new password
+                .then(function (hash) {
+                    currentUser.password = hash;
+                    currentUser.save();
+                    console.log('Password for ' + payload.user.username + ' has been updated.');
+
+                    return jwt.sign({ user: currentUser }, 'secret', { expiresIn: '1h' });
+                })
+
+                //Send updated token to client
+                .then(function (token) {
+                    console.log('Sending new token to client.');
+                    res.json({
+                        success: true,
+                        msg: 'New Password Saved',
+                        token: token
+                    });
+                    return
+                })
+                .catch(error => { console.log('Error:', error.message); });
         });
     });
 
@@ -324,15 +292,15 @@ module.exports = (router) => {
     router.post('/add_game', (req, res) => {
         var token = req.body.token;
         var game = req.body.game;
+        var newGameWithId;
 
-        //1.  Verify web token
+        //Verify token
         jwt.verify(token, 'secret', (err, payload) => {
 
             if (err) {
                 console.log(err);
             }
 
-            //2.  Save a record of this game to the game collection
             let newGame = new Game({
                 title: game.title,
                 cover: game.cover,
@@ -341,108 +309,96 @@ module.exports = (router) => {
                 available: true
             });
 
-            newGame.save((err) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log('A record for ' + game.title + ' has been added to the game collection.');
-                }
-
-
-                Game.findOne({
-                    title: game.title,
-                    cover: game.cover,
-                    platform: game.platform,
-                    owner: payload.user.username
-                }, (err, game) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                    console.log('find', game);
-                    //2.  Find user's record according to username from JWT payload
-                    User.findOne({ username: payload.user.username }, (err, user) => {
-                        if (err) {
-                            console.log(err);
-                        }
-
-                        user.games.push(game);
-                        user.save((err) => {
-                            if (err) {
-                                console.log(err);
-                            } else if (!err) {
-                                console.log("User's new game has been saved.");
-
-                                //5.  Send new JWT back to client so that UI will display new data.
-                                jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-                                    res.json({
-                                        success: true,
-                                        msg: 'New Game Added',
-                                        token: token
-                                    });
-                                });
-                            }
-                        });
+            //Save a record of this game to the 'games' collection
+            newGame.save()
+                .then(function (newGame) {
+                    console.log('A game has been added to the games collection: ' + newGame.title + ' owned by ' + newGame.owner);
+                    return Game.findOne({
+                        title: game.title,
+                        cover: game.cover,
+                        platform: game.platform,
+                        owner: payload.user.username
                     });
-                });
-            });
+                })
+
+                //Find game in database.  It should now have an id.
+                .then(function (game) {
+                    newGameWithId = game;
+
+                    return User.findOne({ username: payload.user.username });
+                })
+
+                //Save a copy of new game with id to user's 'games' array
+                .then(function (user) {
+                    user.games.push(newGameWithId);
+                    return user.save();
+                })
+
+                .then(function (user) {
+                    console.log("A new game has been added to " + user.username + "'s 'games' array: " + newGameWithId.title);
+                    return jwt.sign({ user: user }, 'secret', { expiresIn: '1h' });
+                })
+
+                //Send success message and updated token back to client
+                .then(function (token) {
+                    res.json({
+                        success: true,
+                        msg: 'New Game Added',
+                        token: token
+                    });
+                })
+                .catch(error => { console.log('Error:', error.message); });
         });
     });
 
-    //Client requests to delete game from user's record
-    router.post('/delete_game', (req, res) => {
-        var token = req.body.token;
-        var game = req.body.game;
 
-        //1.  Verify web token
+    router.post('/delete_game', (req, res) => {
+        let token = req.body.token;
+        let game = req.body.game;
+        let currentUser;
+
+
+        //Verify token
         jwt.verify(token, 'secret', (err, payload) => {
             if (err) {
                 console.log(err);
             }
 
-            //2.  Find this game in game collection and delete it.
-            Game.findOneAndRemove({ _id: game._id }, (err) => {
-                if (err) {
-                    console.log(err);
-                }
-                console.log(game.title + ' has been removed from game collection.');
-            });
+            if (payload) {
+                //Delete this game from 'games' collection in database
+                currentUser = payload.user.username;
+                console.log(game);
 
-            //2.  Find user's record according to username from JWT payload
-            User.findOne({ username: payload.user.username }, (err, user) => {
-                if (err) {
-                    console.log(err);
-                }
 
-                for (let i = 0; i < user.games.length; i++) {
-                    if (user.games[i]._id.toString() === game._id) {
-                        user.games.splice(i, 1);
-                    }
-                }
+                Game.findOneAndRemove({ _id: game._id }).exec()
+                    .then(function () {
+                        console.log('Deleting game from "games" collection in database: ', game._id);
+                        return User.findOne({ username: currentUser });
+                    })
 
-                user.save((err) => {
-                    if (err) {
-                        console.log(err);
-                    } else if (!err) {
-                        console.log(game.title + " has been deleted.");
-
-                        //User's game has been successfuly deleted.
-                        //5.  Send new JWT back to client
-                        jwt.sign({ user: user }, 'secret', { expiresIn: '1h' }, (err, token) => {
-                            if (err) {
-                                console.log(err);
+                    //Delete this game from this user's document
+                    .then(function (user) {
+                        console.log(user.games[0]);
+                        for (let i = 0; i < user.games.length; i++) {
+                            if (user.games[i]._id.toString() === game._id) {
+                                user.games.splice(i, 1);
                             }
-                            res.json({
-                                success: true,
-                                msg: 'Game deleted',
-                                token: token
-                            });
+                        }
+                        user.save();
+                        return jwt.sign({ user: user }, 'secret', { expiresIn: '1h' });
+                    })
+
+                    //Send updated token back to client
+                    .then(function (token) {
+                        console.log('Sending new token back to client.');
+                        res.json({
+                            success: true,
+                            msg: 'Game deleted',
+                            token: token
                         });
-                    }
-                });
-            });
+                    })
+                    .catch(error => { console.log('Error:', error.message); });
+            }
         });
     });
 
@@ -450,36 +406,34 @@ module.exports = (router) => {
     router.get('/profile/*', (req, res) => {
         let username = req.params['0'];
 
-        User.findOne({ username: username }, (err, user) => {
-            if (err) {
-                console.log(err);
-            }
-            res.json(user);
-        });
+        User.findOne({ username: username }).exec()
+            .then(function (user) {
+                res.json(user);
+            })
+            .catch(error => { console.log('Error:', error.message); });
     });
 
-    //Client requests to get trade data for username in parameter
+    //Client requests to get trade data for a specified user
     router.get('/get_trade_data', (req, res) => {
         let username = req.query.username;
 
-        User.findOne({ username: username }, (err, user) => {
-            if (err) {
-                console.log(err);
-            }
-            let tradeData = {
-                username: username,
-                incoming: user.incoming,
-                outgoing: user.outgoing,
-                active: user.active,
-                history: user.history
-            }
-            res.json(tradeData);
-        });
+        User.findOne({ username: username }).exec()
+            .then(function (user) {
+                let tradeData = {
+                    username: username,
+                    incoming: user.incoming,
+                    outgoing: user.outgoing,
+                    active: user.active,
+                    history: user.history
+                }
+                res.json(tradeData);
+            })
+            .catch(error => { console.log('Error:', error.message); });
     });
 
     //Client requests to trade with another user
     router.post('/trade_request', (req, res) => {
-        console.log(req.body);
+
         let initiator = req.body.initiator;
         let game = req.body.game;
 
@@ -490,114 +444,111 @@ module.exports = (router) => {
             date: new Date()
         }
 
-        console.log(newTrade);
+        console.log(initiator + ' initiated a trade request with ' + game.owner + ' for ' + game.title + ' on ' + game.platform);
 
-        //Create an outoing trade request for initiator
-        User.findOne({ username: initiator }, (err, user) => {
-            if (err) {
-                console.log(err);
-            }
-            user.outgoing.push(newTrade);
-
-            //Add record to history array
-            user.history.push({
-                date: new Date(),
-                msg: 'You sent a trade request to ' + game.owner + '.'
-            });
-
-            user.save((err) => {
-                if (err) {
-                    console.log(err);
-                }
-            });
-            //Create an incoming trade requests for owner
-            User.findOne({ username: game.owner }, (err, user) => {
-                if (err) {
-                    console.log(err);
-                }
-                user.incoming.push(newTrade);
-                //Add record to history array
+        User.findOne({ username: initiator }).exec()
+            //Save trade data to trade initiator's outgoing trade requests
+            .then(function (user) {
+                user.outgoing.push(newTrade);
+                //Add entry to trade history log
                 user.history.push({
                     date: new Date(),
-                    msg: initiator + ' requested to trade with you.'
+                    msg: 'You sent a trade request to ' + game.owner + ' for ' + game.title + '.'
                 });
-                user.save((err) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                    res.json({
-                        success: true,
-                        msg: 'Trade request sent'
-                    });
+
+                user.save();
+                return User.findOne({ username: game.owner });
+            })
+
+            //Save trade data to game owner's incoming trade requests
+            .then(function (user) {
+                user.incoming.push(newTrade);
+                //Add entry to trade history log
+                user.history.push({
+                    date: new Date(),
+                    msg: initiator + ' requested to trade with you for your game, ' + newTrade.game.title
                 });
-            });
-        });
+
+                user.save();
+                return;
+            })
+
+            //Send success message back to client
+            .then(function () {
+                console.log('Saved new trade request to "outgoing trade requests" for ' + initiator);
+                console.log('Saved new trade request to "incoming trade requests" for ' + game.owner);
+                res.json({
+                    success: true,
+                    msg: 'Trade request sent'
+                });
+            })
+            .catch(error => { console.log('Error:', error.message); });
     });
+
 
     //Client requests to deny an incoming trade request
     router.post('/deny_trade_request', (req, res) => {
 
-        //Delete this trade request from initiator's outgoing trade requests
-        //Delete this trade request from game owner's incoming trade requests
-        console.log(req.body);
         let initiator = req.body.initiator;
         let game = req.body.game;
 
-        User.findOne({ username: game.owner }, (err, user) => {
-            if (err) {
-                console.log(err);
-            }
+        console.log(game.owner + ' denied a trade request from ' + initiator + ' for ' + game.title + ' on ' + game.platform);
 
-            //Remove from game owner's incoming trade requests
-            for (var i = 0; i < user.incoming.length; i++) {
-                if (user.incoming[i].game._id === game._id) {
-                    user.incoming.splice(i, 1);
-                }
-            }
-
-            //Add record to history array
-            user.history.push({
-                date: new Date(),
-                msg: 'Denied trade request with ' + initiator + '.'
-            });
-
-            user.save((err) => {
-                if (err) {
-                    console.log(err);
-                }
-
-                //Find initiator's record. Remove outgoing trade request
-                User.findOne({ username: initiator }, (err, user) => {
-
-                    for (var i = 0; i < user.outgoing.length; i++) {
-                        if (user.outgoing[i].game._id === game._id) {
-                            user.outgoing.splice(i, 1);
-                        }
+        User.findOne({ username: game.owner }).exec()
+            //Delete trade data from game owner's incoming trade requests
+            .then(function (user) {
+                for (var i = 0; i < user.incoming.length; i++) {
+                    if (user.incoming[i].game._id === game._id) {
+                        user.incoming.splice(i, 1);
                     }
+                }
 
-                    //Add record to history array
-                    user.history.push({
-                        date: new Date(),
-                        msg: game.owner + ' denied your trade request.'
-                    });
-
-                    user.save((err) => {
-                        if (err) {
-                            console.log(err);
-                        }
-                        res.json({
-                            success: true,
-                            msg: 'Denied trade request with ' + initiator + '.'
-                        });
-                    });
+                //Add entry to trade history log
+                user.history.push({
+                    date: new Date(),
+                    msg: 'You denied a trade request from ' + initiator + ' for your ' + game.title + '.'
                 });
-            });
-        });
+                return user.save();
+            })
+
+            .then(function (user) {
+                console.log('Removed new trade request from "incoming trade requests" for ' + game.owner);
+                return User.findOne({ username: initiator });
+            })
+
+            //Delete trade data from initiator's outgoing trade requests
+            .then(function (initiator) {
+                for (var i = 0; i < initiator.outgoing.length; i++) {
+                    if (initiator.outgoing[i].game._id === game._id) {
+                        initiator.outgoing.splice(i, 1);
+                    }
+                }
+                //Add record to history array
+                initiator.history.push({
+                    date: new Date(),
+                    msg: game.owner + ' denied your trade request for ' + game.title + '.'
+                });
+                return initiator.save();
+            })
+
+            .then(function (user) {
+                console.log('Removed new trade request from "outgoing trade requests" for ' + initiator);
+                return;
+            })
+
+            //Send success message back to client
+            .then(function () {
+                return res.json({
+                    success: true,
+                    msg: 'Denied trade request with ' + initiator + '.'
+                });
+            })
+            .catch(error => { console.log('Error:', error.message); });
     });
 
+
     router.post('/accept_trade_request', (req, res) => {
-        console.log(req.body);
-        let initiator = req.body.initiator;
+
         let game = req.body.game;
         let game2 = req.body.game2;
 
@@ -608,135 +559,147 @@ module.exports = (router) => {
             game2: game2
         }
 
-        //Set game.available = false so that it no longer shows up on home page
-        Game.findOne({ _id: game._id }, (err, data) => {
-            if (err) {
-                console.log(err);
-            }
-            data.available = false;
-            data.save((err) => {
-                if (err) {
-                    console.log(err);
+        Game.findOne({ _id: game._id }).exec()
+            //Set available = false for game in 'games' collection 
+            .then(function (data) {
+                data.available = false;
+                return data.save();
+            })
+
+            .then(function (data) {
+                console.log('Availability has been set to false for ' + data.owner + ' ' + data.title);
+                return Game.findOne({ _id: game2._id });
+            })
+
+            //Set available = false for game2 in 'games' collection 
+            .then(function (data) {
+                data.available = false;
+                return data.save();
+            })
+
+            .then(function (data) {
+                console.log('Availability has been set to false for ' + data.owner + ' ' + data.title);
+                return User.findOne({ username: game.owner });
+            })
+
+            //Save trade to 'incoming trades' for game owner
+            .then(function (gameOwner) {
+                let query = JSON.stringify(game._id);``
+
+                for (let i = 0; i < gameOwner.incoming.length; i++) {
+                    let id = JSON.stringify(gameOwner.incoming[i].game._id);
+
+                    if (id === query) {
+                        gameOwner.incoming.splice(i, 1);
+                        gameOwner.active.push(trade);
+                        gameOwner.history.push({
+                            date: new Date(),
+                            msg: 'You accepted a trade request from ' + game2.owner + '.  You are trading your ' + game.title + ' for ' + game2.owner + "'s " + game2.title
+                        });
+                        return gameOwner.save();
+                    }
                 }
-                console.log('Availability for ' + data.title + ' has been set to false');
-            });
-        });
+            })
 
-        //Set game2.available = false so that it no longer shows up on home page
-        Game.findOne({ _id: game2._id }, (err, data) => {
-            if (err) {
-                console.log(err);
-            }
-            data.available = false;
-            data.save((err) => {
-                if (err) {
-                    console.log(err);
+            .then(function (gameOwner) {
+                console.log('A new trade has been saved to ' + gameOwner.username + "'s active trades.");
+                return User.findOne({ username: game2.owner });
+            })
+
+            //Save trade data to 'incoming trades' for game2 owner
+            .then(function (game2Owner) {
+                let query = JSON.stringify(game._id);
+
+                for (let i = 0; i < game2Owner.outgoing.length; i++) {
+                    let id = JSON.stringify(game2Owner.outgoing[i].game._id);
+
+                    if (id === query) {
+                        game2Owner.outgoing.splice(i, 1);
+                        game2Owner.active.push(trade);
+                        game2Owner.history.push({
+                            date: new Date(),
+                            msg: game.owner + ' accepted your trade request.  You are trading your ' + game2.title + ' for ' + game.owner + "'s " + game.title
+                        });
+                        return game2Owner.save();
+                    }
                 }
-                console.log('Availability for ' + data.title + ' has been set to false');
-            });
-        });
+            })
 
-        //Remove trade request from game.owner's incoming trades
-        User.findOne({ username: game.owner }, (err, data) => {
-            if (err) {
-                console.log(err);
-            }
-            let query = JSON.stringify(game._id);
+            .then(function (game2Owner) {
+                console.log('A new trade has been saved to ' + game2Owner.username + "'s active trades.");
+                return
+            })
 
-            for (let i = 0; i < data.incoming.length; i++) {
-                let id = JSON.stringify(data.incoming[i].game._id);
-
-                if (id === query) {
-                    console.log('INCOMING GAME FOUND');
-                    data.incoming.splice(i, 1);
-
-                    data.active.push(trade);
-                    data.save((err) => {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log('reached');
-                            User.findOne({ username: game2.owner }, (err, data2) => {
-                                if (err) {
-                                    console.log(err);
-                                }
-                                let query = JSON.stringify(game._id);
-
-                                for (let i = 0; i < data2.outgoing.length; i++) {
-                                    let id = JSON.stringify(data2.outgoing[i].game._id);
-
-                                    if (id === query) {
-                                        console.log('INCOMING GAME FOUND');
-                                        data2.outgoing.splice(i, 1);
-
-                                        data2.active.push(trade);
-                                        data2.save((err) => {
-                                            if (err) {
-                                                console.log(err);
-                                            }
-                                            else {
-                                                res.json({
-                                                    success: true,
-                                                    msg: 'Saved to active trades'
-                                                });
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-        });
+            //Send success message back to client
+            .then(function () {
+                res.json({
+                    success: true,
+                    msg: 'Saved to active trades'
+                });
+            })
+            .catch(error => { console.log('Error:', error.message); });
     });
+
+
 
     //Client requests to cancel an outgoing trade request
     router.post('/cancel_trade_request', (req, res) => {
 
-        //Delete outgoing trade request for initiator
-        //Delete incoming trade request for game owner
         let initiator = req.body.initiator;
         let game = req.body.game;
 
-
-        // //Find initiator's record and remove this trade request from username's outgoing array
-        User.findOne({ username: initiator }, (err, user) => {
-            for (var i = 0; i < user.outgoing.length; i++) {
-                if (user.outgoing[i].game._id === game._id) {
-                    user.outgoing.splice(i, 1);
-                }
-            }
-
-            user.save((err) => {
-                if (err) {
-                    console.log(err);
-                }
-
-                //Find gameOwner's record and remove this trade request from gameOwner's incoming array
-                User.findOne({ username: game.owner }, (err, user) => {
-
-                    for (var i = 0; i < user.incoming.length; i++) {
-                        if (user.incoming[i].game._id === game._id) {
-                            user.incoming.splice(i, 1);
-                        }
-                    }
-
-                    user.save((err) => {
-                        if (err) {
-                            console.log(err);
-                        }
-                        res.json({
-                            successs: true,
-                            msg: 'Trade request canceled'
+        User.findOne({ username: initiator }).exec()
+            //Delete trade from initiator's outgoing trade requests
+            .then(function (user) {
+                for (var i = 0; i < user.outgoing.length; i++) {
+                    if (user.outgoing[i].game._id === game._id) {
+                        user.outgoing.splice(i, 1);
+                        user.history.push({
+                            date: new Date(),
+                            msg: 'You canceled your trade request with ' + game.owner + ' for ' + game.title + '.'
                         });
-                    });
+                    }
+                }
+                return user.save();
+            })
+
+            .then(function (user) {
+                console.log('A trade has been deleted from ' + initiator + "'s outgoing trade requests.");
+                return User.findOne({ username: game.owner });
+            })
+
+            //Delete trade from game.owner's incoming trade requests
+            .then(function (user) {
+                for (var i = 0; i < user.incoming.length; i++) {
+                    if (user.incoming[i].game._id === game._id) {
+                        user.incoming.splice(i, 1);
+                        user.history.push({
+                            date: new Date(),
+                            msg: initiator + ' canceled a trade request with you for ' + game.title + '.'
+                        });
+                    }
+                }
+                return user.save();
+            })
+
+            .then(function (user) {
+                console.log('A trade has been deleted from ' + game.owner + "'s incoming trade requests.");
+                return;
+            })
+
+            //Send success message back to client
+            .then(function (user) {
+                return res.json({
+                    successs: true,
+                    msg: 'Trade request canceled'
                 });
-            });
-        });
+            })
+            .catch(error => { console.log('Error:', error.message); });
     });
 
+
     router.post('/mark_returned', (req, res) => {
+
         let key = req.body.key;
         let trade = req.body.trade;
 
@@ -750,37 +713,50 @@ module.exports = (router) => {
         let game2_id = trade[otherKey]._id;
 
         if (trade[otherKey + 'Returned']) {
-            //Delete this trade from both users' active arrays.            
+            //Trade is complete.  Delete this trade from both users' active trades
             User.findOne({ username: trade[key].owner }).exec()
-
-                //Find this trade in this user's 'active' array.  
+                //Delete this trade from [key].owner's active trades 
                 .then(function (user) {
                     for (let i = 0; i < user.active.length; i++) {
                         if (JSON.stringify(user.active[i]) === JSON.stringify(trade)) {
-
                             user.active.splice(i, 1);
+                            user.history.push({
+                                date: new Date(),
+                                msg: trade[otherKey].owner + ' returned your game, ' + trade[key].title + '.'
+                            });
                         }
                     }
-                    user.save();
-                    return User.findOne({ username: trade[otherKey].owner }).exec();
+                    return user.save();
                 })
 
+                .then(function (user) {
+                    console.log('A trade has been deleted from ' + trade[key].owner + "'s active trades.");
+                    return User.findOne({ username: trade[otherKey].owner });
+                })
+
+                //Delete this trade from [otherKey].owner's active trades
                 .then(function (user2) {
                     for (let i = 0; i < user2.active.length; i++) {
                         if (JSON.stringify(user2.active[i]) === JSON.stringify(trade)) {
-
                             user2.active.splice(i, 1);
+                            user2.history.push({
+                                date: new Date(),
+                                msg: 'You returned ' + trade[key].owner + "'s game, " + trade[key].title + '.'
+                            });
                         }
                     }
-                    user2.save();
-                    return Game.findOne({ '_id': trade[key]['_id'] }).exec();
+                    return user2.save();
                 })
 
-                .then(function (game) {
+                .then(function (user2) {
+                    console.log('A trade has been deleted from ' + trade[otherKey].owner + "'s active trades.");
+                    return Game.findOne({ '_id': trade[key]['_id'] });
+                })
 
+                //Set this game's availability to true in the 'games' collection
+                .then(function (game) {
                     game.available = true;
-                    game.save();
-                    return;
+                    return game.save();
                 })
 
                 .then(function () {
@@ -789,57 +765,67 @@ module.exports = (router) => {
                         msg: 'Both games have been returned.'
                     });
                 })
-
                 .catch(error => { console.log('Error:', error.message); });
 
         } else if (!trade[otherKey + 'Returned']) {
-            //Set this game to show as 'returned' for both users' active arrays.
-
+            //Trade is not yet complete.  Indicate that this game has been returned in both users' active trades
             User.findOne({ username: trade[key].owner }).exec()
-
-                //Find this trade in this user's 'active' array.  
+                //Set [key + 'Returned] = true in [key].owner's active trades
                 .then(function (user) {
                     for (let i = 0; i < user.active.length; i++) {
-
                         if (JSON.stringify(user.active[i][key]) === JSON.stringify(trade[key])) {
                             trade[key.toString() + 'Returned'] = true;
                             user.active.splice(i, 1, trade);
+                            user.history.push({
+                                date: new Date(),
+                                msg: trade[otherKey].owner + ' returned your game, ' + trade[key].title + '.'
+                            });
                         }
                     }
-                    user.save();
+                    return user.save();
+                })
+
+                .then(function (user) {
                     return User.findOne({ username: trade[otherKey].owner }).exec();
                 })
 
+                //Set [key + 'Returned] = true in [otherKey].owner's active trades
                 .then(function (user2) {
                     for (let i = 0; i < user2.active.length; i++) {
                         if (JSON.stringify(user2.active[i][key]) === JSON.stringify(trade[key])) {
                             trade[key.toString() + 'Returned'] = true;
                             user2.active.splice(i, 1, trade);
+                            user2.history.push({
+                                date: new Date(),
+                                msg: 'You returned ' + trade[key].owner + "'s game, " + trade[key].title + '.'
+                            });
                         }
                     }
-                    user2.save();
+                    return user2.save();
+                })
+
+                .then(function (user2) {
                     return Game.findOne({ _id: trade[key]['_id'] });
                 })
 
+                //Set this game's availability to true in the 'games' collection
                 .then(function (game) {
-
                     game.available = true;
-                    game.save();
-                    return;
+                    return game.save();
                 })
 
+                //Send Success message back to client
                 .then(function () {
                     res.json({
                         success: true,
                         msg: 'Game saved as returned.'
                     });
                 })
-
                 .catch(error => { console.log('Error:', error.message); });
         }
-
     });
 
+    //TODO: check if i need this endpoint
     router.get('/get_cover_url', (req, res) => {
         let gameOwner = req.query.gameOwner;
         let gameName = req.query.gameName;
@@ -847,104 +833,55 @@ module.exports = (router) => {
         Game.findOne({
             title: gameName,
             owner: gameOwner
-        }, (err, game) => {
-            if (err) {
-                console.log(err);
-            }
-            res.json(game);
-        })
+        }).exec()
+
+            .then(function (game) {
+                res.json(game);
+            })
+
+            .catch(error => { console.log('Error:', error.message); });
     });
 
     router.post('/select_game_for_trade', (req, res) => {
-        console.log(req.body.tradeRequest);
         let token = req.body.token;
+        let game = req.body.game;
+        let tradeRequest = req.body.tradeRequest;
 
+        //Verify token
         jwt.verify(token, 'secret', (err, payload) => {
             if (err) {
                 console.log(err);
             }
 
-            console.log(payload);
             let username = payload.user.username;
 
-            User.findOne({ username: username }, (err, user) => {
-                if (err) {
-                    console.log(err);
-                }
-                console.log(user.incoming);
+            //Save this game as 'game2' for this trade request
+            User.findOne({ username: username }).exec()
+                .then(function (user) {
+                    for (let i = 0; i < user.incoming.length; i++) {
+                        let tradeRequestOnFile = JSON.stringify(user.incoming[i]);
+                        let tradeRequestFromClient = JSON.stringify(tradeRequest);
 
-                for (let i = 0; i < user.incoming.length; i++) {
-                    let tradeRequestOnFile = JSON.stringify(user.incoming[i]);
-                    let tradeRequestFromClient = JSON.stringify(req.body.tradeRequest);
+                        if (tradeRequestOnFile === tradeRequestFromClient) {
+                            let tradeRequest = user.incoming[i];
+                            tradeRequest.game2 = game;
+                            user.incoming.splice(i, 1, tradeRequest);
 
-                    if (tradeRequestOnFile === tradeRequestFromClient) {
-                        console.log('Trade request located');
-
-                        let tradeRequest = user.incoming[i];
-                        tradeRequest.game2 = req.body.game;
-                        //This is a work-around because I wans't able to directly modify the 
-                        //nested object
-                        user.incoming.splice(i, 1, tradeRequest);
-
-                        user.save((err) => {
-                            if (err) {
-                                console.log(err);
-                            }
-                            res.json({
-                                success: true,
-                                msg: 'Selection has been saved'
-                            });
-                        });
-
+                            return user.save();
+                        }
                     }
-                }
+                })
 
-            });
-
-
+                //Send success message back to client
+                .then(function () {
+                    res.json({
+                        success: true,
+                        msg: 'Selection has been saved'
+                    });
+                })
+                .catch(error => { console.log('Error:', error.message); });
         });
     });
 
     return router;
 }
-
-//----------------Promises example---------------------------
-
-// function enrollStudent(req, res, next) {
-//     var student;
-
-//     //Load the user
-//     Student.findById(req.body.studentId).exec()
-
-//     //Capture student and load the course 
-//     .then(function(studentFromDb){
-//       student = studentFromDb
-//       return Course.findById(req.body.courseId).exec();
-//     })
-
-//     //Check if there are available seats in the course
-//     .then(function(course){
-//       if(course.isSeatAvailable()){
-//         //Enroll student into the course
-//         course.enrolledStudents.push(student.id);
-//         return course;
-//       } else {
-//         //throw an error
-//         throw new Error('No seats available');
-//       }
-//     })
-
-//     //Save the course
-//     .then(function(course){
-//       return course.save();
-//     })
-
-//     //Send the response back
-//     .then(function(course){
-//       return res.json({message : 'Enrollment successful'})
-//     });
-
-//     //Catch all errors and call the error handler;
-//     .then(null, next);
-
-//   }

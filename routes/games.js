@@ -11,10 +11,28 @@ module.exports = (router) => {
           if(err){
               console.log(err);
           }
-          console.log(data);
           res.send(data);
       });
   });
+
+  router.post('/delete_all', (req, res) => {
+    //Find and delete all games in the 'Game' collection
+    Game.find({}).exec()
+        .then(function (data) {
+            data.forEach(function (game) {
+                game.remove();
+            });
+            return;
+        })
+
+        .then(function () {
+            return res.json({
+                success: true,
+                msg: 'All games have been deleted from the database.'
+            });
+        })
+        .catch(error => { console.log('Error:', error.message); });
+});
 
   
     return router;

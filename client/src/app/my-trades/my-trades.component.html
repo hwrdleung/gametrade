@@ -18,7 +18,10 @@
 <div class="container">
   <ul id="tab-menu">
     <li>
-      <a (click)="this.tradeService.getTradeData(); displayContent('Trade Requests')">Trade Requests</a>
+      <a (click)="this.tradeService.getTradeData(); displayContent('Incoming Trade Requests')">Incoming Trade Requests ({{this.tradeService.incoming.length}})</a>
+    </li>
+    <li>
+      <a (click)="this.tradeService.getTradeData(); displayContent('Outgoing Trade Requests')">Outgoing Trade Requests ({{this.tradeService.outgoing.length}})</a>
     </li>
     <li>
       <a (click)="this.tradeService.getTradeData(); displayContent('Active Trades')">Active Trades</a>
@@ -28,9 +31,8 @@
     </li>
   </ul>
 
-  <div *ngIf="displayTradeRequests" class="tab-content">
+  <div *ngIf="displayIncomingTradeRequests" class="tab-content">
 
-    <h2>Incoming trade requests: {{this.tradeService.incoming.length}}</h2>
     <div class="incoming-trades">
       <div class="trade-card" *ngFor="let tradeRequest of this.tradeService.incoming">
         <h4 class="game-card-date">{{tradeRequest.date | date:'fullDate'}}</h4>
@@ -69,11 +71,16 @@
           <button (click)="this.tradeService.denyTradeRequest(tradeRequest)">Deny</button>
         </div>
       </div>
+      
 
     </div>
-    <hr>
-    <h2>Outgoing trade requests: {{this.tradeService.outgoing.length}}</h2>
+    </div>
+  
 
+
+
+
+  <div *ngIf="displayOutgoingTradeRequests" class="tab-content">
     <div class="outgoing-trades">
       <div class="outgoing-trade-card" *ngFor="let tradeRequest of this.tradeService.outgoing">
         <div class="game-card">
@@ -89,6 +96,7 @@
       </div>
     </div>
   </div>
+    
 
   <div *ngIf="displayActiveTrades" class="tab-content">
     <h3>Active Trades</h3>
