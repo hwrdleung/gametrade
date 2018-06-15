@@ -10,15 +10,18 @@
         <div class="game-grid">
                 <div *ngFor="let game of this.homeGames">
                         <div class="game-card" *ngIf="game.available">
-                                <img src="{{game.cover}}">
-                                <p>{{game.title}}</p>
-                                <p>{{game.platform}}</p>
-                                <p>
-                                  <a [routerLink]="['/profile', game.owner]">{{game.owner}}</a>
-                                </p>
-                                <p *ngIf="this.tradeService.alreadyRequested(game)">Request pending</p>
-                                <button *ngIf="dataService.currentUser && !this.tradeService.alreadyRequested(game)" 
-                                (click)=" this.tradeService.getTradeData(); this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
+                                <div class="game-card-img-container">
+                                        <img src="{{game.cover}}">
+                                </div>
+                                <div class="game-card-p-container">
+                                        <p>{{game.title}}</p>
+                                        <p>{{game.platform}}</p>
+                                        <p>
+                                                <a [routerLink]="['/profile', game.owner]">{{game.owner}}</a>
+                                        </p>
+                                </div>
+                                <p class="game-card-status" *ngIf="this.tradeService.alreadyRequested(game)">Request pending</p>
+                                <button *ngIf="dataService.currentUser && !this.tradeService.alreadyRequested(game)" (click)=" this.tradeService.getTradeData(); this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
                         </div>
                 </div>
         </div>

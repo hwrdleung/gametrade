@@ -13,9 +13,13 @@
         <p>Games added here will be displayed as available for trade.</p>
         <div class="game-grid">
             <div class="game-card" *ngFor="let game of this.dataService.userData.games">
-                <img src="{{game.cover}}"> 
-                <p>{{game.title}}</p>
-                <p>{{game.platform}}</p>
+                <div class="game-card-img-container">
+                    <img src="{{game.cover}}"> </div>
+                <div class="game-card-p-container">
+                    <p>{{game.title}}</p>
+                    <p>{{game.platform}}</p>
+                </div>
+
                 <button (click)="this.dataService.deleteGame(game)">Delete</button>
             </div>
         </div>
@@ -35,7 +39,9 @@
 
         <div class="game-grid">
             <div class="game-card" *ngFor="let game of this.gamesDataService.searchResults">
-                <img src={{game.cover}}> 
+                    <div class="game-card-img-container">
+                            <img src={{game.cover}}></div>
+                            <div class="game-card-p-container">
                 <p>{{game.title}}</p>
                 <select [(ngModel)]="selectedOption">
                     <option>Select a platform</option>
@@ -48,7 +54,8 @@
                     <option value="X Box One">X Box One</option>
                     <option value="X Box 360">X Box 360</option>
                     <option value="X Box">X Box</option>
-                </select>
+                </select>                                </div>
+
                 <button (click)="this.dataService.addGame(game, selectedOption)" [disabled]="!selectedOption">Add Game</button>
             </div>
         </div>

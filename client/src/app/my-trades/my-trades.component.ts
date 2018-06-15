@@ -27,19 +27,21 @@ export class MyTradesComponent implements OnInit {
   initiator = '';
   initiatorGames = [];
 
-  constructor(private gamesDataService: GamesDataService, private dataService:DataService, private http:HttpClient, private tradeService:TradeService) { }
+  constructor(private gamesDataService: GamesDataService, private dataService: DataService, private http: HttpClient, private tradeService: TradeService) { }
 
   ngOnInit() {
     this.tradeService.getTradeData();
+
   }
 
-  selectGameWindow(tradeRequest){
+
+  selectGameWindow(tradeRequest) {
     this.displaySelectGameWindow = true;
     this.initiator = tradeRequest.initiator;
     this.tradeRequest = tradeRequest;
     let getProfileDataEndpoint = this.serverEndpoint + '/user/profile/' + tradeRequest.initiator;
 
-    this.http.get(getProfileDataEndpoint).subscribe((res)=>{
+    this.http.get(getProfileDataEndpoint).subscribe((res) => {
       console.log(res);
       console.log(res['games']);
 
@@ -47,48 +49,48 @@ export class MyTradesComponent implements OnInit {
     });
   }
 
-selectGame(game){
-  console.log('select game');
-  let secureData = {
-    token: this.dataService.currentUser,
-    game: game,
-    tradeRequest: this.selectGameWindowTradeRequest
-  }
-  //Add game as game2 to this traderequest in gameOwner's incoming array
-  let selectGameForTradeEndpoint = this.serverEndpoint + '/user/select_game_for_trade';
-  this.http.post(selectGameForTradeEndpoint, secureData).subscribe((res)=>{
-    console.log(res);
-    this.tradeService.getTradeData();
-    this.closeSelectGameWindow();
-  });
-}
-
-openSelectGameWindow(tradeRequest){
-  this.selectGameWindowGames = [];
-  this.selectGameWindowInitiator = '';
-  this.selectGameWindowTradeRequest = tradeRequest;
-  this.displaySelectGameWindow = true;
-  let initiator = tradeRequest.initiator;
-  let getAllGamesEndpoint = this.serverEndpoint + '/games/get_all/';
-  //This would not be okay with a large number of games in the database
-  this.http.get(getAllGamesEndpoint).subscribe((res)=>{
-    console.log(res);
-
-    for(let game in res){
-      console.log(res[game]);
-
-      if(res[game]['owner'] === initiator && !this.tradeService.alreadyRequested(res[game]) && res[game].available){
-        this.selectGameWindowGames.push(res[game]);
-      }
+  selectGame(game) {
+    console.log('select game');
+    let secureData = {
+      token: this.dataService.currentUser,
+      game: game,
+      tradeRequest: this.selectGameWindowTradeRequest
     }
+    //Add game as game2 to this traderequest in gameOwner's incoming array
+    let selectGameForTradeEndpoint = this.serverEndpoint + '/user/select_game_for_trade';
+    this.http.post(selectGameForTradeEndpoint, secureData).subscribe((res) => {
+      console.log(res);
+      this.tradeService.getTradeData();
+      this.closeSelectGameWindow();
+    });
+  }
 
-    this.selectGameWindowInitiator = initiator;
-  });
-}
+  openSelectGameWindow(tradeRequest) {
+    this.selectGameWindowGames = [];
+    this.selectGameWindowInitiator = '';
+    this.selectGameWindowTradeRequest = tradeRequest;
+    this.displaySelectGameWindow = true;
+    let initiator = tradeRequest.initiator;
+    let getAllGamesEndpoint = this.serverEndpoint + '/games/get_all/';
+    //This would not be okay with a large number of games in the database
+    this.http.get(getAllGamesEndpoint).subscribe((res) => {
+      console.log(res);
 
-closeSelectGameWindow(){
-  this.displaySelectGameWindow = false;
-}
+      for (let game in res) {
+        console.log(res[game]);
+
+        if (res[game]['owner'] === initiator && !this.tradeService.alreadyRequested(res[game]) && res[game].available) {
+          this.selectGameWindowGames.push(res[game]);
+        }
+      }
+
+      this.selectGameWindowInitiator = initiator;
+    });
+  }
+
+  closeSelectGameWindow() {
+    this.displaySelectGameWindow = false;
+  }
 
   displayContent(tab) {
     this.displayIncomingTradeRequests = false;

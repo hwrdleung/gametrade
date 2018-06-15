@@ -3,6 +3,7 @@
      margin: 0 ;
      padding: 0;
      font-family: Helvetica; 
+     box-sizing: border-box;
  }
 
  h1, h2, h3, h4, h5, label, p {
@@ -26,6 +27,17 @@
      flex-direction: column;
      margin: 50px auto;
  }
+
+ #splash {
+    width: 100%;
+    height: 400px;
+    background: url('/assets/heroes.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
  label {
      display: flex;
@@ -126,10 +138,9 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between; 
-    display: inline-block;
     color: #FFF;
     font-size: 0.8rem;
-    margin: 20px 10px;   
+    margin: 10px;   
     background: rgb(39, 39, 39);
 }
 
@@ -139,44 +150,72 @@
 
 .game-card img {
     display: block;
-    max-width: 100%;
-    width: auto;
+    width: 100%;
     height: auto;
-}
+ }
 
-.game-card p {
-    margin: 10px;
-}
+
+ .game-card-img-container {
+     height: 150px;
+     width: 150px;
+     overflow: hidden;
+ }
+
+ 
+
+
+ .game-card-p-container {
+     height: 100px;
+     width: 150px;
+     overflow: hidden;
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+ }
+
+ .game-card-p-container p{
+     margin: auto 10px;
+ }
+
 
 .game-card select {
     margin: 10px;
 }
 
+.game-card-status {
+    width: 100%;
+    padding: 7px 0;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    text-align: center;
+    background: red;
+    color: #FFF;
+    border: 0;
+    outline: none;
+}
+
+.game-card-btn,
 .game-card button {
     width: 100%;
     font-size: 0.7rem;
     text-transform: uppercase;
     border-radius: 0;
 }
-
+.game-card-btn:hover,
 .game-card button:hover {
     background: rgb(81, 81, 255);
 }
 
+.game-card-btn:active,
 .game-card button:active {
     background: rgb(108, 153, 250);
 }
 
-.incoming-trades {
+.trades-container {
     display:flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: flex-start;
-}
-
-.outgoing-trades{
-    display: flex;
-    flex-wrap: wrap;
 }
 
 .trade-match{
@@ -192,7 +231,7 @@
 .trade-card {
     margin: 10px;
     padding: 20px;
-    background: rgb(10, 10, 10);
+    background: rgb(20, 20, 20);
     max-width: 400px;
     display: flex;
     flex-direction: column;
@@ -202,11 +241,6 @@
 
 hr {
     margin: 50px auto;
-}
-
-.outgoing-trade-card {
-    max-width: 250px;
-    margin: 20px 0;
 }
 
 .trade-card button {
@@ -238,23 +272,27 @@ hr {
     overflow: auto;
 }
 
-
-
 .trade-request-placeholder{
-    height: 300px;
+    height: 250px;
     width: 150px;
-    border: 5px rgb(43, 43, 43) dashed;
+    background: none;
+    border: 5px rgb(192, 192, 192)
+    dashed;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 20px;
-    margin: 20px 10px;   
 }
 
 .trade-request-placeholder a {
     display: block;
+}
+
+.no-content {
+    text-align: center;
+    margin: 100px auto;
 }
 
 
