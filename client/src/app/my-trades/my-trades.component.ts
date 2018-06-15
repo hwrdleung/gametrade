@@ -19,6 +19,7 @@ export class MyTradesComponent implements OnInit {
   displayTradeHistory = false;
   displayActiveTrades = false;
   displaySelectGameWindow = false;
+  displayGameSelector = false;
 
   selectGameWindowGames = [];
   selectGameWindowInitiator = '';
@@ -89,7 +90,8 @@ export class MyTradesComponent implements OnInit {
   }
 
   closeSelectGameWindow() {
-    this.displaySelectGameWindow = false;
+    this.displayGameSelector = false;
+    this.displayIncomingTradeRequests = true;
   }
 
   displayContent(tab) {
@@ -97,12 +99,15 @@ export class MyTradesComponent implements OnInit {
     this.displayOutgoingTradeRequests = false;
     this.displayTradeHistory = false;
     this.displayActiveTrades = false;
+    this.displayGameSelector = false;
 
     switch (tab) {
       case 'Incoming Trade Requests': this.displayIncomingTradeRequests = true; break;
       case 'Outgoing Trade Requests': this.displayOutgoingTradeRequests = true; break;
       case 'Trade History': this.displayTradeHistory = true; break;
       case 'Active Trades': this.displayActiveTrades = true; break;
+      case 'Game Selector': this.displayGameSelector = true; break;
+
     }
   }
 }

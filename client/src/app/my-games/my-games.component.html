@@ -10,7 +10,7 @@
 
     <div *ngIf="displayMyGames" class="tab-content">
         <h1 class="component-title">My Games</h1>
-        <p>Games added here will be displayed as available for trade.</p>
+        <p>*Games that you add here will be displayed publicly as available for trade.</p>
         <div class="game-grid">
             <div class="game-card" *ngFor="let game of this.dataService.userData.games">
                 <div class="game-card-img-container">

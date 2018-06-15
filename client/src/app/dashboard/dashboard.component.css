@@ -7,9 +7,7 @@ h2 {
     max-width: 1000px;
     margin: 20px auto;
     font-size: 1rem;
-    padding: 20px 0;
-    border-top: 1px #FFF solid;
-    border-bottom: 1px #FFF solid;
+    padding: 0;
 }
 
 #account-data li{
@@ -18,4 +16,10 @@ h2 {
     justify-content: space-between;
     align-items: flex-end;
     padding: 10px 0;
+}
+
+#account-data p,
+#account-data h2,
+#account-data a {
+    color: #fff;
 }

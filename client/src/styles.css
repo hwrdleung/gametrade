@@ -6,18 +6,23 @@
      box-sizing: border-box;
  }
 
- h1, h2, h3, h4, h5, label, p {
-     color: #FFF;
-     margin: 0;
+ h1, h2, h3, h4, h5, label {
+     color: #000;
+     /* margin: 10px auto; */
+     padding: 0;
+ }
+
+ p {
+     color: rgb(0, 0, 0);
      padding: 0;
  }
 
  a {
-     color: rgb(192, 192, 192);
+     color: rgb(0, 0, 0);
  }
 
  a:hover{
-     color:#FFF;
+     color:rgb(155, 155, 155);
      cursor: pointer;
  }
 
@@ -28,15 +33,15 @@
      margin: 50px auto;
  }
 
- #splash {
-    width: 100%;
-    height: 400px;
-    background: url('/assets/heroes.png');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+ .shadow{
+    box-shadow: 2px 2px 5px rgb(75, 75, 75);
+    background: rgb(20, 20, 20);
+    padding: 20px;
+    margin: 20px auto;
+ }
+
+form h3 {
+    color: #fff;
 }
 
  label {
@@ -45,6 +50,7 @@
      width: 100%;
      margin: 10px auto;
      font-weight: bold;
+     color: #fff;
  }
 
  input[type="text"],
@@ -84,14 +90,14 @@
 }
 
  body {
-     background: #000;
+     background: rgb(231, 231, 231);
 
     }
 
  .container {
      margin: 0 auto;
      padding: 100px 0;
-     width: 100%;
+     width: auto;
      max-width: 1200px;
      height: auto;
  }
@@ -105,25 +111,27 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    border-bottom: 1px #FFF solid;
+    border-bottom: 1px #000 solid;
 }
 
 #tab-menu li {
-    padding: 10px 10px 5px 10px;
+    padding: 10px 20px 5px 20px;
     list-style-type: none;
 }
 
 #tab-menu li a:hover{
-    color:#FFF;
+    color:rgb(116, 116, 116);
     cursor: pointer;
 }
 
 .tab-content {
     padding: 20px 0;
+    text-align: center;
 }
 
+
 .game-grid {
-    width: 100%;
+    width: auto;
     height: auto;
     display: flex;
     flex-direction: row;
@@ -142,11 +150,11 @@
     font-size: 0.8rem;
     margin: 10px;   
     background: rgb(39, 39, 39);
+    text-align: left;
+    box-shadow: 2px 2px 5px rgb(102, 102, 102);
 }
 
-.game-card-date {
-    text-align: center;
-}
+
 
 .game-card img {
     display: block;
@@ -161,9 +169,6 @@
      overflow: hidden;
  }
 
- 
-
-
  .game-card-p-container {
      height: 100px;
      width: 150px;
@@ -173,10 +178,14 @@
      justify-content: space-between;
  }
 
- .game-card-p-container p{
-     margin: auto 10px;
+ .game-card-p-container a{
+     color: #fff;
  }
 
+ .game-card-p-container p{
+     margin: auto 10px;
+     color: #fff;
+ }
 
 .game-card select {
     margin: 10px;
@@ -237,6 +246,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    box-shadow: 2px 2px 7px rgb(75, 75, 75);
+    color: #fff;
+}
+
+.trade-card h4,
+.trade-card p,
+.trade-card a {
+    color: #fff;
 }
 
 hr {
@@ -257,17 +274,15 @@ hr {
 }
 
 #select-game-window {
-    height: 800px;
-    width: 800px;
+    height: auto;
+    width: 100%;
     position: fixed;
     box-sizing: border-box;
     border: 10px rgb(49, 49, 49) solid;
-    background: #000;
+    background: rgb(49, 49, 49);
     position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-top: -400px;
-    margin-left: -400px;
+    bottom: 0;
+    left: 0;
     padding: 20px;
     overflow: auto;
 }
@@ -276,8 +291,7 @@ hr {
     height: 250px;
     width: 150px;
     background: none;
-    border: 5px rgb(192, 192, 192)
-    dashed;
+    border: 5px rgb(192, 192, 192) dashed;
     box-sizing: border-box;
     display: flex;
     justify-content: center;

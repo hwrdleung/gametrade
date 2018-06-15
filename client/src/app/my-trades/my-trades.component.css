@@ -1,4 +1,12 @@
 
+table {
+    padding: 0;
+}
+
+table p {
+    color: #fff;
+}
+
 table,
 table tr,
 table td {

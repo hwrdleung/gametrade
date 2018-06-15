@@ -11,9 +11,10 @@
 }
 
 .nav-bar {
-    height: auto;
+    box-shadow: 2px 2px 5px rgb(75, 75, 75);
+    background: rgb(20, 20, 20);
+    height: 50px;
     width: 100%;
-    background: none;
     color: #FFF;
     font-size: 1rem;
     display: flex;
@@ -33,13 +34,18 @@
 
 .nav-bar ul li {
     list-style-type: none;
+    height: 100%;
 }
 
 .nav-bar ul li a{
+    height: 50px;
     text-decoration: none;
     color: #FFF;
-    padding: 10px 15px;
+    padding: 0 20px;
     display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .nav-bar ul li a:hover {
@@ -51,7 +57,7 @@
 }
 
 #home-link {
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 10px 25px;
     font-family: 'Orbitron';
     color: #FFF;
