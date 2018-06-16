@@ -1,16 +1,16 @@
 <div class="container">
-  <ul id="tab-menu">
+  <ul class="tab-menu">
     <li>
-      <a (click)="this.tradeService.getTradeData(); displayContent('Incoming Trade Requests')">Incoming Trade Requests ({{this.tradeService.incoming.length}})</a>
+      <a id="incoming-tab" (click)="this.tradeService.getTradeData(); displayContent('Incoming Trade Requests')">Incoming Trade Requests ({{this.tradeService.incoming.length}})</a>
     </li>
     <li>
-      <a (click)="this.tradeService.getTradeData(); displayContent('Outgoing Trade Requests')">Outgoing Trade Requests ({{this.tradeService.outgoing.length}})</a>
+      <a id="outgoing-tab" (click)="this.tradeService.getTradeData(); displayContent('Outgoing Trade Requests')">Outgoing Trade Requests ({{this.tradeService.outgoing.length}})</a>
     </li>
     <li>
-      <a (click)="this.tradeService.getTradeData(); displayContent('Active Trades')">Active Trades ({{this.tradeService.active.length}})</a>
+      <a id="active-tab" (click)="this.tradeService.getTradeData(); displayContent('Active Trades')">Active Trades ({{this.tradeService.active.length}})</a>
     </li>
     <li>
-      <a (click)="this.tradeService.getTradeData(); displayContent('Trade History')">Trade History</a>
+      <a id="history-tab" (click)="this.tradeService.getTradeData(); displayContent('Trade History')">Trade History</a>
     </li>
   </ul>
 
@@ -18,7 +18,7 @@
     <h3>Incoming Trade Requests</h3>
 
     <div *ngIf="this.tradeService.incoming.length > 0; else noIncoming" class="trades-container">
-      <div class="trade-card" *ngFor="let tradeRequest of this.tradeService.incoming">
+      <div class="trade-card theme" *ngFor="let tradeRequest of this.tradeService.incoming">
         <h4 class="game-card-date">{{tradeRequest.date | date:'fullDate'}}</h4>
         <p>
           <a [routerLink]="['/profile', tradeRequest.initiator]">{{tradeRequest.initiator}}</a> has requested to trade with you.</p>
@@ -31,9 +31,7 @@
             <div class="game-card-p-container">
               <p>{{tradeRequest.game.title}}</p>
               <p>{{tradeRequest.game.platform}}</p>
-              <p>
-                <a [routerLink]="['/profile', tradeRequest.game.owner]">{{tradeRequest.game.owner}}</a>
-              </p>
+              <a [routerLink]="['/profile', tradeRequest.game.owner]">{{tradeRequest.game.owner}}</a>
             </div>
             <p class="game-card-status" *ngIf="this.tradeService.alreadyRequested(tradeRequest.game)">Request pending</p>
           </div>
@@ -70,7 +68,7 @@
     </div>
 
     <ng-template #noIncoming>
-      <p class="no-content">You have no incoming trade requests at this time.</p>
+      <p class="content-description">You have no incoming trade requests at this time.</p>
     </ng-template>
   </div>
 
@@ -78,7 +76,7 @@
     <h3>Outgoing Trade Requests</h3>
 
     <div *ngIf="this.tradeService.outgoing.length > 0; else noOutgoing" class="trades-container">
-      <div class="trade-card" *ngFor="let tradeRequest of this.tradeService.outgoing">
+      <div class="trade-card theme" *ngFor="let tradeRequest of this.tradeService.outgoing">
         <h4 class="game-card-date">{{tradeRequest.date | date:'fullDate'}}</h4>
         <div class="game-card">
           <div class="game-card-img-container">
@@ -87,9 +85,7 @@
           <div class="game-card-p-container">
             <p>{{tradeRequest.game.title}}</p>
             <p>{{tradeRequest.game.platform}}</p>
-            <p>
-              <a [routerLink]="['/profile', tradeRequest.game.owner]">{{tradeRequest.game.owner}}</a>
-            </p>
+            <a [routerLink]="['/profile', tradeRequest.game.owner]">{{tradeRequest.game.owner}}</a>
           </div>
           <button (click)="this.tradeService.cancelTradeRequest(tradeRequest)">Cancel</button>
         </div>
@@ -97,7 +93,7 @@
     </div>
 
     <ng-template #noOutgoing>
-      <p class="no-content">You have no outgoing trade requests at this time.</p>
+      <p class="content-description">You have no outgoing trade requests at this time.</p>
     </ng-template>
   </div>
 
@@ -106,7 +102,7 @@
 
 
     <div *ngIf="this.tradeService.active.length > 0; else noActive" class="trades-container">
-      <div class="trade-card" *ngFor="let trade of this.tradeService.active;">
+      <div class="trade-card theme" *ngFor="let trade of this.tradeService.active;">
         <h4 class="game-card-date">{{trade.date | date:'fullDate'}}</h4>
         <div class="trade-match">
           <div class="game-card">
@@ -116,9 +112,7 @@
             <div class="game-card-p-container">
               <p>{{trade.game.title}}</p>
               <p>{{trade.game.platform}}</p>
-              <p>
-                <a [routerLink]="['/profile', trade.game.owner]">{{trade.game.owner}}</a>
-              </p>
+              <a [routerLink]="['/profile', trade.game.owner]">{{trade.game.owner}}</a>
             </div>
 
             <button *ngIf="trade.game.owner === this.dataService.userData.username && !trade.gameReturned" (click)="this.tradeService.markReturned(trade.date, 'game')">
@@ -135,9 +129,7 @@
 
               <p>{{trade.game2.title}}</p>
               <p>{{trade.game2.platform}}</p>
-              <p>
-                <a [routerLink]="['/profile', trade.game2.owner]">{{trade.game2.owner}}</a>
-              </p>
+              <a [routerLink]="['/profile', trade.game2.owner]">{{trade.game2.owner}}</a>
             </div>
             <button *ngIf="trade.game2.owner === this.dataService.userData.username && !trade.game2Returned" (click)="this.tradeService.markReturned(trade.date, 'game2')">
               Mark as returned
@@ -149,7 +141,7 @@
     </div>
 
     <ng-template #noActive>
-      <p class="no-content">You have no active trades at this time.</p>
+      <p class="content-description">You have no active trades at this time.</p>
     </ng-template>
   </div>
 
@@ -161,7 +153,7 @@
 
 
     <div *ngIf="this.tradeService.history.length > 0; else noHistory">
-      <table class="shadow">
+      <table class="theme">
         <tr>
           <th>
             <p>Date</p>
@@ -190,7 +182,7 @@
     </div>
 
     <ng-template #noHistory>
-      <p class="no-content">There is no trade history to display.</p>
+      <p class="content-description">There is no trade history to display.</p>
     </ng-template>
 
   </div>
@@ -200,7 +192,7 @@
     <button (click)="closeSelectGameWindow()">Cancel</button>
     <div *ngIf="selectGameWindowGames.length > 0; else noAvailableGames">
 
-    <div class="game-grid">
+      <div class="game-grid">
         <div class="game-card" *ngFor="let game of selectGameWindowGames">
           <div class="game-card-img-container">
             <img src="{{game.cover}}">
@@ -208,15 +200,13 @@
           <div class="game-card-p-container">
             <p>{{game.title}}</p>
             <p>{{game.platform}}</p>
-            <p>
-              <a [routerLink]="['/profile', game.owner]">{{game.owner}}</a>
-            </p>
+            <a [routerLink]="['/profile', game.owner]">{{game.owner}}</a>
           </div>
           <button (click)="selectGame(game)">Select Game</button>
         </div>
       </div>
     </div>
     <ng-template #noAvailableGames>
-        <p class="no-content">{{selectGameWindowInitiator}} currently does not have any games available for trade.  Please try again at a later date.</p>
-      </ng-template>
+      <p class="content-description">{{selectGameWindowInitiator}} currently does not have any games available for trade. Please try again at a later date.</p>
+    </ng-template>
   </div>

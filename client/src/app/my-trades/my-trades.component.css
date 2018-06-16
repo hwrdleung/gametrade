@@ -1,25 +1,31 @@
 
+.trade-request-placeholder {
+    box-sizing: border-box;
+    border: 5px gray dashed;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 25px;
+    line-height: 1.2rem;
+}
+
 table {
     padding: 0;
-}
-
-table p {
-    color: #fff;
-}
-
-table,
-table tr,
-table td {
-    border: 0;
+    margin: 20px auto;
+    color: #FFF;
     border-spacing: 0;
 }
 
-table tr td {
+table td,
+table th {
     padding: 15px;
 }
 
 table tr td:nth-child(1){
-    width: 300px;
+    width: 250px;
     text-align: center;
 }
 
@@ -28,15 +34,11 @@ table tr td:nth-child(2){
     line-height: 1.5;
 }
 
-table th {
-    background: rgb(20, 20, 20);
-    padding: 15px;
-}
-
 table tr:nth-child(odd) {
-    background: rgb(15, 15, 15);
+    background: rgb(35, 35, 35);
 }
 
 table tr:nth-child(even) {
-    background: rgb(10, 10, 10);
+    background: rgb(25, 25, 25);
 }
+

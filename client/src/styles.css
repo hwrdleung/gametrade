@@ -1,138 +1,78 @@
-/* You can add global styles to this file, and also import other style files */
- *{
-     margin: 0 ;
-     padding: 0;
-     font-family: Helvetica; 
-     box-sizing: border-box;
- }
-
- h1, h2, h3, h4, h5, label {
-     color: #000;
-     /* margin: 10px auto; */
-     padding: 0;
- }
-
- p {
-     color: rgb(0, 0, 0);
-     padding: 0;
- }
-
- a {
-     color: rgb(0, 0, 0);
- }
-
- a:hover{
-     color:rgb(155, 155, 155);
-     cursor: pointer;
- }
-
- form {
-     max-width: 350px;
-     display: flex;
-     flex-direction: column;
-     margin: 50px auto;
- }
-
- .shadow{
-    box-shadow: 2px 2px 5px rgb(75, 75, 75);
-    background: rgb(20, 20, 20);
-    padding: 20px;
-    margin: 20px auto;
- }
-
-form h3 {
-    color: #fff;
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Helvetica';
 }
 
- label {
-     display: flex;
-     flex-direction: column;
-     width: 100%;
-     margin: 10px auto;
-     font-weight: bold;
-     color: #fff;
- }
-
- input[type="text"],
- input[type="password"],
- input[type="email"]{
-     font-size: 1.5rem;
-     padding: 10px 5px 0 5px;
-     background: none;
-     color: #FFF;
-     border: 0;
-     border-bottom: 1px #FFF solid;
-     user-select: none;
-     outline: none;
- }
-
- button,
- input[type="submit"]{
-     width: 100px;
-     padding: 7px;
-     font-size: 1rem;
-     text-align: center;
-     background: blue;
-     color: #FFF;
-     border: 0;
-     border-radius: 5px;
-     outline: none;
- }
-
- button:hover,
- input[type="submit"]:hover {
-     background: rgb(80, 80, 255);
- }
-
- button:active,
- input[type="submit"]:active {
-    background: rgb(118, 118, 253);
+body {
+    background: rgb(240, 240, 240);
 }
 
- body {
-     background: rgb(231, 231, 231);
-
-    }
-
- .container {
-     margin: 0 auto;
-     padding: 100px 0;
-     width: auto;
-     max-width: 1200px;
-     height: auto;
- }
-
- .component-title {
-     text-align: center;
-     margin: 0 auto;
- }
-
- #tab-menu {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    border-bottom: 1px #000 solid;
-}
-
-#tab-menu li {
-    padding: 10px 20px 5px 20px;
-    list-style-type: none;
-}
-
-#tab-menu li a:hover{
-    color:rgb(116, 116, 116);
+a:hover {
     cursor: pointer;
+    color: gray;
 }
 
-.tab-content {
-    padding: 20px 0;
+.container{
+    max-width: 1200px;
+    margin: 100px auto;
+}
+
+.container h1,
+.container h2,
+.container h3, 
+.container h4 {
+    margin: 0 auto;
     text-align: center;
+} 
+
+input[type="submit"],
+button {
+    color: #FFF;
+    min-width: 100px;
+    background: blue;
+    border: 0;
+    border-radius: 5px;
+    padding: 7px 20px;
+    margin: 5px;
 }
 
+input[type="submit"]:hover,
+button:hover {
+    background: rgb(81, 81, 255);
+}
+
+.theme {
+    background: rgb(20, 20, 20);
+    box-shadow: 2px 2px 5px rgb(75, 75, 75);
+    margin: 20px auto;
+}
+
+.theme h1,
+.theme h2,
+.theme h3,
+.theme h4,
+.theme a,
+.theme p
+ {
+    color: #FFF;
+    text-decoration: none;
+}
+
+.theme a {
+    text-decoration: underline;
+}
+
+.theme a:hover {
+    color: silver;
+}
+
+.nav-active {
+    border-bottom: 5px green solid;
+}
 
 .game-grid {
-    width: auto;
-    height: auto;
+    width: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -146,170 +86,175 @@ form h3 {
     display: flex;
     flex-direction: column;
     justify-content: space-between; 
-    color: #FFF;
-    font-size: 0.8rem;
-    margin: 10px;   
     background: rgb(39, 39, 39);
     text-align: left;
     box-shadow: 2px 2px 5px rgb(102, 102, 102);
+    margin: 20px;
 }
 
+.game-card-img-container {
+    height: 150px;
+    width: 150px;
+    overflow: hidden;
+}
 
+.game-card-p-container {
+    height: 100px;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
 
-.game-card img {
-    display: block;
+.game-card-img-container img {
     width: 100%;
-    height: auto;
- }
+}
 
-
- .game-card-img-container {
-     height: 150px;
-     width: 150px;
-     overflow: hidden;
- }
-
- .game-card-p-container {
-     height: 100px;
-     width: 150px;
-     overflow: hidden;
-     display: flex;
-     flex-direction: column;
-     justify-content: space-between;
- }
-
- .game-card-p-container a{
-     color: #fff;
- }
-
- .game-card-p-container p{
-     margin: auto 10px;
-     color: #fff;
- }
+.game-card-p-container a,
+.game-card-p-container p{
+    color: #FFF;
+    font-size: 0.8rem;
+    padding: 0 10px;
+}
 
 .game-card select {
     margin: 10px;
 }
+.game-card-p-container a{
+    text-decoration: underline;
+}
+
+.game-card-p-container a:hover {
+    color: rgb(200, 200, 200);
+}
 
 .game-card-status {
-    width: 100%;
-    padding: 7px 0;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    text-align: center;
     background: red;
-    color: #FFF;
-    border: 0;
-    outline: none;
+    font-style: italic;
 }
 
-.game-card-btn,
 .game-card button {
     width: 100%;
-    font-size: 0.7rem;
+}
+
+.game-card button, 
+.game-card-status {
+    padding: 7px;
+    color: #FFF;
     text-transform: uppercase;
+    font-size: 0.7rem;
+    text-align: center;
     border-radius: 0;
-}
-.game-card-btn:hover,
-.game-card button:hover {
-    background: rgb(81, 81, 255);
-}
-
-.game-card-btn:active,
-.game-card button:active {
-    background: rgb(108, 153, 250);
-}
-
-.trades-container {
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
-}
-
-.trade-match{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100%;
-    padding: 0;
     margin: 0;
 }
 
 .trade-card {
-    margin: 10px;
-    padding: 20px;
-    background: rgb(20, 20, 20);
-    max-width: 400px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    box-shadow: 2px 2px 7px rgb(75, 75, 75);
-    color: #fff;
-}
-
-.trade-card h4,
-.trade-card p,
-.trade-card a {
-    color: #fff;
-}
-
-hr {
-    margin: 50px auto;
-}
-
-.trade-card button {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-}
-
-.trade-card button:hover {
-    background: rgb(81, 81, 255);
-}
-
-.trade-card button:active {
-    background: rgb(108, 153, 250);
-}
-
-#select-game-window {
-    height: auto;
-    width: 100%;
-    position: fixed;
-    box-sizing: border-box;
-    border: 10px rgb(49, 49, 49) solid;
-    background: rgb(49, 49, 49);
-    position: fixed;
-    bottom: 0;
-    left: 0;
+    max-width: 400px;
     padding: 20px;
-    overflow: auto;
+    margin: 20px;
 }
 
-.trade-request-placeholder{
-    height: 250px;
-    width: 150px;
-    background: none;
-    border: 5px rgb(192, 192, 192) dashed;
-    box-sizing: border-box;
+.trade-card p,
+.trade-card h4 {
+    color: #FFF;
+}
+
+.trade-match {
+    display: flex;
+    flex-direction: row;
+    color: #FFF;
+}
+
+.trades-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.tab-menu {
+    width: 100%;
+    list-style-type: none;
+    border-bottom: 1px #000 solid;
+}
+
+.tab-menu li {
+    display: inline-block;
+}
+
+.tab-menu li a {
+    display: block;
+    padding: 10px 20px;
+}
+
+.tab-content {
+    padding: 40px;
+}
+
+.content-description {
+    width: 100%;
+    height:75px;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    padding: 20px;
 }
 
-.trade-request-placeholder a {
-    display: block;
+form {
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px;
 }
 
-.no-content {
-    text-align: center;
-    margin: 100px auto;
+form label {
+    display: flex;
+    flex-direction: column;
+    color: #FFF;
+    width: 80%;
+    margin: 10px auto;
 }
 
+input[type="text"],
+input[type="password"],
+input[type="email"]{
+    font-size: 1.5rem;
+    padding: 10px 5px 0 5px;
+    background: none;
+    color: #FFF;
+    border: 0;
+    border-bottom: 1px #FFF solid;
+    user-select: none;
+    outline: none;
+}
 
+.search-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: space-around;
+}
 
+.search-bar input[type="text"] {
+    background: #FFF;
+    height: 30px;
+    width: 500px;
+    padding: 0 10px;
+    margin: 0;
+    font-size: 1rem;
+    border: 0;
+    color: #000;
+}
 
+.search-bar input[type="submit"]{
+    height: 30px;
+    width: 100px;
+    border-radius: 0;
+    margin: 0;
+}
 

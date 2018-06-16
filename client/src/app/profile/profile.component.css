@@ -1,0 +1,16 @@
+
+.profile-container {
+    display: flex;
+    flex-direction: row;
+    max-width: 1200px;
+    margin: 100px auto;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.gamer-card{
+    width: 250px;
+    height: 800px;
+    padding: 25px;
+    margin: 0 50px;
+}

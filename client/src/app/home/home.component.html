@@ -1,12 +1,13 @@
-<div id="splash" *ngIf="this.dataService.currentUser">
-  
-</div>
+
 
 <div class="container" *ngIf="this.dataService.currentUser; else loggedOut">
-                <!-- <form class="main-search-form" [formGroup]="searchForm">
+        <!-- <form class="main-search-form" [formGroup]="searchForm">
                                 <input type="text" formControlName="query" name="query" placeholder="this does not work yet.">
                                 <input type="submit" value="Search">
                         </form> -->
+                        <div id="splash" *ngIf="this.dataService.currentUser">
+
+                                </div>
         <div class="game-grid">
                 <div *ngFor="let game of this.homeGames">
                         <div class="game-card" *ngIf="game.available">
@@ -16,9 +17,7 @@
                                 <div class="game-card-p-container">
                                         <p>{{game.title}}</p>
                                         <p>{{game.platform}}</p>
-                                        <p>
-                                                <a [routerLink]="['/profile', game.owner]">{{game.owner}}</a>
-                                        </p>
+                                        <a [routerLink]="['/profile', game.owner]">{{game.owner}}</a>
                                 </div>
                                 <p class="game-card-status" *ngIf="this.tradeService.alreadyRequested(game)">Request pending</p>
                                 <button *ngIf="dataService.currentUser && !this.tradeService.alreadyRequested(game)" (click)=" this.tradeService.getTradeData(); this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
@@ -35,9 +34,9 @@
                 <h1>GameTrader</h1>
                 <h2>A club for gamers.</h2>
                 <h2>Trade console games with other gamers in your city.</h2>
-                <a id="sign-up-link" routerLink="register">Sign up for free!</a>
+                <button id="sign-up-link" routerLink="register">Sign up for free!</button>
         </div>
 
         <!-- TOP RIGHT CORNER OF SCREEN -->
-        <a id="sign-in-link" routerLink="login">Sign in</a>
+        <button id="sign-in-link" routerLink="login">Sign in</button>
 </ng-template>

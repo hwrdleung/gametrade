@@ -1,14 +1,27 @@
 <div class="container">
-<h1 class="component-title">Account</h1>
 
-  <div class="tab-content">
 
-<div class="shadow">
+    <div class="container">
+
+        <ul class="tab-menu">
+            <li>
+              <a id="profile-tab" (click)="displayContent('Edit Profile')">Edit Profile</a>
+            </li>
+            <li>
+              <a id="account-tab" (click)="displayContent('Account Settings')">Account Settings</a>
+            </li>
+    </ul>
+
+<h1 class="component-title">{{ this.dataService.userData.username }}</h1>
+
+<div *ngIf="displayEditProfileTab"class="tab-content">
+  <h1>Edit Profile</h1>
+  </div>
+
+  <div *ngIf="displayAccountSettingsTab"class="tab-content">
+
+<div class="theme">
     <ul id="account-data">
-
-      <li>
-        <h2>{{ this.dataService.userData.username }}</h2>
-      </li>
 
       <li>
         <h2>{{ this.dataService.userData.first }} {{ this.dataService.userData.last }}</h2>
@@ -36,9 +49,9 @@
           <a (click)="displayForm('delete account')">Delete Account</a>
         </li>
     </ul>
-
+  </div>
     <div>
-      <form *ngIf="displayChangeLocationForm" [formGroup]="changeLocationForm" (ngSubmit)="this.dataService.changeLocation(changeLocationForm.value); hideAllForms()">
+      <form class="theme" *ngIf="displayChangeLocationForm" [formGroup]="changeLocationForm" (ngSubmit)="this.dataService.changeLocation(changeLocationForm.value); hideAllForms()">
         <h3>Update Your Location</h3>
 
         <label>City:
@@ -56,7 +69,7 @@
         <input type="submit" [disabled]="!changeLocationForm.valid">
       </form>
 
-      <form *ngIf="displayChangeEmailForm" [formGroup]="changeEmailForm" (ngSubmit)="this.dataService.changeEmail(changeEmailForm.value)">
+      <form class="theme" *ngIf="displayChangeEmailForm" [formGroup]="changeEmailForm" (ngSubmit)="this.dataService.changeEmail(changeEmailForm.value)">
         <h3>Update your email address</h3>
 
         <label>
@@ -73,7 +86,7 @@
 
       </form>
 
-      <form *ngIf="displayChangePasswordForm" [formGroup]="changePasswordForm" (ngSubmit)="this.dataService.changePassword(changePasswordForm.value)">
+      <form class="theme" *ngIf="displayChangePasswordForm" [formGroup]="changePasswordForm" (ngSubmit)="this.dataService.changePassword(changePasswordForm.value)">
         <h3>Change your password</h3>
 
         <label>
@@ -95,7 +108,7 @@
       </form>
     </div>
 
-    <form *ngIf="displayDeleteAccountForm" [formGroup]="deleteAccountForm" (ngSubmit)="this.dataService.deleteAccount(deleteAccountForm.value)">
+    <form class="theme" *ngIf="displayDeleteAccountForm" [formGroup]="deleteAccountForm" (ngSubmit)="this.dataService.deleteAccount(deleteAccountForm.value)">
       <h3>Delete your account</h3>
       <br>
       <p>Warning:  You are about to delete your account.  This is irreversible and all of your data will be lost.  To proceed, please enter your password.</p>
@@ -116,5 +129,4 @@
   <div *ngIf="displayActiveTrades" class="tab-content">
     <h3>Active Trades</h3>
   </div>
-</div>
 </div>

@@ -21,21 +21,11 @@ export class TradeService {
 
   constructor(private dataService:DataService, private http:HttpClient) { }
 
-  test(){
-    this.getTradeData();
-    console.log('Incoming: ', this.incoming);
-    console.log('Outgoing: ', this.outgoing);
-    console.log('Active: ', this.active);
-    console.log('History: ', this.history);
-  }
-
   getTradeData(){
     let username = this.dataService.userData.username;
     let params = new HttpParams().set('username', username);
 
     this.http.get(this.getTradeDataEndpoint, {params: params}).subscribe((res)=>{
-      console.log(res);
-
       this.incoming = res['incoming'];
       this.outgoing = res['outgoing'];
       this.active = res['active'];
@@ -48,8 +38,6 @@ export class TradeService {
     let params = new HttpParams().set('username', username);
 
     this.http.get(this.getTradeDataEndpoint, {params: params}).subscribe((res)=>{
-      console.log(res);
-
       this.incoming = res['incoming'];
       this.outgoing = res['outgoing'];
       this.active = res['active'];
@@ -71,7 +59,6 @@ export class TradeService {
       }
   
       this.http.post(this.markReturnedEndpoint, data).subscribe((res)=>{
-        console.log(res);
         this.getTradeData();
       });
     });
@@ -81,7 +68,6 @@ export class TradeService {
 
   denyTradeRequest(tradeRequest){
     this.http.post(this.denyTradeRequestEndpoint, tradeRequest).subscribe((res)=>{
-      console.log(res);
       this.getTradeData();
     });
 
@@ -89,7 +75,6 @@ export class TradeService {
 
   acceptTradeRequest(tradeRequest){
     this.http.post(this.acceptTradeRequestEndpoint, tradeRequest).subscribe((res)=>{
-      console.log(res);
       this.getTradeData();
     });
   }
@@ -97,15 +82,11 @@ export class TradeService {
   cancelTradeRequest(tradeRequest){
     //username is currentUser that RECIEVED the trade request from another user
     this.http.post(this.cancelTradeRequestEndpoint, tradeRequest).subscribe((res)=>{
-      console.log(res);
       this.getTradeData();
     });
   }
 
   requestTrade(username, game){
-
-    console.log(username);
-    console.log(game);
 
       let tradeData = {
         initiator: username,
@@ -113,7 +94,6 @@ export class TradeService {
       };
 
       this.http.post(this.requestTradeEndpoint, tradeData).subscribe((res)=>{
-        console.log(res);
         this.getTradeData();
       });
 

@@ -20,13 +20,11 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      console.log(params);
       this.username = params.username;
 
       let getProfileDataEndpoint = this.serverEndpoint + '/user/profile/' + this.username;
 
       this.http.get(getProfileDataEndpoint).subscribe((res)=>{
-        console.log(res);
         this.profileData = res;
       });
     });

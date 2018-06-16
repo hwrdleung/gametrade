@@ -9,6 +9,7 @@ const UserSchema = mongoose.Schema({
     state: {type: String },
     country: {type: String },
     password: {type: String },
+    bio: {type: String },
     games: {type: Array},
     incoming: {type:Array},
     outgoing: {type:Array},

@@ -1,7 +1,7 @@
   <div class="container">
   
   <h1 class="component-title">Sign In</h1>
-  <form class="shadow" [formGroup]="loginForm" (ngSubmit)="this.dataService.login(loginForm.value)">
+  <form class="theme" [formGroup]="loginForm" (ngSubmit)="this.dataService.login(loginForm.value)">
 
       <label>Name
         <input type="text" formControlName="username" name="username">

@@ -1,13 +1,8 @@
-h2 {
-    margin-left: 0;
-    text-align: left;
-}
-
 #account-data {
-    max-width: 1000px;
+    list-style-type: none;
+    color: #FFF;
+    padding: 40px;
     margin: 20px auto;
-    font-size: 1rem;
-    padding: 0;
 }
 
 #account-data li{
@@ -18,8 +13,6 @@ h2 {
     padding: 10px 0;
 }
 
-#account-data p,
-#account-data h2,
-#account-data a {
-    color: #fff;
+#account-data h2{
+    margin: 0;
 }

@@ -34,10 +34,7 @@ export class HomeComponent implements OnInit {
   refreshGames(){
     console.log('refresh');
     this.http.get(this.getAllEndPoint).subscribe((res)=>{
-      console.log(res);
       this.homeGames = res;
-      console.log(typeof this.homeGames);
-      console.log(Object.keys(this.homeGames));
     }); 
   }
 

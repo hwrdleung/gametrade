@@ -32,7 +32,6 @@ export class MyTradesComponent implements OnInit {
 
   ngOnInit() {
     this.tradeService.getTradeData();
-
   }
 
 
@@ -43,15 +42,11 @@ export class MyTradesComponent implements OnInit {
     let getProfileDataEndpoint = this.serverEndpoint + '/user/profile/' + tradeRequest.initiator;
 
     this.http.get(getProfileDataEndpoint).subscribe((res) => {
-      console.log(res);
-      console.log(res['games']);
-
       this.initiatorGames = res['games'];
     });
   }
 
   selectGame(game) {
-    console.log('select game');
     let secureData = {
       token: this.dataService.currentUser,
       game: game,
@@ -60,7 +55,6 @@ export class MyTradesComponent implements OnInit {
     //Add game as game2 to this traderequest in gameOwner's incoming array
     let selectGameForTradeEndpoint = this.serverEndpoint + '/user/select_game_for_trade';
     this.http.post(selectGameForTradeEndpoint, secureData).subscribe((res) => {
-      console.log(res);
       this.tradeService.getTradeData();
       this.closeSelectGameWindow();
     });
@@ -75,16 +69,11 @@ export class MyTradesComponent implements OnInit {
     let getAllGamesEndpoint = this.serverEndpoint + '/games/get_all/';
     //This would not be okay with a large number of games in the database
     this.http.get(getAllGamesEndpoint).subscribe((res) => {
-      console.log(res);
-
       for (let game in res) {
-        console.log(res[game]);
-
         if (res[game]['owner'] === initiator && !this.tradeService.alreadyRequested(res[game]) && res[game].available) {
           this.selectGameWindowGames.push(res[game]);
         }
       }
-
       this.selectGameWindowInitiator = initiator;
     });
   }

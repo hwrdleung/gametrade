@@ -30,10 +30,6 @@ export class MyGamesComponent implements OnInit {
     this.gamesDataService.searchResults = [];
   }
 
-  test(){
-    console.log('test');
-    }
-
   displayContent(tabName){
     switch(tabName){
       case 'My Games': 

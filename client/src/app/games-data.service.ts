@@ -45,9 +45,6 @@ export class GamesDataService {
 
     this.http.get(this.IGDB_API_KEYWORD_SEARCH_ENDPOINT + query, httpOptions).subscribe((res) => {
       //This gets a list of game ID's from IGDB pertaining to search query
-      console.log(res);
-
-
       let context = this;
       let searchResults = res;
 

@@ -18,6 +18,9 @@ export class DashboardComponent implements OnInit {
   changePasswordForm: FormGroup;
   deleteAccountForm: FormGroup;
 
+  displayEditProfileTab = true;
+  displayAccountSettingsTab = false;
+
   displayChangeLocationForm = false;
   displayChangeEmailForm = false;
   displayChangePasswordForm = false;
@@ -67,19 +70,20 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
   }
 
+  displayContent(tab) {
+    this.displayEditProfileTab = false;
+    this.displayAccountSettingsTab = false;
 
-  test() {
-    console.log('test');
-  }
-
-  hideAllForms() {
-    this.displayChangeLocationForm = false;
-    this.displayChangeEmailForm = false;
-    this.displayChangePasswordForm = false;
-    this.displayDeleteAccountForm = false;
+    switch (tab) {
+      case 'Edit Profile':     this.displayEditProfileTab = true;
+      break;
+      case 'Account Settings':     this.displayAccountSettingsTab = true;
+       break;
+    }
   }
 
   displayForm(form) {
+
     switch (form) {
       case 'location':
         this.displayChangeLocationForm = !this.displayChangeLocationForm;

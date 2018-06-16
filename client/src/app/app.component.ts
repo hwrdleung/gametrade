@@ -20,7 +20,6 @@ ngOnInit(){
   this.dataService.userData = JWT(sessionStorage.getItem('currentUser')).user;
 }
 
-
 ngOnDestroy(){
   this.gamesDataService.searchResults = [];
 }

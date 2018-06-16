@@ -1,25 +1,29 @@
-<div class="container">
 
-  <h1>{{username}}</h1>
+  
+<div class="profile-container flex-row">
+  <div class="gamer-card theme">
+    <h1>{{username}}</h1>
+    <h4>{{profileData.first}} {{profileData.last}}</h4>
+    <h4>{{profileData.email}}</h4>
+    <h4>{{profileData.city}}</h4>
+    <h4>{{profileData.state}}</h4>
+    <h4>{{profileData.country}}</h4>
+  </div>
+  <div>
+    <h2>Games available for trade:</h2>
 
-  <h3>{{profileData.first}} {{profileData.last}}</h3>
-  <h3>{{profileData.email}}</h3>
-  <h3>{{profileData.city}}, {{profileData.state}} {{profileData.country}}</h3>
-<br>
-  <h2>Games available for trade:</h2>
+    <div class="game-grid">
+      <div *ngFor="let game of profileData.games" class="game-card">
+        <div class="game-card-img-container">
+          <img src="{{game.cover}}">
+        </div>
+        <div class="game-card-p-container">
+          <p>{{game.title}}</p>
+          <p>{{game.platform}}</p>
+        </div>
 
-  <div class="game-grid">
-    <div *ngFor="let game of profileData.games" class="game-card">
-      <div class="game-card-img-container">
-        <img src="{{game.cover}}">
+        <button (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
       </div>
-      <div class="game-card-p-container">
-        <p>{{game.title}}</p>
-        <p>{{game.platform}}</p>
-      </div>
-
-      <button (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
     </div>
   </div>
-
 </div>

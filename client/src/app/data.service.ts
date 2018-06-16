@@ -25,7 +25,6 @@ export class DataService {
 
   register(formData) {
     this.http.post(this.registerEndpoint, formData).subscribe((res) => {
-      console.log(res);
       if(res['success']){
         this.router.navigate(['login']);
       }
@@ -37,14 +36,11 @@ export class DataService {
     this.http.post(this.loginEndpoint, formData).subscribe((res) => {
 
       if (!res['success']) {
-        console.log(res['msg']);
       } else if (res['success']) {
-        console.log('JWT saved to session storage as "currentUser"');
         this.currentUser = res['token'];
         
         sessionStorage.setItem('currentUser', res['token']);
         this.userData = JWT(this.currentUser).user;
-        console.log('!!!', this.userData);
         this.router.navigate(['/']);
 
       }
@@ -69,9 +65,7 @@ export class DataService {
     }
 
     this.http.post(this.changeEmailEndpoint, data).subscribe((res)=>{
-      console.log(res);
       let token = res['token'];
-      console.log('test token', token);
       sessionStorage.setItem('currentUser', token);
       
       this.userData = JWT(sessionStorage.getItem('currentUser')).user;
@@ -91,7 +85,6 @@ export class DataService {
     console.log(data);
 
     this.http.post(this.serverEndpoint + '/user/delete_account', data).subscribe((res)=>{
-      console.log(res);
       if(res['success']){
         this.currentUser = '';
         sessionStorage.removeItem('currentUser');
@@ -110,7 +103,6 @@ export class DataService {
     }
 
     this.http.post(this.changePasswordEndpoint, data).subscribe((res)=>{
-      console.log(res);
       let token = res['token'];
       console.log('test token', token);
       sessionStorage.setItem('currentUser', token);
@@ -131,9 +123,7 @@ export class DataService {
     console.log(data);
 
     this.http.post(this.changeLocationEndpoint, data).subscribe((res)=>{
-      console.log(res);
       let token = res['token'];
-      console.log('test token', token);
       sessionStorage.setItem('currentUser', token);
       
       this.userData = JWT(sessionStorage.getItem('currentUser')).user;
@@ -152,43 +142,27 @@ export class DataService {
     }
 
     this.http.post(this.addGameEndpoint, secureData).subscribe((res)=>{
-      console.log(res);
-
       let token = res['token'];
       sessionStorage.setItem('currentUser', token);
       this.currentUser = res['token'];
       this.userData = JWT(sessionStorage.getItem('currentUser')).user;
-      console.log(this.userData);
     });
   }
 
   deleteGame(game){
 
     let token = this.currentUser;
-    console.log(token);
-    console.log(JWT(token));
     let secureData = {
       token: token,
       game: game
     }
 
     this.http.post(this.deleteGameEndpoint, secureData).subscribe((res)=>{
-      console.log(res);
-
       let token = res['token'];
       sessionStorage.setItem('currentUser', token);
       this.currentUser = res['token'];
       this.userData = JWT(sessionStorage.getItem('currentUser')).user;
-      console.log(this.userData);
     });
-  }
-
-  test() {
-    console.log('test() from dataservice');
-    console.log('currentUser', this.currentUser);
-    console.log('currentUser decoded', JWT(this.currentUser));
-    console.log('userData', this.userData);
-    console.log('Router.url', this.router.url);
   }
 
 }

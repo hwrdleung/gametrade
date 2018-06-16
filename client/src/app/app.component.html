@@ -1,8 +1,8 @@
 
 
-<nav *ngIf="this.dataService.currentUser" class="nav-bar">
+<nav *ngIf="this.dataService.currentUser" class="nav-bar theme">
 
-        <a id="home-link" routerLink="/">GameTrader</a>
+        <a id="logo" routerLink="/">GameTrader</a>
 
     <ul>
         <li>
@@ -10,11 +10,11 @@
         </li>
 
         <li>
-            <a id="my-trades-link" routerLink="/myTrades">My Trades</a>
+            <a routerLink="/myTrades">My Trades</a>
         </li>
 
         <li>
-            <a id="account-link" routerLink="/dashboard">{{this.dataService.userData.username}}</a>
+            <a routerLink="/dashboard">{{this.dataService.userData.username}}</a>
         </li>
 
         <li>
