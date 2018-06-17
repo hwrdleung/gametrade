@@ -1,11 +1,16 @@
-#account-data {
+.settings-box {
     list-style-type: none;
     color: #FFF;
     padding: 40px;
     margin: 20px auto;
+    max-width: 700px;
 }
 
-#account-data li{
+.settings-box ul{
+    width: 100%;
+}
+
+.settings-box li{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -13,6 +18,7 @@
     padding: 10px 0;
 }
 
-#account-data h2{
+.settings-box h2{
     margin: 0;
 }
+

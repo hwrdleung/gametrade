@@ -25,6 +25,10 @@ export class DashboardComponent implements OnInit {
   displayChangeEmailForm = false;
   displayChangePasswordForm = false;
   displayDeleteAccountForm = false;
+  displayPictureSelector = false;
+
+  editBioMode = false;
+  editProfileForm: FormGroup;
 
   //Custom validator functions
   passwordMatchValidator = function (fg: FormGroup) {
@@ -37,6 +41,12 @@ export class DashboardComponent implements OnInit {
 
 
   constructor(private dataService: DataService, private formBuilder: FormBuilder) {
+
+    this.editProfileForm = formBuilder.group({
+      'displayName' : [this.dataService.userData.profile['display name']?'Enable':'Disable'],
+      'displayEmail': [this.dataService.userData.profile['display email']?'Enable':'Disable'],
+      'bio':[this.dataService.userData.profile.bio]
+    });
 
     this.changeLocationForm = formBuilder.group({
       'newCity': [null, Validators.required],
@@ -70,15 +80,22 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
   }
 
+
+  toggleEditBioMode(){
+    this.editBioMode = !this.editBioMode;
+  }
+
   displayContent(tab) {
     this.displayEditProfileTab = false;
     this.displayAccountSettingsTab = false;
+    this.displayPictureSelector = false;
 
     switch (tab) {
       case 'Edit Profile':     this.displayEditProfileTab = true;
       break;
       case 'Account Settings':     this.displayAccountSettingsTab = true;
        break;
+       case 'Picture Selector': this.displayPictureSelector = true; break;
     }
   }
 

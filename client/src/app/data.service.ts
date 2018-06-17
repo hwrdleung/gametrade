@@ -10,6 +10,11 @@ export class DataService {
   currentUser = sessionStorage.getItem('currentUser');
   userData;
 
+  profilePics = [
+    "./assets/profile-pics/kitty.jpg",
+    "./assets/profile-pics/puppy.jpg",
+  ]
+
   serverEndpoint = 'http://localhost:3000';
   registerEndpoint = this.serverEndpoint +'/user/register';
   loginEndpoint = this.serverEndpoint + '/user/login';
@@ -20,6 +25,8 @@ export class DataService {
   deleteGameEndpoint = this.serverEndpoint + '/user/delete_game';
 
   deleteAllEndpoint = this.serverEndpoint + '/user/delete_all';
+
+
 
   constructor(private router: Router, private http: HttpClient) { }
 
@@ -82,7 +89,6 @@ export class DataService {
       token: token
     }
 
-    console.log(data);
 
     this.http.post(this.serverEndpoint + '/user/delete_account', data).subscribe((res)=>{
       if(res['success']){
@@ -129,6 +135,26 @@ export class DataService {
       this.userData = JWT(sessionStorage.getItem('currentUser')).user;
     });
   }
+
+  editProfile(formData){
+
+    let token = sessionStorage.getItem('currentUser');
+
+    let data = {
+      token: token,
+      formData: formData
+    }
+
+    this.http.post(this.serverEndpoint + '/user/edit_profile', data).subscribe((res)=>{
+      if(res['success']){
+        let token = res['token'];
+      sessionStorage.setItem('currentUser', token);
+      
+      this.userData = JWT(sessionStorage.getItem('currentUser')).user;
+      }
+    });
+  }
+
 
   //MY GAMES FUNCTIONS
   addGame(game, platform){

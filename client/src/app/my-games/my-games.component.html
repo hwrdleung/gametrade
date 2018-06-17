@@ -28,7 +28,7 @@
     <div *ngIf="displayAddGames" class="tab-content">
         <h1 class="component-title">Add Games</h1>
         <form [formGroup]="searchForm" (ngSubmit)="this.gamesDataService.searchGame(searchForm.value)">
-            <div class="search-bar theme">
+            <div class="search-bar">
                 <input type="text" formControlName="query" name="query" placeholder="Search for a game title...">
                 <input type="submit" value="Search" [disabled]="!searchForm.valid">
             </div>

@@ -1,132 +1,179 @@
 <div class="container">
 
 
-    <div class="container">
+  <div class="container">
 
-        <ul class="tab-menu">
-            <li>
-              <a id="profile-tab" (click)="displayContent('Edit Profile')">Edit Profile</a>
-            </li>
-            <li>
-              <a id="account-tab" (click)="displayContent('Account Settings')">Account Settings</a>
-            </li>
+    <ul class="tab-menu">
+      <li>
+        <a id="profile-tab" (click)="displayContent('Edit Profile')">Edit Profile</a>
+      </li>
+      <li>
+        <a id="account-tab" (click)="displayContent('Account Settings')">Account Settings</a>
+      </li>
     </ul>
 
-<h1 class="component-title">{{ this.dataService.userData.username }}</h1>
+    <h1 class="component-title">{{ this.dataService.userData.username }}</h1>
 
-<div *ngIf="displayEditProfileTab"class="tab-content">
-  <h1>Edit Profile</h1>
-  </div>
+    <div *ngIf="displayEditProfileTab" class="tab-content">
+      <h1>Edit Profile</h1>
 
-  <div *ngIf="displayAccountSettingsTab"class="tab-content">
+      <form class="theme settings-box" [formGroup]="editProfileForm" (ngSubmit)="this.dataService.editProfile(editProfileForm.value)">
+      <ul>
+        <li>
+            <img class="profile-img" src="{{this.dataService.profilePics[this.dataService.userData.profile.picture]}}">
+        </li>
+        <li>
+          <div>
+            <a (click)="displayContent('Picture Selector')">Change Profile Picture</a>
+          </div>
+          <a routerLink="/profile/{{this.dataService.userData.username}}">View Public Profile</a>
 
-<div class="theme">
-    <ul id="account-data">
+        </li>
+        <li>
+          <p>Display name publicly:</p>
+          <select formControlName="displayName" name="displayName">
+            <option value="Enable">Enable</option>
+            <option value="Disable">Disable</option>
+          </select>
+        </li>
+        <li>
+          <p>Display email address publicly:</p>
+          <select formControlName="displayEmail" name="displayEmail">
+            <option value="Enable">Enable</option>
+            <option value="Disable">Disable</option>
+          </select>
+        </li>
+        <li>
+          <div *ngIf="!editBioMode; else edit">
+            <p>{{this.dataService.userData.profile.bio}}</p>
+          </div>
+          <ng-template #edit>
+            <textarea formControlName="bio" name="bio">
+              {{this.dataService.userData.profile.bio}}
+            </textarea>
+          </ng-template>
 
-      <li>
-        <h2>{{ this.dataService.userData.first }} {{ this.dataService.userData.last }}</h2>
-        <a routerLink="/profile/{{this.dataService.userData.username}}">View Public Profile</a>
-      </li>
+          <a (click)="toggleEditBioMode()">Edit Bio</a>
+        </li>
+        <li>
+          <input type="submit" value="Save Changes">
+        </li>
+      </ul>
+    </form>
+    </div>
 
-      <li>
-        <p>Location: {{ this.dataService.userData.city }}, {{ this.dataService.userData.state }}, {{ this.dataService.userData.country
-          }}</p>
-        <a (click)="displayForm('location')">Change Location</a>
-      </li>
+    <div *ngIf="displayPictureSelector" class="tab-content">
+      <h1>Choose profile pic</h1>
+    </div>
 
-      <li>
-        <p>Email Address: {{ this.dataService.userData.email }}</p>
-        <a (click)="displayForm('email')">Change Email Address</a>
-      </li>
+    <div *ngIf="displayAccountSettingsTab" class="tab-content">
 
-      <li>
-        <p>Password: ********</p>
-        <a (click)="displayForm('password')">Change Password</a>
-      </li>
+      <ul class="theme settings-box">
 
-      <li>
+        <li>
+          <h2>{{ this.dataService.userData.first }} {{ this.dataService.userData.last }}</h2>
+        </li>
+
+        <li>
+          <p>Location: {{ this.dataService.userData.city }}, {{ this.dataService.userData.state }}, {{ this.dataService.userData.country
+            }}
+          </p>
+          <a (click)="displayForm('location')">Change Location</a>
+        </li>
+
+        <li>
+          <p>Email Address: {{ this.dataService.userData.email }}</p>
+          <a (click)="displayForm('email')">Change Email Address</a>
+        </li>
+
+        <li>
+          <p>Password: ********</p>
+          <a (click)="displayForm('password')">Change Password</a>
+        </li>
+
+        <li>
           <p>Delete Account</p>
           <a (click)="displayForm('delete account')">Delete Account</a>
         </li>
-    </ul>
-  </div>
-    <div>
-      <form class="theme" *ngIf="displayChangeLocationForm" [formGroup]="changeLocationForm" (ngSubmit)="this.dataService.changeLocation(changeLocationForm.value); hideAllForms()">
-        <h3>Update Your Location</h3>
+      </ul>
+      <div>
+        <form class="theme" *ngIf="displayChangeLocationForm" [formGroup]="changeLocationForm" (ngSubmit)="this.dataService.changeLocation(changeLocationForm.value); hideAllForms()">
+          <h3>Update Your Location</h3>
 
-        <label>City:
-          <input type="text" formControlName="newCity" name="newCity">
-        </label>
+          <label>City:
+            <input type="text" formControlName="newCity" name="newCity">
+          </label>
 
-        <label>State:
-          <input type="text" formControlName="newState" name="newState">
-        </label>
+          <label>State:
+            <input type="text" formControlName="newState" name="newState">
+          </label>
 
-        <label>Country:
-          <input type="text" formControlName="newCountry" name="newCountry">
-        </label>
+          <label>Country:
+            <input type="text" formControlName="newCountry" name="newCountry">
+          </label>
 
-        <input type="submit" [disabled]="!changeLocationForm.valid">
+          <input type="submit" [disabled]="!changeLocationForm.valid">
+        </form>
+
+        <form class="theme" *ngIf="displayChangeEmailForm" [formGroup]="changeEmailForm" (ngSubmit)="this.dataService.changeEmail(changeEmailForm.value)">
+          <h3>Update your email address</h3>
+
+          <label>
+            Enter your new email address:
+            <input type="email" formControlName="newEmail" name="newEmail">
+          </label>
+
+          <label>
+            Re-type your new email address:
+            <input type="email" formControlName="newEmail2" name="newEmail2">
+          </label>
+
+          <input type="submit" [disabled]="!changeEmailForm.valid">
+
+        </form>
+
+        <form class="theme" *ngIf="displayChangePasswordForm" [formGroup]="changePasswordForm" (ngSubmit)="this.dataService.changePassword(changePasswordForm.value)">
+          <h3>Change your password</h3>
+
+          <label>
+            Enter your old password:
+            <input type="password" formControlName="oldPassword" name="oldPassword">
+          </label>
+
+          <label>
+            Enter your new password:
+            <input type="password" formControlName="newPassword" name="newPassword">
+          </label>
+
+          <label>
+            Re-type your new password:
+            <input type="password" formControlName="newPassword2" name="newPassword2">
+          </label>
+
+          <input type="submit" [disabled]="!changePasswordForm.valid">
+        </form>
+      </div>
+
+      <form class="theme" *ngIf="displayDeleteAccountForm" [formGroup]="deleteAccountForm" (ngSubmit)="this.dataService.deleteAccount(deleteAccountForm.value)">
+        <h3>Delete your account</h3>
+        <br>
+        <p>Warning: You are about to delete your account. This is irreversible and all of your data will be lost. To proceed,
+          please enter your password.</p>
+        <input type="password" formControlName="password" name="password">
+        <input type="submit" [disabled]="!deleteAccountForm.valid">
       </form>
 
-      <form class="theme" *ngIf="displayChangeEmailForm" [formGroup]="changeEmailForm" (ngSubmit)="this.dataService.changeEmail(changeEmailForm.value)">
-        <h3>Update your email address</h3>
-
-        <label>
-          Enter your new email address:
-          <input type="email" formControlName="newEmail" name="newEmail">
-        </label>
-
-        <label>
-          Re-type your new email address:
-          <input type="email" formControlName="newEmail2" name="newEmail2">
-        </label>
-
-        <input type="submit" [disabled]="!changeEmailForm.valid">
-
-      </form>
-
-      <form class="theme" *ngIf="displayChangePasswordForm" [formGroup]="changePasswordForm" (ngSubmit)="this.dataService.changePassword(changePasswordForm.value)">
-        <h3>Change your password</h3>
-
-        <label>
-          Enter your old password:
-          <input type="password" formControlName="oldPassword" name="oldPassword">
-        </label>
-
-        <label>
-          Enter your new password:
-          <input type="password" formControlName="newPassword" name="newPassword">
-        </label>
-
-        <label>
-          Re-type your new password:
-          <input type="password" formControlName="newPassword2" name="newPassword2">
-        </label>
-
-        <input type="submit" [disabled]="!changePasswordForm.valid">
-      </form>
     </div>
 
-    <form class="theme" *ngIf="displayDeleteAccountForm" [formGroup]="deleteAccountForm" (ngSubmit)="this.dataService.deleteAccount(deleteAccountForm.value)">
-      <h3>Delete your account</h3>
-      <br>
-      <p>Warning:  You are about to delete your account.  This is irreversible and all of your data will be lost.  To proceed, please enter your password.</p>
-      <input type="password" formControlName="password" name="password">
-      <input type="submit" [disabled]="!deleteAccountForm.valid">
-    </form>
+    <div *ngIf="displayTradeRequests" class="tab-content">
+      <h3>Trade Requests</h3>
+    </div>
 
-  </div>
+    <div *ngIf="displayTradeHistory" class="tab-content">
+      <h3>Trade History</h3>
+    </div>
 
-  <div *ngIf="displayTradeRequests" class="tab-content">
-    <h3>Trade Requests</h3>
+    <div *ngIf="displayActiveTrades" class="tab-content">
+      <h3>Active Trades</h3>
+    </div>
   </div>
-
-  <div *ngIf="displayTradeHistory" class="tab-content">
-    <h3>Trade History</h3>
-  </div>
-
-  <div *ngIf="displayActiveTrades" class="tab-content">
-    <h3>Active Trades</h3>
-  </div>
-</div>

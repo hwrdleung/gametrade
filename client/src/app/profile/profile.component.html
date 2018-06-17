@@ -1,28 +1,61 @@
-
-  
 <div class="profile-container flex-row">
+  <div class="profile-column">
   <div class="gamer-card theme">
+    <img class="profile-img" src="{{this.dataService.profilePics[this.dataService.userData.profile.picture]}}">
     <h1>{{username}}</h1>
-    <h4>{{profileData.first}} {{profileData.last}}</h4>
-    <h4>{{profileData.email}}</h4>
-    <h4>{{profileData.city}}</h4>
-    <h4>{{profileData.state}}</h4>
+    <h4 *ngIf="this.dataService.userData.profile['display name']">{{profileData.first}} {{profileData.last}}</h4>
+    <h4 *ngIf="this.dataService.userData.profile['display email']">{{profileData.email}}</h4>
+    <h4>{{profileData.city}}, {{profileData.state}}</h4>
+
     <h4>{{profileData.country}}</h4>
+    <br>
+    <p>{{this.dataService.userData.profile.bio}}</p>
   </div>
-  <div>
-    <h2>Games available for trade:</h2>
+  <div class="gamer-card theme">
 
-    <div class="game-grid">
-      <div *ngFor="let game of profileData.games" class="game-card">
-        <div class="game-card-img-container">
-          <img src="{{game.cover}}">
-        </div>
-        <div class="game-card-p-container">
-          <p>{{game.title}}</p>
-          <p>{{game.platform}}</p>
-        </div>
+    <p>Leave a review:</p>
+    <form class="review-form" *ngIf="this.dataService.currentUser" [formGroup]="reviewForm" (ngSubmit)="postReview(username, reviewForm.value)">
+      <textarea name="reviewBody" formControlName="reviewBody" name="reviewBody">
+    </textarea>
+      <input type="submit" value="Submit" [disabled]="!reviewForm.valid">
+    </form>
+  </div>
+</div>
+  <div class="profile-column">
+    <h3>My Reviews:</h3>
 
-        <button (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
+    <div *ngIf="profileData.profile.reviews; else noReviews" class="review-container">
+      <div class="review-card" *ngFor="let review of profileData.profile.reviews">
+        <p>{{review.body}}</p>
+        <br>
+        <p>{{review.date | date:'fullDate'}}</p>
+        <p>Posted by:
+          <a [routerLink]="['/profile', review.reviewer]">{{review.reviewer}}</a>
+        </p>
+      </div>
+    </div>
+
+    <ng-template #noReviews>
+      <p class="content-description">There are no reviews for this user.</p>
+    </ng-template>
+
+<br>
+
+    <div>
+      <h3>My Games:</h3>
+
+      <div class="game-grid">
+        <div *ngFor="let game of profileData.games" class="game-card">
+          <div class="game-card-img-container">
+            <img src="{{game.cover}}">
+          </div>
+          <div class="game-card-p-container">
+            <p>{{game.title}}</p>
+            <p>{{game.platform}}</p>
+          </div>
+
+          <button (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
+        </div>
       </div>
     </div>
   </div>

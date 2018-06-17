@@ -73,6 +73,15 @@ module.exports = (router) => {
                 state: req.body.state,
                 country: req.body.country,
                 password: hash,
+                profile: {
+                    'display name': true,
+                    'display email': true,
+                    'picture': 1,
+                    'bio': 'I like turtles',
+                    'reviews': [
+                        { 'msg': 'This gamer really likes turtles' }
+                    ]
+                }
             });
 
             //Save new user to database
@@ -584,7 +593,7 @@ module.exports = (router) => {
 
             //Save trade to 'incoming trades' for game owner
             .then(function (gameOwner) {
-                let query = JSON.stringify(game._id);``
+                let query = JSON.stringify(game._id); ``
 
                 for (let i = 0; i < gameOwner.incoming.length; i++) {
                     let id = JSON.stringify(gameOwner.incoming[i].game._id);
@@ -882,6 +891,95 @@ module.exports = (router) => {
                 .catch(error => { console.log('Error:', error.message); });
         });
     });
+
+    router.post('/edit_profile', (req, res) => {
+
+        let token = req.body.token;
+        let bio = req.body.formData.bio;
+        let displayName = req.body.formData.displayName === 'Enable' ? true : false;
+        let displayEmail = req.body.formData.displayEmail === 'Enable' ? true : false;
+
+        console.log(displayName, displayEmail);
+
+        jwt.verify(token, 'secret', (err, payload) => {
+            if (err) {
+                console.log(err);
+            }
+
+            let username = payload.user.username;
+
+            User.findOne({ username: username }).exec()
+
+                //Save updated profile data to user's document in db
+                .then(function (user) {
+                    user.profile['display name'] = displayName;
+                    user.profile['display email'] = displayEmail;
+                    user.profile['bio'] = bio;
+
+                    return user.save();
+                })
+
+                //Create  JWT with updated data
+                .then(function (user) {
+                    console.log('Profile data updated for user: ' + username);
+                    return jwt.sign({ user: user }, 'secret', { expiresIn: '1h' });
+                })
+
+                //Send success message and updated token back to client
+                .then(function (token) {
+                    console.log('Sending new token to client.');
+                    res.json({
+                        success: true,
+                        msg: 'Profile changes have been saved for ' + username,
+                        token: token
+                    });
+                    return
+                })
+                .catch(error => { console.log('Error:', error.message); });
+
+        });
+    });
+
+    router.post('/post_review', (req, res) => {
+
+        let token = req.body.token;
+        let profile = req.body.formData.profile;
+        let reviewBody = req.body.formData.reviewBody;
+        let reviewer;
+
+        //Verify token
+        jwt.verify(token, 'secret', (err, payload) => {
+            if (err) {
+                console.log(err);
+            }
+
+            reviewer = payload.user.username;
+
+            User.findOne({username: profile}).exec()
+            
+            //Save new review to profile's document
+            .then(function(user){
+                user.profile.reviews.push({
+                    date: new Date(),
+                    reviewer: reviewer,
+                    body: reviewBody
+                });
+                return user.save();
+            })
+
+            //Send success message back to client
+            .then(function(user){
+                console.log('A new review has been saved to ' + profile + "'s document.");
+                return res.json({
+                    success: true,
+                    msg: 'Review has been successfully saved'
+                });
+            })       
+            .catch(error => { console.log('Error:', error.message); });
+        });
+
+    });
+
 
     return router;
 }

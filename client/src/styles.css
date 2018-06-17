@@ -238,6 +238,7 @@ input[type="email"]{
     flex-direction: row;
     justify-content: center;
     align-items: space-around;
+    box-shadow: 2px 2px 5px rgb(75, 75, 75);
 }
 
 .search-bar input[type="text"] {
@@ -258,3 +259,9 @@ input[type="email"]{
     margin: 0;
 }
 
+
+/*--------------------*/
+.profile-img {
+    height: 200px;
+    width: 200px;
+}
