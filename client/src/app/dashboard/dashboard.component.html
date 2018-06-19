@@ -12,61 +12,65 @@
       </li>
     </ul>
 
-    <h1 class="component-title">{{ this.dataService.userData.username }}</h1>
 
     <div *ngIf="displayEditProfileTab" class="tab-content">
-      <h1>Edit Profile</h1>
+      <h3>Edit Profile</h3>
 
-      <form class="theme settings-box" [formGroup]="editProfileForm" (ngSubmit)="this.dataService.editProfile(editProfileForm.value)">
-      <ul>
-        <li>
-            <img class="profile-img" src="{{this.dataService.profilePics[this.dataService.userData.profile.picture]}}">
-        </li>
-        <li>
-          <div>
-            <a (click)="displayContent('Picture Selector')">Change Profile Picture</a>
-          </div>
-          <a routerLink="/profile/{{this.dataService.userData.username}}">View Public Profile</a>
+      <form class="theme settings-box" [formGroup]="editProfileForm" (ngSubmit)="this.dataService.editProfile(editProfileForm.value); resetView()">
+        <ul>
+          <li>
+            <img class="profile-img" [src]="selectedImg">
+            <div *ngIf="displayPictureSelector" class="picture-selector">
+              <div *ngFor="let picture of this.dataService.profilePics;let i = index">
+                <a (click)="setPicture(i)"><img src="{{picture}}"></a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div>
+              <a (click)="togglePictureSelector()">Change Profile Picture</a>
+            </div>
+            <a routerLink="/profile/{{this.dataService.userData.username}}">View Public Profile</a>
 
-        </li>
-        <li>
-          <p>Display name publicly:</p>
-          <select formControlName="displayName" name="displayName">
-            <option value="Enable">Enable</option>
-            <option value="Disable">Disable</option>
-          </select>
-        </li>
-        <li>
-          <p>Display email address publicly:</p>
-          <select formControlName="displayEmail" name="displayEmail">
-            <option value="Enable">Enable</option>
-            <option value="Disable">Disable</option>
-          </select>
-        </li>
-        <li>
-          <div *ngIf="!editBioMode; else edit">
+          </li>
+          <li>
+            <p>Display name publicly:</p>
+            <select formControlName="displayName" name="displayName">
+              <option value="Enable">Enable</option>
+              <option value="Disable">Disable</option>
+            </select>
+          </li>
+          <li>
+            <p>Display email address publicly:</p>
+            <select formControlName="displayEmail" name="displayEmail">
+              <option value="Enable">Enable</option>
+              <option value="Disable">Disable</option>
+            </select>
+          </li>
+          <li *ngIf="!editBioMode; else edit">
             <p>{{this.dataService.userData.profile.bio}}</p>
-          </div>
+            <a (click)="toggleEditBioMode()">Edit Bio</a>
+          </li>
           <ng-template #edit>
-            <textarea formControlName="bio" name="bio">
+            <li>
+              <textarea formControlName="bio" name="bio">
               {{this.dataService.userData.profile.bio}}
             </textarea>
+            <a (click)="toggleEditBioMode()">Cancel</a>
+
+            </li>
           </ng-template>
 
-          <a (click)="toggleEditBioMode()">Edit Bio</a>
-        </li>
-        <li>
-          <input type="submit" value="Save Changes">
-        </li>
-      </ul>
-    </form>
-    </div>
 
-    <div *ngIf="displayPictureSelector" class="tab-content">
-      <h1>Choose profile pic</h1>
+          <li>
+            <input type="submit" value="Save Changes">
+          </li>
+        </ul>
+      </form>
     </div>
 
     <div *ngIf="displayAccountSettingsTab" class="tab-content">
+        <h3>Account Settings</h3>
 
       <ul class="theme settings-box">
 

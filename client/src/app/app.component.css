@@ -22,6 +22,16 @@
     font-family: 'Orbitron';
     font-size: 1.5rem;
     padding: 0 20px;
+    color: #FFF;
+    z-index: 5;
+}
+
+#logo-black {
+    font-family: 'Orbitron';
+    font-size: 1.5rem;
+    padding: 0 20px;
+    color: #000;
+    z-index: 5;
 }
 
 .nav-bar ul {

@@ -78,9 +78,7 @@ module.exports = (router) => {
                     'display email': true,
                     'picture': 1,
                     'bio': 'I like turtles',
-                    'reviews': [
-                        { 'msg': 'This gamer really likes turtles' }
-                    ]
+                    'reviews': []
                 }
             });
 
@@ -896,6 +894,7 @@ module.exports = (router) => {
 
         let token = req.body.token;
         let bio = req.body.formData.bio;
+        let picture = req.body.formData.picture;
         let displayName = req.body.formData.displayName === 'Enable' ? true : false;
         let displayEmail = req.body.formData.displayEmail === 'Enable' ? true : false;
 
@@ -915,6 +914,7 @@ module.exports = (router) => {
                     user.profile['display name'] = displayName;
                     user.profile['display email'] = displayEmail;
                     user.profile['bio'] = bio;
+                    user.profile['picture'] = picture;
 
                     return user.save();
                 })

@@ -85,7 +85,7 @@ button:hover {
     height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; 
+    justify-content: flex-start; 
     background: rgb(39, 39, 39);
     text-align: left;
     box-shadow: 2px 2px 5px rgb(102, 102, 102);
@@ -203,13 +203,19 @@ button:hover {
 }
 
 form {
-    max-width: 400px;
+    max-width: 800px;
+    width: auto;
     display: flex;
     flex-direction: column;
     margin: 0 auto;
     justify-content: space-between;
     align-items: center;
     padding: 50px;
+}
+
+.form-alert {
+    color: red;
+    font-size: 0.8rem;
 }
 
 form label {
@@ -259,8 +265,6 @@ input[type="email"]{
     margin: 0;
 }
 
-
-/*--------------------*/
 .profile-img {
     height: 200px;
     width: 200px;

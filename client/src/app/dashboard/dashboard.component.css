@@ -14,11 +14,31 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
     padding: 10px 0;
 }
 
 .settings-box h2{
     margin: 0;
+}
+
+.settings-box textarea {
+    width: 600px;
+    height: 150px;
+}
+
+.picture-selector {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.picture-selector img {
+    height: 100px;
+    width: 100px;
 }
 

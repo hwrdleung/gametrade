@@ -29,6 +29,8 @@ export class DashboardComponent implements OnInit {
 
   editBioMode = false;
   editProfileForm: FormGroup;
+  selectedImgIndex = this.dataService.userData.profile.picture;
+  selectedImg = this.dataService.profilePics[this.selectedImgIndex];
 
   //Custom validator functions
   passwordMatchValidator = function (fg: FormGroup) {
@@ -45,7 +47,8 @@ export class DashboardComponent implements OnInit {
     this.editProfileForm = formBuilder.group({
       'displayName' : [this.dataService.userData.profile['display name']?'Enable':'Disable'],
       'displayEmail': [this.dataService.userData.profile['display email']?'Enable':'Disable'],
-      'bio':[this.dataService.userData.profile.bio]
+      'bio':[this.dataService.userData.profile.bio],
+      'picture':[this.selectedImgIndex]
     });
 
     this.changeLocationForm = formBuilder.group({
@@ -80,6 +83,21 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
   }
 
+  resetView(){
+    this.displayPictureSelector = false;
+    this.editBioMode = false;
+  }
+
+  togglePictureSelector() {
+    this.displayPictureSelector = !this.displayPictureSelector;
+  }
+
+  setPicture(index){
+    this.selectedImgIndex = index;
+    this.selectedImg = this.dataService.profilePics[index];
+    this.editProfileForm.value.picture = index;
+  }
+
 
   toggleEditBioMode(){
     this.editBioMode = !this.editBioMode;
@@ -88,14 +106,12 @@ export class DashboardComponent implements OnInit {
   displayContent(tab) {
     this.displayEditProfileTab = false;
     this.displayAccountSettingsTab = false;
-    this.displayPictureSelector = false;
 
     switch (tab) {
       case 'Edit Profile':     this.displayEditProfileTab = true;
       break;
       case 'Account Settings':     this.displayAccountSettingsTab = true;
        break;
-       case 'Picture Selector': this.displayPictureSelector = true; break;
     }
   }
 

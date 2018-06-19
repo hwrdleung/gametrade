@@ -9,7 +9,7 @@
     </ul>
 
     <div *ngIf="displayMyGames" class="tab-content">
-        <h1 class="component-title">My Games</h1>
+        <h3 class="component-title">My Games</h3>
         <p class="content-description">*Games that you add here will be displayed publicly as available for trade.</p>
         <div class="game-grid">
             <div class="game-card" *ngFor="let game of this.dataService.userData.games">
@@ -26,7 +26,7 @@
     </div>
 
     <div *ngIf="displayAddGames" class="tab-content">
-        <h1 class="component-title">Add Games</h1>
+        <h3 class="component-title">Add Games</h3>
         <form [formGroup]="searchForm" (ngSubmit)="this.gamesDataService.searchGame(searchForm.value)">
             <div class="search-bar">
                 <input type="text" formControlName="query" name="query" placeholder="Search for a game title...">

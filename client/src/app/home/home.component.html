@@ -1,14 +1,30 @@
-
-
 <div class="container" *ngIf="this.dataService.currentUser; else loggedOut">
-        <!-- <form class="main-search-form" [formGroup]="searchForm">
-                                <input type="text" formControlName="query" name="query" placeholder="this does not work yet.">
-                                <input type="submit" value="Search">
-                        </form> -->
-                        <div id="splash" *ngIf="this.dataService.currentUser">
 
-                                </div>
-        <div class="game-grid">
+        <div id="splash" *ngIf="this.dataService.currentUser">
+                <div class="splash-blocks-container">
+                <div class="splash-block1">
+                        <h1>GameTrader</h1>
+                        <h4>A freecodecamp project</h4>
+                        <h4>Powered by
+                                <a href="https://www.igdb.com/" target="_blank">IGDB API</a>
+                        </h4>
+
+                </div>
+                <ul class="splash-block2">
+                        <li>HTML</li>
+                        <li>CSS</li>
+                        <li>JavaScript</li>
+                        <li>TypeScript</li>
+                </ul>
+                <ul class="splash-block3">
+                        <li>MongoDB</li>
+                        <li>ExpressJS</li>
+                        <li>Angular</li>
+                        <li>NodeJS</li>
+                </ul>
+        </div>
+        </div>
+        <div *ngIf="this.homeGames.length > 0; else noHomeGames" class="game-grid">
                 <div *ngFor="let game of this.homeGames">
                         <div class="game-card" *ngIf="game.available">
                                 <div class="game-card-img-container">
@@ -24,6 +40,10 @@
                         </div>
                 </div>
         </div>
+
+        <ng-template #noHomeGames>
+                <p class="content-description">There are no games to display.</p>
+        </ng-template>
 </div>
 
 

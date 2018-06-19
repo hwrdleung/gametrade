@@ -13,6 +13,10 @@ export class DataService {
   profilePics = [
     "./assets/profile-pics/kitty.jpg",
     "./assets/profile-pics/puppy.jpg",
+    "./assets/profile-pics/halo.jpg",
+    "./assets/profile-pics/fallout.jpg",
+    "./assets/profile-pics/battlefield.jpg",
+    "./assets/profile-pics/masseffect.jpg",
   ]
 
   serverEndpoint = 'http://localhost:3000';
@@ -26,13 +30,17 @@ export class DataService {
 
   deleteAllEndpoint = this.serverEndpoint + '/user/delete_all';
 
-
+  errorMsg = "";
+  errorMsgDuration = 5000;
 
   constructor(private router: Router, private http: HttpClient) { }
 
   register(formData) {
     this.http.post(this.registerEndpoint, formData).subscribe((res) => {
-      if(res['success']){
+      if (!res['success']) {
+        console.log(res);
+        this.flashErrorMsg(res['msg']);
+      } else if(res['success']){
         this.router.navigate(['login']);
       }
     });
@@ -43,6 +51,8 @@ export class DataService {
     this.http.post(this.loginEndpoint, formData).subscribe((res) => {
 
       if (!res['success']) {
+        console.log(res);
+        this.flashErrorMsg(res['msg']);
       } else if (res['success']) {
         this.currentUser = res['token'];
         
@@ -54,9 +64,16 @@ export class DataService {
     });
   }
 
+  flashErrorMsg(error){
+    this.errorMsg = error;
+    let context = this;
+    setTimeout(function(){
+      context.errorMsg = "";
+      console.log('3 seconds elapsed');
+    }, this.errorMsgDuration);
+  }
+
   logout() {
-    //Delete JWT from local storage
-    //clear currentUser
     this.currentUser = '';
     sessionStorage.removeItem('currentUser');
     this.router.navigate(['/']);
@@ -144,6 +161,8 @@ export class DataService {
       token: token,
       formData: formData
     }
+
+    console.log(data);
 
     this.http.post(this.serverEndpoint + '/user/edit_profile', data).subscribe((res)=>{
       if(res['success']){

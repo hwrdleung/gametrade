@@ -4,48 +4,62 @@
 <h1 class="component-title">Sign Up</h1>
   <form class="theme" [formGroup]="registrationForm" (ngSubmit)="this.dataService.register(registrationForm.value)">
 
+    <div class="registration-form-contents">
     <label>First name:
       <input type="text" formControlName="first" name="first">
+      <div class="form-alert" *ngIf="!registrationForm.controls['first'].valid && registrationForm.controls['first'].touched">First name is required.</div>
     </label>
 
     <label>Last name:
       <input type="text" formControlName="last" name="last">
+      <div class="form-alert" *ngIf="!registrationForm.controls['last'].valid && registrationForm.controls['last'].touched">Last name is required.</div>
     </label>
 
     <label>Username:
       <input type="text" formControlName="username" name="username">
+      <div class="form-alert" *ngIf="!registrationForm.controls['username'].valid && registrationForm.controls['username'].touched">Username is required.</div>
     </label>
 
     <label>City:
       <input type="text" formControlName="city" name="city">
+      <div class="form-alert" *ngIf="!registrationForm.controls['city'].valid && registrationForm.controls['city'].touched">City is required.</div>
     </label>
 
     <label>State:
       <input type="text" formControlName="state" name="state">
+      <div class="form-alert" *ngIf="!registrationForm.controls['state'].valid && registrationForm.controls['state'].touched">State is required.</div>
     </label>
 
     <label>Country:
       <input type="text" formControlName="country" name="country">
+      <div class="form-alert" *ngIf="!registrationForm.controls['country'].valid && registrationForm.controls['country'].touched">Country is required.</div>
     </label>
 
     <label>Email Address:
       <input type="email" formControlName="email" name="email">
+      <div class="form-alert" *ngIf="!registrationForm.controls['email'].valid && registrationForm.controls['email'].touched">You must enter a valid email address.</div>
     </label>
 
     <label>Re-type Email Address:
       <input type="email" formControlName="email2" name="email2">
+      <div class="form-alert" *ngIf="!registrationForm.controls['email2'].valid && registrationForm.controls['email2'].touched">You must re-enter your email address.</div>
     </label>
 
-    <label>Password:
+    <label>Password: 
       <input type="password" formControlName="password" name="password">
+      <div class="form-alert" *ngIf="!registrationForm.controls['password'].valid && registrationForm.controls['password'].touched">Password is required.</div>
     </label>
 
     <label>Re-type Password:
       <input type="password" formControlName="password2" name="password2">
+      <!-- <div class="form-alert" *ngIf="!registrationForm.controls['password2'].valid && registrationForm.controls['password2'].touched">You must re-enter your password.</div> -->
+      <div class="form-alert" *ngIf="registrationForm.get('password2').hasError('required') && registrationForm.controls['password2'].touched">You must re-type your password.</div>
+      <div class="form-alert" *ngIf="registrationForm.get('password2').hasError('mismatch') && registrationForm.controls['password2'].touched">The passwords you entered do not match.</div>
+
     </label>
-
+  </div>
     <input type="submit" value="Submit" [disabled]="!registrationForm.valid">
-
+  <div class="form-alert" *ngIf="this.dataService.errorMsg">{{ this.dataService.errorMsg }}</div>
   </form>
 
 </div>

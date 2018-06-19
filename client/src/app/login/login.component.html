@@ -1,17 +1,21 @@
   <div class="container">
   
   <h1 class="component-title">Sign In</h1>
-  <form class="theme" [formGroup]="loginForm" (ngSubmit)="this.dataService.login(loginForm.value)">
-
+  <form class="login-form theme" [formGroup]="loginForm" (ngSubmit)="this.dataService.login(loginForm.value)">
       <label>Name
         <input type="text" formControlName="username" name="username">
       </label>
+      <div class="form-alert" *ngIf="!loginForm.controls['username'].valid && loginForm.controls['username'].touched">Username is required.</div>
 
       <label>Password
         <input type="password" formControlName="password" name="password">
       </label>
+      <div class="form-alert" *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched">Password is required.</div>
+
 
       <input type="submit" class="button expanded" value="Submit" [disabled]="!loginForm.valid">
+      <div class="form-alert" *ngIf="this.dataService.errorMsg">{{this.dataService.errorMsg}}</div>
+
 </form>
 
 </div>

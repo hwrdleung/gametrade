@@ -10,8 +10,8 @@
     padding: 100px 0;
     justify-content: center;
     align-items: flex-start;
-    box-shadow: 2px 2px 5px rgb(75, 75, 75);
-    background: rgb(255, 255, 255);
+    /* box-shadow: 2px 2px 5px rgb(75, 75, 75);
+    background: rgb(255, 255, 255); */
 }
 
 .profile-column {
@@ -19,6 +19,10 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+}
+
+.profile-column:nth-child(2){
+    min-width: 700px;
 }
 
 .gamer-card{
@@ -37,15 +41,25 @@
     overflow: auto;
     width: 100%;
     max-height: 350px;
+
 }
 
 .review-card {
-    background: rgb(206, 206, 206);
+    background: rgb(83, 83, 83);
+    color: #FFF;
     box-shadow: 2px 2px 5px rgb(75, 75, 75);
     margin: 10px auto;
     padding: 10px;
     width: 200px;
     font-size: 0.8rem;
+}
+
+.review-card a {
+    color:#FFF;
+}
+
+.review-card a:hover {
+    color: silver;
 }
 
 .review-form {

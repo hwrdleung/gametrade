@@ -1,3 +1,11 @@
 
+.registration-form-contents{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px auto;
+}
 
-
+.registration-form-contents label {
+    width: 300px;
+}

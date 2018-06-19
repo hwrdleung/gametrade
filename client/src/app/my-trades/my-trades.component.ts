@@ -67,7 +67,6 @@ export class MyTradesComponent implements OnInit {
     this.displaySelectGameWindow = true;
     let initiator = tradeRequest.initiator;
     let getAllGamesEndpoint = this.serverEndpoint + '/games/get_all/';
-    //This would not be okay with a large number of games in the database
     this.http.get(getAllGamesEndpoint).subscribe((res) => {
       for (let game in res) {
         if (res[game]['owner'] === initiator && !this.tradeService.alreadyRequested(res[game]) && res[game].available) {

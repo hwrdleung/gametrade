@@ -1,31 +1,31 @@
 <div class="profile-container flex-row">
   <div class="profile-column">
-  <div class="gamer-card theme">
-    <img class="profile-img" src="{{this.dataService.profilePics[this.dataService.userData.profile.picture]}}">
-    <h1>{{username}}</h1>
-    <h4 *ngIf="this.dataService.userData.profile['display name']">{{profileData.first}} {{profileData.last}}</h4>
-    <h4 *ngIf="this.dataService.userData.profile['display email']">{{profileData.email}}</h4>
-    <h4>{{profileData.city}}, {{profileData.state}}</h4>
+    <div class="gamer-card theme">
+      <img class="profile-img" src="{{this.dataService.profilePics[profileData.profile.picture]}}">
+      <h3>{{username}}</h3>
+      <h4 *ngIf="profileData.profile['display name']">{{profileData.first}} {{profileData.last}}</h4>
+      <h4 *ngIf="profileData.profile['display email']">{{profileData.email}}</h4>
+      <h4>{{profileData.city}}, {{profileData.state}}</h4>
 
-    <h4>{{profileData.country}}</h4>
-    <br>
-    <p>{{this.dataService.userData.profile.bio}}</p>
-  </div>
-  <div class="gamer-card theme">
+      <h4>{{profileData.country}}</h4>
+      <br>
+      <p>{{profileData.profile.bio}}</p>
+    </div>
+    <div class="gamer-card theme">
 
-    <p>Leave a review:</p>
-    <form class="review-form" *ngIf="this.dataService.currentUser" [formGroup]="reviewForm" (ngSubmit)="postReview(username, reviewForm.value)">
-      <textarea name="reviewBody" formControlName="reviewBody" name="reviewBody">
+      <p>Leave a review:</p>
+      <form class="review-form" *ngIf="this.dataService.currentUser" [formGroup]="reviewForm" (ngSubmit)="postReview(username, reviewForm.value)">
+        <textarea name="reviewBody" formControlName="reviewBody" name="reviewBody">
     </textarea>
-      <input type="submit" value="Submit" [disabled]="!reviewForm.valid">
-    </form>
+        <input type="submit" value="Submit" [disabled]="!reviewForm.valid">
+      </form>
+    </div>
   </div>
-</div>
   <div class="profile-column">
     <h3>My Reviews:</h3>
 
-    <div *ngIf="profileData.profile.reviews; else noReviews" class="review-container">
-      <div class="review-card" *ngFor="let review of profileData.profile.reviews">
+    <div *ngIf="profileData.profile.reviews.length > 0; else noReviews" class="review-container">
+      <div class="review-card" *ngFor="let review of profileData.profile.reviews?.reverse()">
         <p>{{review.body}}</p>
         <br>
         <p>{{review.date | date:'fullDate'}}</p>
@@ -39,12 +39,11 @@
       <p class="content-description">There are no reviews for this user.</p>
     </ng-template>
 
-<br>
+    <br>
 
-    <div>
       <h3>My Games:</h3>
 
-      <div class="game-grid">
+      <div *ngIf="profileData.games.length > 0; else noGames" class="game-grid">
         <div *ngFor="let game of profileData.games" class="game-card">
           <div class="game-card-img-container">
             <img src="{{game.cover}}">
@@ -57,6 +56,10 @@
           <button (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
         </div>
       </div>
-    </div>
+
+      <ng-template #noGames>
+          <p class="content-description">There are no games for this user.</p>
+        </ng-template>
+
   </div>
 </div>
