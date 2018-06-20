@@ -17,6 +17,11 @@ const mongoose = require('mongoose');
 mongoose.connect ('mongodb://noodles01:noodles01@ds253879.mlab.com:53879/gametrade');
 
 app.use(cors());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
 app.use(express.static(__dirname + '/public/'));
 
 //Middleware
