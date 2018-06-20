@@ -116,7 +116,7 @@ module.exports = (router) => {
 
             //Send success message back to client
             .then(function (user) {
-                console.log('New user registration successful.  ' + newUser.username + ' is now registered.  Sending success message to client.');
+                console.log('New user registration successful.  ' + user.username + ' is now registered.  Sending success message to client.');
                 res.json({
                     success: true,
                     msg: 'Registration successful.'
