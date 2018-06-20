@@ -5,7 +5,7 @@ import { DataService } from './data.service';
 @Injectable()
 export class TradeService {
   
-  serverEndpoint = 'http://localhost:3000';
+  serverEndpoint = 'https://gametrader.herokuapp.com';
   requestTradeEndpoint = this.serverEndpoint + '/user/trade_request';
   getTradeDataEndpoint = this.serverEndpoint + '/user/get_trade_data';
   cancelTradeRequestEndpoint = this.serverEndpoint + '/user/cancel_trade_request';

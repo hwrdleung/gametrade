@@ -19,7 +19,7 @@ export class DataService {
     "./assets/profile-pics/masseffect.jpg",
   ]
 
-  serverEndpoint = 'http://localhost:3000';
+  serverEndpoint = 'https://gametrader.herokuapp.com';
   registerEndpoint = this.serverEndpoint +'/user/register';
   loginEndpoint = this.serverEndpoint + '/user/login';
   changeEmailEndpoint = this.serverEndpoint + '/user/email';

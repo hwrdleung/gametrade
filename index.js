@@ -26,10 +26,9 @@ app.use('/user', user);
 app.use('/games', games);
 app.use(cors());
 
-
 //Route
 app.get('/', (req, res)=>{
-    res.sendFile(path.join(__dirname + '/index.html'));
+    response.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 //Start server

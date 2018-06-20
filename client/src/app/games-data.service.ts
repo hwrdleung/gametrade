@@ -8,7 +8,7 @@ export class GamesDataService {
   IGDB_API_KEY = '09f049c49c43481b21812a91f6559298';
   IGDB_API_KEYWORD_SEARCH_ENDPOINT = 'https://api-endpoint.igdb.com/games/?search=';
   IDGB_API_GAME_ID_SEARCH_ENDPOINT = 'https://api-endpoint.igdb.com/games/';
-  serverEndpoint = 'http://localhost:3000';
+  serverEndpoint = 'https://gametrader.herokuapp.com';
   getCoverEndpoint = this.serverEndpoint + '/user/get_cover_url';
   searchResults = [];
 

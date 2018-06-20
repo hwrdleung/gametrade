@@ -11,7 +11,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 })
 export class MyTradesComponent implements OnInit {
 
-  serverEndpoint = 'http://localhost:3000';
+  serverEndpoint = 'https://gametrader.herokuapp.com';
 
   //UI stuff
   displayIncomingTradeRequests = true;

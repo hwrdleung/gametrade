@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   searchForm: FormGroup
   homeGames;
-  serverEndpoint = 'http://localhost:3000';
+  serverEndpoint = 'https://gametrader.herokuapp.com';
   getAllEndPoint = this.serverEndpoint + '/games/get_all';
 
   constructor(private formBuilder:FormBuilder, private http:HttpClient, private dataService:DataService, private tradeService:TradeService) {

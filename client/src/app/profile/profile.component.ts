@@ -16,7 +16,7 @@ export class ProfileComponent implements OnInit {
   username: String; //Display profile page for this user
   profileData: Object;
   private sub: any;
-  serverEndpoint = 'http://localhost:3000';
+  serverEndpoint = 'https://gametrader.herokuapp.com';
   reviewForm: FormGroup;
 
   constructor(private formBuilder:FormBuilder, private tradeService: TradeService, private dataService: DataService, private route: ActivatedRoute, private http:HttpClient) { 
