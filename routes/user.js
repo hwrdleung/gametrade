@@ -121,6 +121,7 @@ module.exports = (router) => {
                     success: true,
                     msg: 'Registration successful.'
                 });
+                return;
             })
 
             .catch(error => { console.log('Error:', error.message); });
