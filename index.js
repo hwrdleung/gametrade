@@ -16,14 +16,15 @@ const games = require('./routes/games')(router);
 const mongoose = require('mongoose');
 mongoose.connect ('mongodb://noodles01:noodles01@ds253879.mlab.com:53879/gametrade');
 
+app.use(cors());
+app.use(express.static(__dirname + '/public/'));
+
 //Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
-app.use(express.static(__dirname + '/public/'));
 app.use('/user', user);
 app.use('/games', games);
-app.use(cors());
 
 //Route
 app.get('/', (req, res)=>{
