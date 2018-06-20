@@ -1,6 +1,6 @@
+<a id="logo-black" routerLink="/">GameTrader</a>
+
 <div class="container">
-
-
 <h1 class="component-title">Sign Up</h1>
   <form class="theme" [formGroup]="registrationForm" (ngSubmit)="this.dataService.register(registrationForm.value)">
 
@@ -42,19 +42,25 @@
 
     <label>Re-type Email Address:
       <input type="email" formControlName="email2" name="email2">
-      <div class="form-alert" *ngIf="!registrationForm.controls['email2'].valid && registrationForm.controls['email2'].touched">You must re-enter your email address.</div>
+      <div class="form-alert" *ngIf="registrationForm.get('email2').hasError('required') && registrationForm.controls['email2'].touched">You must re-type your email address.</div>
+      <div class="form-alert" *ngIf="registrationForm.controls.email2.errors?.emailMismatch">The email addresses you entered do not match.</div>
     </label>
 
     <label>Password: 
       <input type="password" formControlName="password" name="password">
-      <div class="form-alert" *ngIf="!registrationForm.controls['password'].valid && registrationForm.controls['password'].touched">Password is required.</div>
+      <div class="form-alert" *ngIf="registrationForm.controls.password.errors?.required && registrationForm.controls['password'].touched">Password is required.</div>
+      <div class="form-alert" *ngIf="registrationForm.controls.password.errors?.noSpecialChar">Your password must have at least one of the following special characters: !@#$%^&*</div>
+      <div class="form-alert" *ngIf="registrationForm.controls.password.errors?.allUpperCase">Your password must have at least one lowercase letter.</div>
+      <div class="form-alert" *ngIf="registrationForm.controls.password.errors?.allLowercase">Your password must have at least one uppercase letter.</div>
+      <div class="form-alert" *ngIf="registrationForm.controls.password.errors?.noNumber">Your password must have at least one number.</div>
+      <div class="form-alert" *ngIf="registrationForm.controls.password.errors?.minlength">Your password must be at least 8 characters.</div>
     </label>
 
     <label>Re-type Password:
       <input type="password" formControlName="password2" name="password2">
       <!-- <div class="form-alert" *ngIf="!registrationForm.controls['password2'].valid && registrationForm.controls['password2'].touched">You must re-enter your password.</div> -->
       <div class="form-alert" *ngIf="registrationForm.get('password2').hasError('required') && registrationForm.controls['password2'].touched">You must re-type your password.</div>
-      <div class="form-alert" *ngIf="registrationForm.get('password2').hasError('mismatch') && registrationForm.controls['password2'].touched">The passwords you entered do not match.</div>
+      <div class="form-alert" *ngIf="registrationForm.controls.password2.errors?.passwordMismatch">The passwords you entered do not match.</div>
 
     </label>
   </div>

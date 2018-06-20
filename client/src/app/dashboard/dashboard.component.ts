@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import * as JWT from 'jwt-decode';
 import { DataService } from '../data.service';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { passwordMatchValidator } from '../validators/passwordMatch.validator';
+import { emailMatchValidator } from '../validators/emailMatch.validator';
+import { passwordRequirementsValidator } from '../validators/passwordRequirements.validator';
 
 
 @Component({
@@ -32,15 +35,6 @@ export class DashboardComponent implements OnInit {
   selectedImgIndex = this.dataService.userData.profile.picture;
   selectedImg = this.dataService.profilePics[this.selectedImgIndex];
 
-  //Custom validator functions
-  passwordMatchValidator = function (fg: FormGroup) {
-    return fg.get('newPassword').value === fg.get('newPassword2').value ? null : { 'mismatch': true };
-  }
-
-  emailMatchValidator = function (fg: FormGroup) {
-    return fg.get('newEmail').value === fg.get('newEmail2').value ? null : { 'mismatch': true };
-  }
-
 
   constructor(private dataService: DataService, private formBuilder: FormBuilder) {
 
@@ -58,25 +52,25 @@ export class DashboardComponent implements OnInit {
     });
 
     this.changeEmailForm = formBuilder.group({
-      'newEmail': [null, Validators.compose([
+      'email': [null, Validators.compose([
         Validators.required,
         Validators.email
       ])],
-      'newEmail2': [null, Validators.compose([
+      'email2': [null, Validators.compose([
         Validators.required,
         Validators.email
       ])],
-    }, { validator: this.emailMatchValidator });
+    }, { validator: emailMatchValidator});
 
     this.changePasswordForm = formBuilder.group({
       'oldPassword': [null, Validators.required],
-      'newPassword': [null, Validators.required],
-      'newPassword2': [null, Validators.required]
-    }, { validator: this.passwordMatchValidator });
+      'password': [null, Validators.required],
+      'password2': [null, Validators.required]
+    }, { validator: [passwordMatchValidator, passwordRequirementsValidator]});
 
     this.deleteAccountForm = formBuilder.group({
       'password': [null, Validators.required],
-    });
+    }, );
 
   }
 

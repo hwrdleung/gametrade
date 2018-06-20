@@ -1,28 +1,18 @@
-
-        <a id="logo-black" routerLink="/">GameTrader</a>
-
 <nav *ngIf="this.dataService.currentUser" class="nav-bar theme">
         <a id="logo" routerLink="/">GameTrader</a>
-
-
     <ul>
         <li>
             <a routerLink="/myGames">My Games</a>
         </li>
-
         <li>
             <a routerLink="/myTrades">My Trades</a>
         </li>
-
         <li>
             <a routerLink="/dashboard">{{this.dataService.userData.username}}</a>
         </li>
-
         <li>
             <a (click)="this.dataService.logout()">Sign Out</a>
         </li>
-
-
     </ul>
 </nav>
 

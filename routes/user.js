@@ -62,45 +62,70 @@ module.exports = (router) => {
         //Data validation is handled client-side.
         console.log('Data received for new user registration.');
 
-        bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
-            //Hash password and create new user 
-            var newUser = new User({
-                first: req.body.first,
-                last: req.body.last,
-                email: req.body.email,
-                username: req.body.username,
-                city: req.body.city,
-                state: req.body.state,
-                country: req.body.country,
-                password: hash,
-                profile: {
-                    'display name': true,
-                    'display email': true,
-                    'picture': 1,
-                    'bio': 'I like turtles',
-                    'reviews': []
-                }
-            });
-
-            //Save new user to database
-            newUser.save((err) => {
-                if (err) {
-                    console.log(err);
-                    console.log('New user registration unsuccessful.  Sending error message to client.');
+        User.findOne({ username: req.body.username }).exec()
+            //Check for existing account with this username
+            .then(function (user) {
+                console.log('Checking for existing account with this username.');
+                if (user) {
                     res.json({
                         success: false,
-                        msg: 'An error occured while registering.  Please try again.'
-                    });
-                } else {
-                    console.log('New user registration successful.  ' + newUser.username + ' is now registered.  Sending success message to client.');
-                    res.json({
-                        success: true,
-                        msg: 'Registration successful.'
-                    });
+                        msg: 'This username is already in use.'
+                    })
+                    throw 'End promise chain';
                 }
-            });
-        });
+                console.log('Username available.');
+                return User.findOne({ email: req.body.email });
+            })
+
+            //Check for existing account with this email address
+            .then(function (email) {
+                console.log('Checking for existing account with this email address.');
+                if (email) {
+                    res.json({
+                        success: false,
+                        msg: 'This email address has already been used to create an account.'
+                    })
+                    throw 'End promise chain';
+                }
+                console.log('Email address available.');
+                return bcrypt.hash(req.body.password, saltRounds);
+            })
+
+            //If passed checks, then hash password and save new user.
+            .then(function (hash) {
+                console.log('Registering new user.');
+                var newUser = new User({
+                    first: req.body.first,
+                    last: req.body.last,
+                    email: req.body.email,
+                    username: req.body.username,
+                    city: req.body.city,
+                    state: req.body.state,
+                    country: req.body.country,
+                    password: hash,
+                    profile: {
+                        'display name': true,
+                        'display email': true,
+                        'picture': 1,
+                        'bio': 'I like turtles',
+                        'reviews': []
+                    }
+                });
+                return newUser.save();
+            })
+
+            //Send success message back to client
+            .then(function (user) {
+                console.log('New user registration successful.  ' + newUser.username + ' is now registered.  Sending success message to client.');
+                res.json({
+                    success: true,
+                    msg: 'Registration successful.'
+                });
+            })
+
+            .catch(error => { console.log('Error:', error.message); });
     });
+
 
     router.post('/delete_account', (req, res) => {
 
@@ -160,7 +185,7 @@ module.exports = (router) => {
     router.post('/email', (req, res) => {
 
         let token = req.body.token;
-        let newEmail = req.body.formData.newEmail;
+        let newEmail = req.body.formData.email;
 
         //Verify token
         jwt.verify(token, 'secret', (err, payload) => {
@@ -186,7 +211,7 @@ module.exports = (router) => {
                         console.log('Sending new token back to client.');
                         return res.json({
                             success: true,
-                            msg: 'New Email Address Saved',
+                            msg: 'New Email Address has been Saved',
                             token: token
                         });
                     })
@@ -240,7 +265,7 @@ module.exports = (router) => {
 
         let token = req.body.token;
         let oldPassword = req.body.formData.oldPassword;
-        let newPassword = req.body.formData.newPassword;
+        let newPassword = req.body.formData.password;
         let currentUser;
 
         //Verify token
@@ -955,27 +980,27 @@ module.exports = (router) => {
 
             reviewer = payload.user.username;
 
-            User.findOne({username: profile}).exec()
-            
-            //Save new review to profile's document
-            .then(function(user){
-                user.profile.reviews.push({
-                    date: new Date(),
-                    reviewer: reviewer,
-                    body: reviewBody
-                });
-                return user.save();
-            })
+            User.findOne({ username: profile }).exec()
 
-            //Send success message back to client
-            .then(function(user){
-                console.log('A new review has been saved to ' + profile + "'s document.");
-                return res.json({
-                    success: true,
-                    msg: 'Review has been successfully saved'
-                });
-            })       
-            .catch(error => { console.log('Error:', error.message); });
+                //Save new review to profile's document
+                .then(function (user) {
+                    user.profile.reviews.push({
+                        date: new Date(),
+                        reviewer: reviewer,
+                        body: reviewBody
+                    });
+                    return user.save();
+                })
+
+                //Send success message back to client
+                .then(function (user) {
+                    console.log('A new review has been saved to ' + profile + "'s document.");
+                    return res.json({
+                        success: true,
+                        msg: 'Review has been successfully saved'
+                    });
+                })
+                .catch(error => { console.log('Error:', error.message); });
         });
 
     });

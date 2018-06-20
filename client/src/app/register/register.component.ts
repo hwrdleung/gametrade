@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { DataService } from '../data.service';
+import { passwordMatchValidator } from '../validators/passwordMatch.validator';
+import { emailMatchValidator } from '../validators/emailMatch.validator';
+import { passwordRequirementsValidator } from '../validators/passwordRequirements.validator';
 
 @Component({
   selector: 'app-register',
@@ -11,24 +14,13 @@ export class RegisterComponent implements OnInit {
 
   registrationForm: FormGroup;
 
-  //Custom validator functions
-  passwordMatchValidator = function(fg:FormGroup){
-    return fg.get('password').value === fg.get('password2').value ? null : { 'mismatch': true};
-  }
-
-  emailMatchValidator = function(fg:FormGroup){
-    return fg.get('email').value === fg.get('email2').value ? null : { 'mismatch': true};
-  }
-
-  constructor(private formBuilder:FormBuilder, private dataService:DataService) { 
-
+  constructor(private formBuilder: FormBuilder, private dataService: DataService) {
     this.registrationForm = formBuilder.group({
       'first': [null, Validators.required],
       'last': [null, Validators.required],
       'username': [null, Validators.compose([
         //Will have to check database to see if username is available
         Validators.required,
-        Validators.minLength(4)
       ])],
       'city': [null, Validators.compose([
         Validators.required
@@ -43,7 +35,9 @@ export class RegisterComponent implements OnInit {
         Validators.required,
         Validators.email
       ])],
-      'email2': [null, Validators.required],
+      'email2': [null, Validators.compose([
+        Validators.required
+      ])],
       'password': [null, Validators.compose([
         Validators.required,
         Validators.minLength(8)
@@ -51,14 +45,10 @@ export class RegisterComponent implements OnInit {
       'password2': [null, Validators.compose([
         Validators.required
       ])]
-    }, {validator: this.passwordMatchValidator});
-
+    }, { validator: [passwordMatchValidator, emailMatchValidator, passwordRequirementsValidator] });
   }
 
   ngOnInit() {
-    
+
   }
-
-
-
 }

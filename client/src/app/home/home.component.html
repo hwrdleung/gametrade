@@ -2,27 +2,26 @@
 
         <div id="splash" *ngIf="this.dataService.currentUser">
                 <div class="splash-blocks-container">
-                <div class="splash-block1">
-                        <h1>GameTrader</h1>
-                        <h4>A freecodecamp project</h4>
-                        <h4>Powered by
-                                <a href="https://www.igdb.com/" target="_blank">IGDB API</a>
-                        </h4>
-
+                        <div class="splash-block1">
+                                <h1>GameTrader</h1>
+                                <h4>A freecodecamp project</h4>
+                                <h4>Powered by
+                                        <a href="https://www.igdb.com/" target="_blank">IGDB API</a>
+                                </h4>
+                        </div>
+                        <ul class="splash-block2">
+                                <li>HTML</li>
+                                <li>CSS</li>
+                                <li>JavaScript</li>
+                                <li>TypeScript</li>
+                        </ul>
+                        <ul class="splash-block3">
+                                <li>MongoDB</li>
+                                <li>ExpressJS</li>
+                                <li>Angular</li>
+                                <li>NodeJS</li>
+                        </ul>
                 </div>
-                <ul class="splash-block2">
-                        <li>HTML</li>
-                        <li>CSS</li>
-                        <li>JavaScript</li>
-                        <li>TypeScript</li>
-                </ul>
-                <ul class="splash-block3">
-                        <li>MongoDB</li>
-                        <li>ExpressJS</li>
-                        <li>Angular</li>
-                        <li>NodeJS</li>
-                </ul>
-        </div>
         </div>
         <div *ngIf="this.homeGames.length > 0; else noHomeGames" class="game-grid">
                 <div *ngFor="let game of this.homeGames">

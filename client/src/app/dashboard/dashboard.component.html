@@ -47,15 +47,23 @@
               <option value="Disable">Disable</option>
             </select>
           </li>
+          <li>
+          </li>
           <li *ngIf="!editBioMode; else edit">
-            <p>{{this.dataService.userData.profile.bio}}</p>
+            <div>
+              <p>Bio:</p>
+              <p>{{this.dataService.userData.profile.bio}}</p>
+              </div>
             <a (click)="toggleEditBioMode()">Edit Bio</a>
           </li>
           <ng-template #edit>
             <li>
+                <div>
+                    <p>Bio:</p>
               <textarea formControlName="bio" name="bio">
               {{this.dataService.userData.profile.bio}}
             </textarea>
+            </div>
             <a (click)="toggleEditBioMode()">Cancel</a>
 
             </li>
@@ -101,7 +109,7 @@
         </li>
       </ul>
       <div>
-        <form class="theme" *ngIf="displayChangeLocationForm" [formGroup]="changeLocationForm" (ngSubmit)="this.dataService.changeLocation(changeLocationForm.value); hideAllForms()">
+        <form class="theme settings-box" *ngIf="displayChangeLocationForm" [formGroup]="changeLocationForm" (ngSubmit)="this.dataService.changeLocation(changeLocationForm.value); hideAllForms()">
           <h3>Update Your Location</h3>
 
           <label>City:
@@ -119,46 +127,59 @@
           <input type="submit" [disabled]="!changeLocationForm.valid">
         </form>
 
-        <form class="theme" *ngIf="displayChangeEmailForm" [formGroup]="changeEmailForm" (ngSubmit)="this.dataService.changeEmail(changeEmailForm.value)">
+        <form class="theme settings-box" *ngIf="displayChangeEmailForm" [formGroup]="changeEmailForm" (ngSubmit)="this.dataService.changeEmail(changeEmailForm.value)">
           <h3>Update your email address</h3>
 
           <label>
             Enter your new email address:
-            <input type="email" formControlName="newEmail" name="newEmail">
+            <input type="email" formControlName="email" name="email">
+            <div class="form-alert" *ngIf="!changeEmailForm.controls['email'].valid && changeEmailForm.controls['email'].touched">You must enter a valid email address.</div>
           </label>
 
           <label>
             Re-type your new email address:
-            <input type="email" formControlName="newEmail2" name="newEmail2">
+            <input type="email" formControlName="email2" name="email2">
+            <div class="form-alert" *ngIf="changeEmailForm.get('email2').hasError('required') && changeEmailForm.controls['email2'].touched">You must re-type your email address.</div>
+      <div class="form-alert" *ngIf="changeEmailForm.controls.email2.errors?.emailMismatch">The email addresses you entered do not match.</div>
           </label>
 
           <input type="submit" [disabled]="!changeEmailForm.valid">
 
         </form>
 
-        <form class="theme" *ngIf="displayChangePasswordForm" [formGroup]="changePasswordForm" (ngSubmit)="this.dataService.changePassword(changePasswordForm.value)">
+        <form class="theme settings-box" *ngIf="displayChangePasswordForm" [formGroup]="changePasswordForm" (ngSubmit)="this.dataService.changePassword(changePasswordForm.value)">
           <h3>Change your password</h3>
 
           <label>
-            Enter your old password:
+            Enter your current password:
             <input type="password" formControlName="oldPassword" name="oldPassword">
+            <div class="form-alert" *ngIf="changePasswordForm.controls.password.errors?.required && changePasswordForm.controls['password'].touched">You must enter your current password.</div>
           </label>
 
           <label>
             Enter your new password:
-            <input type="password" formControlName="newPassword" name="newPassword">
+            <input type="password" formControlName="password" name="password">
+            <div class="form-alert" *ngIf="changePasswordForm.controls.password.errors?.required && changePasswordForm.controls['password'].touched">Password is required.</div>
+      <div class="form-alert" *ngIf="changePasswordForm.controls.password.errors?.noSpecialChar">Your password must have at least one of the following special characters: !@#$%^&*</div>
+      <div class="form-alert" *ngIf="changePasswordForm.controls.password.errors?.allUpperCase">Your password must have at least one lowercase letter.</div>
+      <div class="form-alert" *ngIf="changePasswordForm.controls.password.errors?.allLowercase">Your password must have at least one uppercase letter.</div>
+      <div class="form-alert" *ngIf="changePasswordForm.controls.password.errors?.noNumber">Your password must have at least one number.</div>
+      <div class="form-alert" *ngIf="changePasswordForm.controls.password.errors?.minlength">Your password must be at least 8 characters.</div>
           </label>
 
           <label>
             Re-type your new password:
-            <input type="password" formControlName="newPassword2" name="newPassword2">
+            <input type="password" formControlName="password2" name="password2">
+            <div class="form-alert" *ngIf="changePasswordForm.get('password2').hasError('required') && changePasswordForm.controls['password2'].touched">You must re-type your password.</div>
+            <div class="form-alert" *ngIf="changePasswordForm.controls.password2.errors?.passwordMismatch">The passwords you entered do not match.</div>
+      
           </label>
 
           <input type="submit" [disabled]="!changePasswordForm.valid">
         </form>
       </div>
 
-      <form class="theme" *ngIf="displayDeleteAccountForm" [formGroup]="deleteAccountForm" (ngSubmit)="this.dataService.deleteAccount(deleteAccountForm.value)">
+      <form class="theme settings-box" *ngIf="displayDeleteAccountForm" [formGroup]="deleteAccountForm" (ngSubmit)="this.dataService.deleteAccount(deleteAccountForm.value)">
         <h3>Delete your account</h3>
         <br>
         <p>Warning: You are about to delete your account. This is irreversible and all of your data will be lost. To proceed,
