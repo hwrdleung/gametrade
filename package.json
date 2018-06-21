@@ -18,8 +18,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "build": "cd client && ng build --prod",
-    "postinstall": "cd client && ng build --aot -prod"
+    "build": "cd client && ng build --prod"
   },
   "engines": {
     "node": "8.9.4",
