@@ -1,14 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-
 const app = express();
-app.use(cors());
-
 const bodyParser = require('body-parser');
 const path = require('path');
 const port = process.env.PORT || 3000;
 const router = express.Router();
-
 
 const user = require('./routes/user')(router);
 const games = require('./routes/games')(router);
@@ -18,7 +14,7 @@ const games = require('./routes/games')(router);
 const mongoose = require('mongoose');
 mongoose.connect ('mongodb://noodles01:noodles01@ds253879.mlab.com:53879/gametrade');
 
-
+app.use(cors());
 app.use(express.static(__dirname + '/public/'));
 
 //Middleware
@@ -32,6 +28,8 @@ app.use('/games', games);
 app.get('/', (req, res)=>{
     response.sendFile(path.join(__dirname + '/public/index.html'));
 });
+
+
 
 //Start server
 app.listen(port, ()=>{
