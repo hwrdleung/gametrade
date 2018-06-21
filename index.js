@@ -1,6 +1,6 @@
 const express = require('express');
-const cors = require('cors');
 const app = express();
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const port = process.env.PORT || 3000;
@@ -33,7 +33,7 @@ app.use('/games', games);
 
 //Route
 app.get('/', (req, res) => {
-    response.sendFile(path.join(__dirname + '/public/index.html'));
+    res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 
