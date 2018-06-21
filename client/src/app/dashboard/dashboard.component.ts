@@ -20,10 +20,11 @@ export class DashboardComponent implements OnInit {
   changeEmailForm: FormGroup;
   changePasswordForm: FormGroup;
   deleteAccountForm: FormGroup;
+  editProfileForm: FormGroup;
 
+  // UI logic variables
   displayEditProfileTab = true;
   displayAccountSettingsTab = false;
-
   displayChangeLocationForm = false;
   displayChangeEmailForm = false;
   displayChangePasswordForm = false;
@@ -31,18 +32,17 @@ export class DashboardComponent implements OnInit {
   displayPictureSelector = false;
 
   editBioMode = false;
-  editProfileForm: FormGroup;
   selectedImgIndex = this.dataService.userData.profile.picture;
-  selectedImg = this.dataService.profilePics[this.selectedImgIndex];
 
+  selectedImg = this.dataService.profilePics[this.selectedImgIndex];
 
   constructor(private dataService: DataService, private formBuilder: FormBuilder) {
 
     this.editProfileForm = formBuilder.group({
-      'displayName' : [this.dataService.userData.profile['display name']?'Enable':'Disable'],
-      'displayEmail': [this.dataService.userData.profile['display email']?'Enable':'Disable'],
-      'bio':[this.dataService.userData.profile.bio],
-      'picture':[this.selectedImgIndex]
+      'displayName': [this.dataService.userData.profile['display name'] ? 'Enable' : 'Disable'],
+      'displayEmail': [this.dataService.userData.profile['display email'] ? 'Enable' : 'Disable'],
+      'bio': [this.dataService.userData.profile.bio],
+      'picture': [this.selectedImgIndex]
     });
 
     this.changeLocationForm = formBuilder.group({
@@ -60,13 +60,13 @@ export class DashboardComponent implements OnInit {
         Validators.required,
         Validators.email
       ])],
-    }, { validator: emailMatchValidator});
+    }, { validator: emailMatchValidator });
 
     this.changePasswordForm = formBuilder.group({
       'oldPassword': [null, Validators.required],
       'password': [null, Validators.required],
       'password2': [null, Validators.required]
-    }, { validator: [passwordMatchValidator, passwordRequirementsValidator]});
+    }, { validator: [passwordMatchValidator, passwordRequirementsValidator] });
 
     this.deleteAccountForm = formBuilder.group({
       'password': [null, Validators.required],
@@ -77,7 +77,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
   }
 
-  resetView(){
+  resetView() {
     this.displayPictureSelector = false;
     this.editBioMode = false;
   }
@@ -86,14 +86,13 @@ export class DashboardComponent implements OnInit {
     this.displayPictureSelector = !this.displayPictureSelector;
   }
 
-  setPicture(index){
+  setPicture(index) {
     this.selectedImgIndex = index;
     this.selectedImg = this.dataService.profilePics[index];
     this.editProfileForm.value.picture = index;
   }
 
-
-  toggleEditBioMode(){
+  toggleEditBioMode() {
     this.editBioMode = !this.editBioMode;
   }
 
@@ -102,15 +101,16 @@ export class DashboardComponent implements OnInit {
     this.displayAccountSettingsTab = false;
 
     switch (tab) {
-      case 'Edit Profile':     this.displayEditProfileTab = true;
-      break;
-      case 'Account Settings':     this.displayAccountSettingsTab = true;
-       break;
+      case 'Edit Profile':
+        this.displayEditProfileTab = true;
+        break;
+      case 'Account Settings':
+        this.displayAccountSettingsTab = true;
+        break;
     }
   }
 
   displayForm(form) {
-
     switch (form) {
       case 'location':
         this.displayChangeLocationForm = !this.displayChangeLocationForm;
@@ -138,5 +138,4 @@ export class DashboardComponent implements OnInit {
         break;
     }
   }
-
 }

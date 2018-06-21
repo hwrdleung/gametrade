@@ -1,7 +1,6 @@
 <a id="logo-black" routerLink="/">GameTrader</a>
-  
+
   <div class="container">
-  
   <h1 class="component-title">Sign In</h1>
   <form class="login-form theme" [formGroup]="loginForm" (ngSubmit)="this.dataService.login(loginForm.value)">
       <label>Name
@@ -17,8 +16,6 @@
 
       <input type="submit" class="button expanded" value="Submit" [disabled]="!loginForm.valid">
       <div class="form-alert" *ngIf="this.dataService.errorMsg">{{this.dataService.errorMsg}}</div>
-
 </form>
-
 </div>
 

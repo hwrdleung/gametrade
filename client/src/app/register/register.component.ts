@@ -19,7 +19,6 @@ export class RegisterComponent implements OnInit {
       'first': [null, Validators.required],
       'last': [null, Validators.required],
       'username': [null, Validators.compose([
-        //Will have to check database to see if username is available
         Validators.required,
       ])],
       'city': [null, Validators.compose([

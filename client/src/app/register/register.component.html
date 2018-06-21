@@ -58,14 +58,11 @@
 
     <label>Re-type Password:
       <input type="password" formControlName="password2" name="password2">
-      <!-- <div class="form-alert" *ngIf="!registrationForm.controls['password2'].valid && registrationForm.controls['password2'].touched">You must re-enter your password.</div> -->
       <div class="form-alert" *ngIf="registrationForm.get('password2').hasError('required') && registrationForm.controls['password2'].touched">You must re-type your password.</div>
       <div class="form-alert" *ngIf="registrationForm.controls.password2.errors?.passwordMismatch">The passwords you entered do not match.</div>
-
     </label>
   </div>
     <input type="submit" value="Submit" [disabled]="!registrationForm.valid">
   <div class="form-alert" *ngIf="this.dataService.errorMsg">{{ this.dataService.errorMsg }}</div>
   </form>
-
 </div>

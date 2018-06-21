@@ -23,20 +23,12 @@ export class HomeComponent implements OnInit {
    }
 
   ngOnInit() {
-    //I will want to change this to run only after user logs in, using observables
-    //But for now I will put it here.
-
-    //To make it scalable and more efficient, I would specify criteria for this get request so 
-    //that it doesn't download the entire database every time a user logs in.  Fix this later.
     this.refreshGames();
   }
 
   refreshGames(){
-    console.log('refresh');
     this.http.get(this.getAllEndPoint).subscribe((res)=>{
       this.homeGames = res;
     }); 
   }
-
-
 }

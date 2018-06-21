@@ -13,18 +13,19 @@ export class MyTradesComponent implements OnInit {
 
   serverEndpoint = 'https://gametrader.herokuapp.com';
 
-  //UI stuff
-  displayIncomingTradeRequests = true;
+  // UI logic variables
+  displayIncomingTradeRequests = true; // set to true to display on load
   displayOutgoingTradeRequests = false;
   displayTradeHistory = false;
   displayActiveTrades = false;
   displaySelectGameWindow = false;
   displayGameSelector = false;
 
+  // Data storage for select-game window
   selectGameWindowGames = [];
   selectGameWindowInitiator = '';
   selectGameWindowTradeRequest;
-  tradeRequest; //For selectGameWindow
+  tradeRequest; 
   initiator = '';
   initiatorGames = [];
 
@@ -34,7 +35,7 @@ export class MyTradesComponent implements OnInit {
     this.tradeService.getTradeData();
   }
 
-
+  // Get data to populate select-game window
   selectGameWindow(tradeRequest) {
     this.displaySelectGameWindow = true;
     this.initiator = tradeRequest.initiator;

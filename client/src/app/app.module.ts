@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http';
-
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -12,7 +11,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MyGamesComponent } from './my-games/my-games.component';
 import { MyTradesComponent } from './my-trades/my-trades.component';
 import { ProfileComponent } from './profile/profile.component';
-
 import { DataService } from './data.service';
 import { GamesDataService } from './games-data.service';
 import { TradeService }  from './trade.service';

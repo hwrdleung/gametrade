@@ -42,6 +42,4 @@ export class MyGamesComponent implements OnInit {
         break;
     }
   }
-
-
 }
