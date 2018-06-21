@@ -21,7 +21,7 @@
           <li>
             <img class="profile-img" [src]="selectedImg">
             <div *ngIf="displayPictureSelector" class="picture-selector">
-              <div *ngFor="let picture of this.profilePics;let i = index">
+              <div *ngFor="let picture of this.dataService.profilePics;let i = index">
                 <a (click)="setPicture(i)"><img src="{{picture}}"></a>
               </div>
             </div>
