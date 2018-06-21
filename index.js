@@ -26,7 +26,7 @@ app.use('/games', games);
 
 //Route
 app.get('/', (req, res)=>{
-    response.sendFile(path.join(__dirname + '/public/index.html'));
+    res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 
