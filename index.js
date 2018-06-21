@@ -31,6 +31,6 @@ app.get('/', (req, res) => {
 });
 
 //Start server
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
     console.log('Server started on port ' + port);
 });
