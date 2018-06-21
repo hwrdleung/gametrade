@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -16,8 +15,7 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://noodles01:noodles01@ds253879.mlab.com:53879/gametrade');
 
 app.use(cors());
-
-app.use(express.static(__dirname + '/public/'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Middleware
 app.use(bodyParser.json());
