@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@angular/cli": "^6.0.0",
+    "@angular/compiler-cli":"6.0.0",
     "bcrypt": "^2.0.1",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
@@ -17,7 +18,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "build": "cd client && ng build --prod"
+    "build": "cd client && ng build --prod",
+    "postinstall": "ng build --prod"
   },
   "engines": {
     "node": "8.9.4",

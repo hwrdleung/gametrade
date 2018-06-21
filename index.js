@@ -29,7 +29,6 @@ app.use('/games', games);
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
-app.set('port', port);
 
 //Start server
 app.listen(port, () => {
