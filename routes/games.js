@@ -1,5 +1,5 @@
 const Game = require('../models/game');
-const request = require('request');
+// const request = require('request');
 const IGDB_USER_KEY = '09f049c49c43481b21812a91f6559298';
 
 module.exports = (router) => {
@@ -16,29 +16,29 @@ module.exports = (router) => {
       });
   });
 
-  router.get('/igdb_keyword_search/*', function(req, res, next){
-    let params = req.params['0'];
-    let options = {
-        uri:'https://api-endpoint.igdb.com/games/?search=' + params,
-        headers: {
-            'Accept': 'application/json',
-            'user-key': IGDB_USER_KEY
-        }
-    }
-    request(options).pipe(res);
-});
+//   router.get('/igdb_keyword_search/*', function(req, res, next){
+//     let params = req.params['0'];
+//     let options = {
+//         uri:'https://api-endpoint.igdb.com/games/?search=' + params,
+//         headers: {
+//             'Accept': 'application/json',
+//             'user-key': IGDB_USER_KEY
+//         }
+//     }
+//     request(options).pipe(res);
+// });
 
-router.get('/igdb_game_id_search/*', function(req, res, next){
-    let params = req.params['0'];
-    let options = {
-        uri:'https://api-endpoint.igdb.com/games/' + params,
-        headers: {
-            'Accept': 'application/json',
-            'user-key': IGDB_USER_KEY
-        }
-    }
-    request(options).pipe(res);
-});
+// router.get('/igdb_game_id_search/*', function(req, res, next){
+//     let params = req.params['0'];
+//     let options = {
+//         uri:'https://api-endpoint.igdb.com/games/' + params,
+//         headers: {
+//             'Accept': 'application/json',
+//             'user-key': IGDB_USER_KEY
+//         }
+//     }
+//     request(options).pipe(res);
+// });
 
   router.post('/delete_all', (req, res) => {
     //Find and delete all games in the 'Game' collection
