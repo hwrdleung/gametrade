@@ -1,7 +1,8 @@
 const User = require('../models/user');
 const Game = require('../models/game');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('../index.js').bcrypt
+const saltRounds = 10;
 
 module.exports = (router) => {
 

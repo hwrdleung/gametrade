@@ -9,9 +9,6 @@ const router = express.Router();
 
 const user = require('./routes/user')(router);
 const games = require('./routes/games')(router);
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
-module.exports.bcrypt = bcrypt;
 
 
 //Database
@@ -34,6 +31,6 @@ app.get('/', (req, res) => {
 });
 
 //Start server
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
     console.log('Server started on port ' + port);
 });
