@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -9,6 +8,7 @@ const router = express.Router();
 const user = require('./routes/user')(router);
 const games = require('./routes/games')(router);
 
+const app = express();
 
 //Database
 const mongoose = require('mongoose');
