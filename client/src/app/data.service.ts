@@ -30,12 +30,12 @@ export class DataService {
   // Stores the paths to all profile pictures that users can choose from for their user profiles
   // This must be in a service because it is used in the profile and dashboard components
   profilePics = [
-    "../assets/profile-pics/kitty.jpg",
-    "../assets/profile-pics/puppy.jpg",
-    "../assets/profile-pics/halo.jpg",
-    "../assets/profile-pics/fallout.jpg",
-    "../assets/profile-pics/battlefield.jpg",
-    "../assets/profile-pics/masseffect.jpg",
+    "./assets/profile-pics/kitty.jpg",
+    "./assets/profile-pics/puppy.jpg",
+    "./assets/profile-pics/halo.jpg",
+    "./assets/profile-pics/fallout.jpg",
+    "./assets/profile-pics/battlefield.jpg",
+    "./assets/profile-pics/masseffect.jpg",
   ]
 
   constructor(private router: Router, private http: HttpClient) { }
