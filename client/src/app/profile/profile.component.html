@@ -41,25 +41,33 @@
 
     <br>
 
-      <h3>My Games:</h3>
+    <h3>My Games:</h3>
 
-      <div *ngIf="profileData.games.length > 0; else noGames" class="game-grid">
-        <div *ngFor="let game of profileData.games" class="game-card">
-          <div class="game-card-img-container">
-            <img src="{{game.cover}}">
-          </div>
-          <div class="game-card-p-container">
-            <p>{{game.title}}</p>
-            <p>{{game.platform}}</p>
-          </div>
-
-          <button (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
+    <div *ngIf="profileData.games.length > 0; else noGames" class="game-grid">
+      <div *ngFor="let game of profileData.games" class="game-card">
+        <div class="game-card-img-container">
+          <img src="{{game.cover}}">
         </div>
-      </div>
+        <div class="game-card-p-container">
+          <p>{{game.title}}</p>
+          <p>{{game.platform}}</p>
+        </div>
 
-      <ng-template #noGames>
-          <p class="content-description">There are no games for this user.</p>
+        <div *ngIf="this.isAvailable(game); else gameUnavailable">
+          <button *ngIf="!this.tradeService.alreadyRequested(game); else alreadyRequested" (click)="this.tradeService.requestTrade(this.dataService.userData.username, game)">Request Trade</button>
+          <ng-template #alreadyRequested>
+            <p class="game-card-status">Request Pending</p>
+          </ng-template>
+        </div>
+        <ng-template #gameUnavailable>
+          <p class="game-card-status">Unavailable</p>
         </ng-template>
+      </div>
+    </div>
+
+    <ng-template #noGames>
+      <p class="content-description">There are no games for this user.</p>
+    </ng-template>
 
   </div>
 </div>

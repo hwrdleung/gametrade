@@ -39,6 +39,21 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  // Returns true if the game that is passed in is not present in profileData active trades
+  isAvailable(game){
+    let checkId = game._id;
+
+    for (let i=0; i < this.profileData['active'].length; i++){
+      let gameId = this.profileData['active'][i].game._id;
+      let game2Id = this.profileData['active'][i].game2._id;
+
+      if(checkId === gameId || checkId === game2Id){
+        return false;
+      }
+    }
+    return true;
+  }
+
   postReview(profile, formData) {
     // Prep data for post request
     let token = sessionStorage.getItem('currentUser');
