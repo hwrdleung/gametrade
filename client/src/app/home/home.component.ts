@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.refreshGames();
+    this.tradeService.getTradeData();
   }
 
   refreshGames(){

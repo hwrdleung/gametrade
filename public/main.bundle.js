@@ -697,6 +697,7 @@ var HomeComponent = /** @class */ (function () {
     }
     HomeComponent.prototype.ngOnInit = function () {
         this.refreshGames();
+        this.tradeService.getTradeData();
     };
     HomeComponent.prototype.refreshGames = function () {
         var _this = this;
