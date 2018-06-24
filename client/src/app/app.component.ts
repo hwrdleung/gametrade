@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'app';
 
+  showMobileMenu = false;
+
   constructor(private tradeService:TradeService, private dataService:DataService, private gamesDataService:GamesDataService) { }
 
 ngOnInit(){
@@ -22,6 +24,10 @@ ngOnInit(){
 
 ngOnDestroy(){
   this.gamesDataService.searchResults = [];
+}
+
+toggleMobileMenu (){
+  this.showMobileMenu = !this.showMobileMenu;
 }
 
   

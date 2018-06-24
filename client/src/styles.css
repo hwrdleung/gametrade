@@ -102,11 +102,11 @@ button:hover {
     height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; 
+    justify-content: space-between; 
     background: rgb(39, 39, 39);
     text-align: left;
     box-shadow: 2px 2px 5px rgb(102, 102, 102);
-    margin: 20px;
+    margin: 10px;
 }
 
 .game-card-img-container {
@@ -165,14 +165,18 @@ button:hover {
     margin: 0;
 }
 
+.game-card {
+}
+
 .trade-card {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     max-width: 400px;
+    height: 400px;
     padding: 20px;
-    margin: 20px;
+    margin: 20px auto;
 }
 
 .trade-card p,
@@ -182,7 +186,10 @@ button:hover {
 
 .trade-match {
     display: flex;
+    width: 100%;
     flex-direction: row;
+    justify-content: space-evenly;
+    align-items: space-evenly;
     color: #FFF;
 }
 
@@ -192,7 +199,16 @@ button:hover {
     flex-wrap: wrap;
 }
 
+
+.tab-menu-mobile {
+    display: none;
+}
+
 .tab-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: space-evenly;
     width: 100%;
     list-style-type: none;
     border-bottom: 1px #000 solid;
@@ -212,12 +228,16 @@ button:hover {
 }
 
 .content-description {
-    width: 100%;
     height:75px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+#selectGameWindow {
+    text-align: center;
+}
+
 
 form {
     max-width: 800px;
@@ -285,4 +305,74 @@ input[type="email"]{
 .profile-img {
     height: 200px;
     width: 200px;
+}
+
+@media only screen and (max-width: 800px) {
+    .container{
+        width: 100%;
+        margin: 100px auto;
+    }
+
+    .trades-container {
+        justify-content: center;
+    }
+
+    .tab-menu {
+        display: none;
+    }
+
+    .tab-content {
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+    }
+
+    .trades-container {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .tab-menu-mobile {
+        display: flex;
+        width: 100%;
+        height: 75px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: #000;
+        color: #FFF;
+        list-style-type: none;
+    }
+
+    .tab-menu-mobile li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 25%;
+        text-align: center;
+        font-size: 0.7rem;
+        margin: auto 10px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+
+    .container {
+        margin: 100px auto;
+        padding: 0;
+    }
+
+    .trade-card {
+        min-width: 300px;
+        width: 100vw;
+    }
+
+    .game-grid {
+        justify-content: space-evenly;
+    }
+
+
+
+
 }

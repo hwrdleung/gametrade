@@ -1,3 +1,19 @@
+
+<ul class="tab-menu-mobile">
+    <li>
+      <a id="incoming-tab" (click)="this.tradeService.getTradeData(); displayContent('Incoming Trade Requests')">Incoming Trade Requests ({{this.tradeService.incoming.length}})</a>
+    </li>
+    <li>
+      <a id="outgoing-tab" (click)="this.tradeService.getTradeData(); displayContent('Outgoing Trade Requests')">Outgoing Trade Requests ({{this.tradeService.outgoing.length}})</a>
+    </li>
+    <li>
+      <a id="active-tab" (click)="this.tradeService.getTradeData(); displayContent('Active Trades')">Active Trades ({{this.tradeService.active.length}})</a>
+    </li>
+    <li>
+      <a id="history-tab" (click)="this.tradeService.getTradeData(); displayContent('Trade History')">Trade History</a>
+    </li>
+  </ul>
+
 <div class="container">
   <ul class="tab-menu">
     <li>
@@ -33,7 +49,7 @@
               <p>{{tradeRequest.game.platform}}</p>
               <a [routerLink]="['/profile', tradeRequest.game.owner]">{{tradeRequest.game.owner}}</a>
             </div>
-            <p class="game-card-status" *ngIf="this.tradeService.alreadyRequested(tradeRequest.game)">Request pending</p>
+            <p class="game-card-status">Request pending</p>
           </div>
 
           <div *ngIf="tradeRequest.game2; else noGame2" class="game-card">
@@ -78,6 +94,7 @@
     <div *ngIf="this.tradeService.outgoing.length > 0; else noOutgoing" class="trades-container">
       <div class="trade-card theme" *ngFor="let tradeRequest of this.tradeService.outgoing">
         <h4 class="game-card-date">{{tradeRequest.date | date:'fullDate'}}</h4>
+        <p>You requested to trade with <a [routerLink]="['/profile', tradeRequest.game.owner]">{{tradeRequest.game.owner}}</a></p>
         <div class="game-card">
           <div class="game-card-img-container">
             <img src="{{tradeRequest.game.cover}}">
@@ -147,10 +164,7 @@
 
 
   <div *ngIf="displayTradeHistory" class="tab-content">
-
-
     <h3>Trade History</h3>
-
 
     <div *ngIf="this.tradeService.history.length > 0; else noHistory">
       <table class="theme">
@@ -187,7 +201,7 @@
 
   </div>
 
-  <div *ngIf="this.displayGameSelector" class="tab-content">
+  <div *ngIf="this.displayGameSelector" class="tab-content" id="selectGameWindow">
     <h4>Choose a game from {{selectGameWindowInitiator}} to complete this trade:</h4>
     <button (click)="closeSelectGameWindow()">Cancel</button>
     <div *ngIf="selectGameWindowGames.length > 0; else noAvailableGames">

@@ -1,4 +1,3 @@
-<div class="container" *ngIf="this.dataService.currentUser; else loggedOut">
 
         <div id="splash" *ngIf="this.dataService.currentUser">
                 <div class="splash-blocks-container">
@@ -9,20 +8,21 @@
                                         <a href="https://www.igdb.com/" target="_blank">IGDB API</a>
                                 </h4>
                         </div>
-                        <ul class="splash-block2">
+                        <ul class="splash-skills">
                                 <li>HTML</li>
                                 <li>CSS</li>
                                 <li>JavaScript</li>
                                 <li>TypeScript</li>
-                        </ul>
-                        <ul class="splash-block3">
                                 <li>MongoDB</li>
                                 <li>ExpressJS</li>
                                 <li>Angular</li>
                                 <li>NodeJS</li>
-                        </ul>
+                                </ul>
                 </div>
         </div>
+
+<div class="container" *ngIf="this.dataService.currentUser; else loggedOut">
+
         <div *ngIf="this.homeGames.length > 0; else noHomeGames" class="game-grid">
                 <div *ngFor="let game of this.homeGames">
                         <div class="game-card" *ngIf="game.available">

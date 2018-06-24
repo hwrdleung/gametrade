@@ -2,7 +2,8 @@
 <!-- NAV BAR -->
 <nav *ngIf="this.dataService.currentUser" class="nav-bar theme">
         <a id="logo" routerLink="/">GameTrader</a>
-    <ul>
+        <div class="mobile-menu-btn" [style.background]="showMobileMenu? 'green' : 'none'"><a (click)="toggleMobileMenu()"><h1>=</h1></a></div>
+    <ul id="nav-links">
         <li>
             <a routerLink="/myGames">My Games</a>
         </li>
@@ -17,5 +18,22 @@
         </li>
     </ul>
 </nav>
+
+<ul class="theme" id="nav-links-mobile" [style.top]="showMobileMenu? '50px' : '-200px'">
+    <li>
+        <a routerLink="/myGames">My Games</a>
+    </li>
+    <li>
+        <a routerLink="/myTrades">My Trades</a>
+    </li>
+    <li>
+        <a routerLink="/dashboard">{{this.dataService.userData.username}}</a>
+    </li>
+    <li>
+        <a (click)="this.dataService.logout()">Sign Out</a>
+    </li>
+</ul>
+
+
 
 <router-outlet></router-outlet>

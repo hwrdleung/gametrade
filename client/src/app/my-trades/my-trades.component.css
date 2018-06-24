@@ -3,6 +3,7 @@
     box-sizing: border-box;
     border: 5px gray dashed;
     height: 100%;
+    width: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,3 +43,11 @@ table tr:nth-child(even) {
     background: rgb(25, 25, 25);
 }
 
+
+@media only screen and (max-width: 600px) {
+
+    table tr td:nth-child(1){
+        width: 35%;
+    }
+
+}
