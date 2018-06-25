@@ -28,6 +28,7 @@ ngOnDestroy(){
 
 toggleMobileMenu (){
   this.showMobileMenu = !this.showMobileMenu;
+  console.log(this.showMobileMenu);
 }
 
   

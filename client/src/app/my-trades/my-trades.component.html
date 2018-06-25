@@ -176,7 +176,7 @@
             <p>Activity</p>
           </th>
         </tr>
-        <tr *ngFor="let record of this.tradeService.history?.reverse()">
+        <tr *ngFor="let record of this.tradeService.history.reverse()">
 
           <td>
             <p>
@@ -190,9 +190,6 @@
           </td>
         </tr>
       </table>
-      <p>
-        {{record.date | date:'fullDate'}} {{record.msg}}
-      </p>
     </div>
 
     <ng-template #noHistory>

@@ -165,9 +165,6 @@ button:hover {
     margin: 0;
 }
 
-.game-card {
-}
-
 .trade-card {
     display: flex;
     flex-direction: column;
@@ -232,6 +229,7 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
 #selectGameWindow {
@@ -287,7 +285,7 @@ input[type="email"]{
 .search-bar input[type="text"] {
     background: #FFF;
     height: 30px;
-    width: 500px;
+    width: 700px;
     padding: 0 10px;
     margin: 0;
     font-size: 1rem;
@@ -343,17 +341,29 @@ input[type="email"]{
         background: #000;
         color: #FFF;
         list-style-type: none;
+        z-index: 20;
+        justify-content: center;
+        align-items: center;
     }
 
     .tab-menu-mobile li {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 25%;
+        width: 25vw;
         text-align: center;
         font-size: 0.7rem;
         margin: auto 10px;
     }
+
+    .game-grid .game-card {
+        margin: 10px;
+    }
+
+    .search-bar input[type="text"] {
+        width: 500px;
+    }
+    
 }
 
 @media only screen and (max-width: 600px) {
@@ -372,7 +382,7 @@ input[type="email"]{
         justify-content: space-evenly;
     }
 
-
-
-
+    .search-bar input[type="text"] {
+        width: auto;
+    }
 }

@@ -20,18 +20,15 @@
         <ul>
           <li>
             <img class="profile-img" [src]="selectedImg">
-            <div *ngIf="displayPictureSelector" class="picture-selector">
+            <div *ngIf="displayPictureSelector" class="theme picture-selector">
               <div *ngFor="let picture of this.dataService.profilePics; let i = index">
-                <a (click)="setPicture(i)"><img src="{{picture}}"></a>
+                <a (click)="setPicture(i); togglePictureSelector()"><img src="{{picture}}"></a>
               </div>
             </div>
           </li>
           <li>
-            <div>
-              <a (click)="togglePictureSelector()">Change Profile Picture</a>
-            </div>
+            <a (click)="togglePictureSelector()">Change Profile Picture</a>
             <a routerLink="/profile/{{this.dataService.userData.username}}">View Public Profile</a>
-
           </li>
           <li>
             <p>Display name publicly:</p>

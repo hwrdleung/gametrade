@@ -1,13 +1,15 @@
-<div class="profile-container flex-row">
+<div class="profile-container">
   <div class="profile-column">
     <div class="gamer-card theme">
       <img class="profile-img" src="{{this.dataService.profilePics[profileData.profile.picture]}}">
+      <div>
       <h3>{{username}}</h3>
       <h4 *ngIf="profileData.profile['display name']">{{profileData.first}} {{profileData.last}}</h4>
       <h4 *ngIf="profileData.profile['display email']">{{profileData.email}}</h4>
       <h4>{{profileData.city}}, {{profileData.state}}</h4>
 
       <h4>{{profileData.country}}</h4>
+    </div>
       <br>
       <p>{{profileData.profile.bio}}</p>
     </div>
