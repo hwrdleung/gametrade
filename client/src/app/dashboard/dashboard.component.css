@@ -18,7 +18,7 @@
     padding: 10px 0;
 }
 
-.settings-box ul li a:nth-child(even){
+.settings-box li >*:last-child {
     text-align: right;
 }
 
@@ -66,11 +66,22 @@
 
     .picture-selector {
         width: 100vw;
+        height: auto;
+        justify-content: center;
+        align-items: center;
         top: 40%;
         left: 0;
         margin-top: 0;
         margin-left: 0;
-        padding: 0;
+        padding: 10px 0;
+    }
+}
+
+@media only screen and (max-width: 350px) {
+    .settings-box {
+
+        font-size: 0.8rem;
+
     }
 }
 

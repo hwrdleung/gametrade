@@ -6,9 +6,7 @@
       <h3>{{username}}</h3>
       <h4 *ngIf="profileData.profile['display name']">{{profileData.first}} {{profileData.last}}</h4>
       <h4 *ngIf="profileData.profile['display email']">{{profileData.email}}</h4>
-      <h4>{{profileData.city}}, {{profileData.state}}</h4>
-
-      <h4>{{profileData.country}}</h4>
+      <h4>{{profileData.city}}, {{profileData.state}}, {{profileData.country}}</h4>
     </div>
       <br>
       <p>{{profileData.profile.bio}}</p>

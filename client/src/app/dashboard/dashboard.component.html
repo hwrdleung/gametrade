@@ -1,3 +1,12 @@
+<ul class="tab-menu-mobile">
+  <li>
+    <a id="profile-tab" (click)="displayContent('Edit Profile')">Edit Profile</a>
+  </li>
+  <li>
+    <a id="account-tab" (click)="displayContent('Account Settings')">Account Settings</a>
+  </li>
+</ul>
+
 <div class="container">
 
 
@@ -65,12 +74,9 @@
 
             </li>
           </ng-template>
-
-
-          <li>
-            <input type="submit" value="Save Changes">
-          </li>
         </ul>
+        <input type="submit" value="Save Changes">
+
       </form>
     </div>
 
@@ -180,7 +186,9 @@
         <h3>Delete your account</h3>
         <br>
         <p>Warning:</p>
-        <p>You are about to delete your account. This is irreversible and all of your data will be lost. To proceed,
+        <p>You are about to delete your account.</p>
+        <p>This is irreversible and all of your data will be lost.</p>
+        <p>To proceed,
           please enter your password.</p>
         <input type="password" formControlName="password" name="password">
         <input type="submit" [disabled]="!deleteAccountForm.valid">

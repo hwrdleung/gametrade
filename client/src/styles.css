@@ -8,9 +8,13 @@ body {
     background: rgb(240, 240, 240);
 }
 
+a:active {
+    color: blue;
+}
+
 a:hover {
     cursor: pointer;
-    color: gray;
+    color: blue;
 }
 
 .container{
