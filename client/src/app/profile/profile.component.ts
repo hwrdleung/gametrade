@@ -24,7 +24,7 @@ export class ProfileComponent implements OnInit {
     private route: ActivatedRoute, 
     private http: HttpClient) {
     this.reviewForm = formBuilder.group({
-      'reviewBody': ['Leave a review', Validators.required]
+      'reviewBody': ['', Validators.required]
     });
   }
 
