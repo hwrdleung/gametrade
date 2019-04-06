@@ -178,12 +178,13 @@ export class DataService {
   // -------------------------------------
 
   addGame(game, platform) {
+    console.log('add game')
     // Prep data for post request
     game.platform = platform;
     let token = this.currentUser;
     let secureData = {
       token: token,
-      game: game,
+      game: game
     }
     // Post request
     this.http.post(this.addGameEndpoint, secureData).subscribe((res) => {

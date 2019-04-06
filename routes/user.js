@@ -106,7 +106,7 @@ module.exports = (router) => {
                         'display name': true,
                         'display email': true,
                         'picture': 1,
-                        'bio': 'I like turtles',
+                        'bio': '',
                         'reviews': []
                     }
                 });
@@ -855,23 +855,6 @@ module.exports = (router) => {
                 })
                 .catch(error => { console.log('Error:', error.message); });
         }
-    });
-
-    //TODO: check if i need this endpoint
-    router.get('/get_cover_url', (req, res) => {
-        let gameOwner = req.query.gameOwner;
-        let gameName = req.query.gameName;
-
-        Game.findOne({
-            title: gameName,
-            owner: gameOwner
-        }).exec()
-
-            .then(function (game) {
-                res.json(game);
-            })
-
-            .catch(error => { console.log('Error:', error.message); });
     });
 
     router.post('/select_game_for_trade', (req, res) => {

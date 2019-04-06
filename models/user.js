@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-
-
 const reviewSchema = mongoose.Schema({
     date: {type: Date},
     reviewer: {type: String},

@@ -523,12 +523,13 @@ var DataService = /** @class */ (function () {
     // -------------------------------------
     DataService.prototype.addGame = function (game, platform) {
         var _this = this;
+        console.log('add game');
         // Prep data for post request
         game.platform = platform;
         var token = this.currentUser;
         var secureData = {
             token: token,
-            game: game,
+            game: game
         };
         // Post request
         this.http.post(this.addGameEndpoint, secureData).subscribe(function (res) {
@@ -590,8 +591,10 @@ var GamesDataService = /** @class */ (function () {
         this.http = http;
         // Client gets search results form IGDB via proxy through the server to avoid cors issue.
         this.serverEndpoint = 'https://gametrader.herokuapp.com';
+        // serverEndpoint = 'http://localhost:3000';
         this.IGDB_API_KEYWORD_SEARCH_ENDPOINT = this.serverEndpoint + '/games/igdb_keyword_search/';
         this.IDGB_API_GAME_ID_SEARCH_ENDPOINT = this.serverEndpoint + '/games/igdb_game_id_search/';
+        this.IGDB_API_COVER_SEARCH_ENDPOINT = this.serverEndpoint + '/games/igdb_cover_search/';
         this.getCoverEndpoint = this.serverEndpoint + '/user/get_cover_url';
         // Data storage.  This array is binded to my-games component.
         this.searchResults = [];
@@ -601,29 +604,25 @@ var GamesDataService = /** @class */ (function () {
         var _this = this;
         this.searchResults = [];
         var query = searchFormValue.query;
-        this.http.get(this.IGDB_API_KEYWORD_SEARCH_ENDPOINT + query).subscribe(function (res) {
-            //This end point returns a list of game ID's from IGDB pertaining to search query
-            var context = _this;
+        this.http.get(this.IGDB_API_KEYWORD_SEARCH_ENDPOINT + query).toPromise().then(function (res) {
             var searchResults = res;
-            // Iterate through each game ID and make get request for each game to get game data
-            for (var game in searchResults) {
-                var gameId = searchResults[game].id;
-                _this.http.get(_this.IDGB_API_GAME_ID_SEARCH_ENDPOINT + gameId).subscribe(function (res) {
-                    var title = res[0].name;
-                    var cover;
-                    if (res[0].cover) {
-                        cover = '//images.igdb.com/igdb/image/upload/t_cover_big/' + res[0]['cover']['cloudinary_id'];
-                    }
-                    else {
-                        cover = '/assets/square-placeholder.jpg';
-                    }
-                    // Prep data to populate searchResults array
+            var _loop_1 = function (game) {
+                var gameId = searchResults[game]['id'];
+                var gameName = searchResults[game]['name'];
+                _this.http.get(_this.IGDB_API_COVER_SEARCH_ENDPOINT + gameId).subscribe(function (res) {
+                    console.log(res);
+                    var gameCoverUrl = res[0]['url'].replace('t_thumb', 't_cover_big');
                     var game = {
-                        title: title,
-                        cover: cover
+                        title: gameName,
+                        cover: gameCoverUrl,
+                        id: gameId
                     };
                     _this.searchResults.push(game);
+                    console.log(game);
                 });
+            };
+            for (var game in searchResults) {
+                _loop_1(game);
             }
         });
     };
@@ -653,14 +652,14 @@ var GamesDataService = /** @class */ (function () {
 /***/ "./src/app/home/home.component.css":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n.splash-bg {\r\n    height: 100vh;\r\n    width: 100%;\r\n    background: url('/assets/game-controller.jpeg');\r\n    background-attachment: fixed;\r\n    background-size: cover;\r\n    background-position: center;\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    z-index: 0;\r\n    -webkit-filter: grayscale(.75);\r\n            filter: grayscale(.75);\r\n}\r\n\r\n.splash-text h1 {\r\n    font-family: 'Orbitron';\r\n    font-size: 3rem;\r\n}\r\n\r\n.splash-text {\r\n    height:100vh;\r\n    width: 100%;\r\n    color: #FFF;\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n        -ms-flex-direction: column;\r\n            flex-direction: column;\r\n    -webkit-box-pack: center;\r\n        -ms-flex-pack: center;\r\n            justify-content: center;\r\n    -webkit-box-align: start;\r\n        -ms-flex-align: start;\r\n            align-items: flex-start;\r\n    text-align: left;\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    z-index: 1;\r\n    padding-left: 50px;\r\n    margin: 0;\r\n}\r\n\r\n#sign-in-link {\r\n    position: absolute;\r\n    top: 20px;\r\n    right: 50px;\r\n    z-index: 2;\r\n}\r\n\r\n#splash {\r\n    height: 400px;\r\n    margin: 50px auto 0 auto;\r\n    width: 100%;\r\n    background: url('/assets/heroes.png');\r\n    background-size: cover;\r\n    background-position: center;\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-pack: end;\r\n        -ms-flex-pack: end;\r\n            justify-content: flex-end;\r\n    -webkit-box-align: center;\r\n        -ms-flex-align: center;\r\n            align-items: center;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n        -ms-flex-direction: column;\r\n            flex-direction: column;\r\n}\r\n\r\n.splash-blocks-container {\r\n    width: 100%;\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -ms-flex-wrap: wrap;\r\n        flex-wrap: wrap;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n        -ms-flex-direction: column;\r\n            flex-direction: column;\r\n}\r\n\r\n.splash-block1 {\r\n    background: rgba(0, 0, 255, 0.5);\r\n    width: 100%;\r\n    padding: 20px 0;\r\n    text-align: center;\r\n}\r\n\r\n.splash-skills {\r\n    width: 100%;\r\n    padding: 5px 0;\r\n    color: #FFF;\r\n    list-style-type: none;\r\n    text-align: center;\r\n}\r\n\r\n.splash-skills li {\r\n    display: inline-block;\r\n    padding: 20px;\r\n    text-transform: uppercase;\r\n    font-size: 0.8rem;\r\n    font-weight: bold;\r\n}\r\n\r\n.splash-block1 a,\r\n.splash-block1 h1,\r\n.splash-block1 h4 {\r\n    color: yellow;\r\n    margin: 0 auto;\r\n}\r\n\r\n#splash h1 {\r\n    font-family: 'Orbitron';\r\n}\r\n\r\n@media only screen and (max-width: 700px) {\r\n\r\n    #sign-in-link {\r\n        right: 20px;\r\n    }\r\n    \r\n    .splash-text {\r\n        padding: 0;\r\n        margin: 0 auto;\r\n    }\r\n\r\n    .splash-text * {\r\n        margin: 10px 25px;\r\n    }\r\n\r\n    .splash-text h1 {\r\n        font-size: 2rem;\r\n    }\r\n\r\n    .splash-skills li {\r\n        font-size: 0.6rem;\r\n        padding: 10px;\r\n    }\r\n\r\n\r\n    #splash {\r\n        max-height: 100vh;\r\n    }\r\n\r\n}\r\n\r\n\r\n\r\n"
+module.exports = "\r\n.splash-bg {\r\n    height: 100vh;\r\n    width: 100%;\r\n    background: url('/assets/game-controller.jpeg');\r\n    background-attachment: fixed;\r\n    background-size: cover;\r\n    background-position: center;\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    z-index: 0;\r\n    -webkit-filter: grayscale(.75);\r\n            filter: grayscale(.75);\r\n}\r\n\r\n.splash-text h1 {\r\n    font-family: 'Orbitron';\r\n    font-size: 3rem;\r\n}\r\n\r\n.splash-text {\r\n    height:100vh;\r\n    width: 100%;\r\n    color: #FFF;\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n        -ms-flex-direction: column;\r\n            flex-direction: column;\r\n    -webkit-box-pack: center;\r\n        -ms-flex-pack: center;\r\n            justify-content: center;\r\n    -webkit-box-align: start;\r\n        -ms-flex-align: start;\r\n            align-items: flex-start;\r\n    text-align: left;\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    z-index: 1;\r\n    padding-left: 50px;\r\n    margin: 0;\r\n}\r\n\r\n#sign-in-link {\r\n    position: absolute;\r\n    top: 20px;\r\n    right: 50px;\r\n    z-index: 2;\r\n}\r\n\r\n#splash {\r\n    height: 400px;\r\n    margin: 45px auto 0 auto;\r\n    width: 100%;\r\n    background: url('/assets/heroes.png');\r\n    background-size: cover;\r\n    background-position: center;\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-pack: end;\r\n        -ms-flex-pack: end;\r\n            justify-content: flex-end;\r\n    -webkit-box-align: center;\r\n        -ms-flex-align: center;\r\n            align-items: center;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n        -ms-flex-direction: column;\r\n            flex-direction: column;\r\n}\r\n\r\n.splash-blocks-container {\r\n    width: 100%;\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -ms-flex-wrap: wrap;\r\n        flex-wrap: wrap;\r\n    -webkit-box-orient: vertical;\r\n    -webkit-box-direction: normal;\r\n        -ms-flex-direction: column;\r\n            flex-direction: column;\r\n}\r\n\r\n.splash-block1 {\r\n    background: rgba(0, 0, 255, 0.5);\r\n    width: 100%;\r\n    padding: 20px 0;\r\n    text-align: center;\r\n}\r\n\r\n.splash-skills {\r\n    width: 100%;\r\n    padding: 5px 0;\r\n    color: #FFF;\r\n    list-style-type: none;\r\n    text-align: center;\r\n}\r\n\r\n.splash-skills li {\r\n    display: inline-block;\r\n    padding: 20px;\r\n    text-transform: uppercase;\r\n    font-size: 0.8rem;\r\n    font-weight: bold;\r\n}\r\n\r\n.splash-block1 a,\r\n.splash-block1 h1,\r\n.splash-block1 h4 {\r\n    color: yellow;\r\n    margin: 0 auto;\r\n}\r\n\r\n#splash h1 {\r\n    font-family: 'Orbitron';\r\n}\r\n\r\n@media only screen and (max-width: 700px) {\r\n\r\n    #sign-in-link {\r\n        right: 20px;\r\n    }\r\n    \r\n    .splash-text {\r\n        padding: 0;\r\n        margin: 0 auto;\r\n    }\r\n\r\n    .splash-text * {\r\n        margin: 10px 25px;\r\n    }\r\n\r\n    .splash-text h1 {\r\n        font-size: 2rem;\r\n    }\r\n\r\n    .splash-skills li {\r\n        font-size: 0.6rem;\r\n        padding: 10px;\r\n    }\r\n\r\n\r\n    #splash {\r\n        max-height: 100vh;\r\n    }\r\n\r\n}\r\n\r\n\r\n\r\n"
 
 /***/ }),
 
 /***/ "./src/app/home/home.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "\r\n        <div id=\"splash\" *ngIf=\"this.dataService.currentUser\">\r\n                <div class=\"splash-blocks-container\">\r\n                        <div class=\"splash-block1\">\r\n                                <h1>GameTrader</h1>\r\n                                <h4>A freecodecamp project</h4>\r\n                                <h4>Powered by\r\n                                        <a href=\"https://www.igdb.com/\" target=\"_blank\">IGDB API</a>\r\n                                </h4>\r\n                        </div>\r\n                        <ul class=\"splash-skills\">\r\n                                <li>HTML</li>\r\n                                <li>CSS</li>\r\n                                <li>JavaScript</li>\r\n                                <li>TypeScript</li>\r\n                                <li>MongoDB</li>\r\n                                <li>ExpressJS</li>\r\n                                <li>Angular</li>\r\n                                <li>NodeJS</li>\r\n                                </ul>\r\n                </div>\r\n        </div>\r\n\r\n<div class=\"container\" *ngIf=\"this.dataService.currentUser; else loggedOut\">\r\n\r\n        <div *ngIf=\"this.homeGames.length > 0; else noHomeGames\" class=\"game-grid\">\r\n                <div *ngFor=\"let game of this.homeGames\">\r\n                        <div class=\"game-card\" *ngIf=\"game.available\">\r\n                                <div class=\"game-card-img-container\">\r\n                                        <img src=\"{{game.cover}}\">\r\n                                </div>\r\n                                <div class=\"game-card-p-container\">\r\n                                        <p>{{game.title}}</p>\r\n                                        <p>{{game.platform}}</p>\r\n                                        <a [routerLink]=\"['/profile', game.owner]\">{{game.owner}}</a>\r\n                                </div>\r\n                                <p class=\"game-card-status\" *ngIf=\"this.tradeService.alreadyRequested(game)\">Request pending</p>\r\n                                <button *ngIf=\"dataService.currentUser && !this.tradeService.alreadyRequested(game)\" (click)=\" this.tradeService.getTradeData(); this.tradeService.requestTrade(this.dataService.userData.username, game)\">Request Trade</button>\r\n                        </div>\r\n                </div>\r\n        </div>\r\n\r\n        <ng-template #noHomeGames>\r\n                <p class=\"content-description\">There are no games to display.</p>\r\n        </ng-template>\r\n</div>\r\n\r\n\r\n<ng-template #loggedOut>\r\n        <div class=\"splash-bg\">\r\n        </div>\r\n        <div class=\"splash-text\">\r\n                <h1>GameTrader</h1>\r\n                <h2>A club for gamers.</h2>\r\n                <h2>Trade console games with other gamers in your city.</h2>\r\n                <button id=\"sign-up-link\" routerLink=\"register\">Sign up for free!</button>\r\n        </div>\r\n\r\n        <!-- TOP RIGHT CORNER OF SCREEN -->\r\n        <button id=\"sign-in-link\" routerLink=\"login\">Sign in</button>\r\n</ng-template>"
+module.exports = "\r\n        <div id=\"splash\" *ngIf=\"this.dataService.currentUser\">\r\n                <div class=\"splash-blocks-container\">\r\n                        <div class=\"splash-block1\">\r\n                                <h1>GameTrader</h1>\r\n                                <h4>A freecodecamp project</h4>\r\n                                <h4>Powered by\r\n                                        <a href=\"https://www.igdb.com/\" target=\"_blank\">IGDB API</a>\r\n                                </h4>\r\n                        </div>\r\n                </div>\r\n        </div>\r\n\r\n<div class=\"container\" *ngIf=\"this.dataService.currentUser; else loggedOut\">\r\n\r\n        <div *ngIf=\"this.homeGames.length > 0; else noHomeGames\" class=\"game-grid\">\r\n                <div *ngFor=\"let game of this.homeGames\">\r\n                        <div class=\"game-card\" *ngIf=\"game.available\">\r\n                                <div class=\"game-card-img-container\">\r\n                                        <img src=\"{{game.cover}}\">\r\n                                </div>\r\n                                <div class=\"game-card-p-container\">\r\n                                        <p>{{game.title}}</p>\r\n                                        <p>{{game.platform}}</p>\r\n                                        <a [routerLink]=\"['/profile', game.owner]\">{{game.owner}}</a>\r\n                                </div>\r\n                                <p class=\"game-card-status\" *ngIf=\"this.tradeService.alreadyRequested(game)\">Request pending</p>\r\n                                <button *ngIf=\"dataService.currentUser && !this.tradeService.alreadyRequested(game)\" (click)=\" this.tradeService.getTradeData(); this.tradeService.requestTrade(this.dataService.userData.username, game)\">Request Trade</button>\r\n                        </div>\r\n                </div>\r\n        </div>\r\n\r\n        <ng-template #noHomeGames>\r\n                <p class=\"content-description\">There are no games to display.</p>\r\n        </ng-template>\r\n</div>\r\n\r\n\r\n<ng-template #loggedOut>\r\n        <div class=\"splash-bg\">\r\n        </div>\r\n        <div class=\"splash-text\">\r\n                <h1>GameTrader</h1>\r\n                <h2>A club for gamers.</h2>\r\n                <h2>Trade video games with other gamers.</h2>\r\n                <button id=\"sign-up-link\" routerLink=\"register\">Sign up for free!</button>\r\n        </div>\r\n\r\n        <!-- TOP RIGHT CORNER OF SCREEN -->\r\n        <button id=\"sign-in-link\" routerLink=\"login\">Sign in</button>\r\n</ng-template>"
 
 /***/ }),
 

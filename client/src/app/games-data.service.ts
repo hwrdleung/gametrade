@@ -5,8 +5,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class GamesDataService {
   // Client gets search results form IGDB via proxy through the server to avoid cors issue.
   serverEndpoint = 'https://gametrader.herokuapp.com';
+  // serverEndpoint = 'http://localhost:3000';
   IGDB_API_KEYWORD_SEARCH_ENDPOINT = this.serverEndpoint + '/games/igdb_keyword_search/';
   IDGB_API_GAME_ID_SEARCH_ENDPOINT = this.serverEndpoint + '/games/igdb_game_id_search/';
+  IGDB_API_COVER_SEARCH_ENDPOINT = this.serverEndpoint + '/games/igdb_cover_search/';
   getCoverEndpoint = this.serverEndpoint + '/user/get_cover_url';
 
   // Data storage.  This array is binded to my-games component.
@@ -19,31 +21,25 @@ export class GamesDataService {
     this.searchResults = [];
     let query = searchFormValue.query;
 
-    this.http.get(this.IGDB_API_KEYWORD_SEARCH_ENDPOINT + query).subscribe((res) => {
-      //This end point returns a list of game ID's from IGDB pertaining to search query
-      let context = this;
+    this.http.get(this.IGDB_API_KEYWORD_SEARCH_ENDPOINT + query).toPromise().then(res => {
       let searchResults = res;
 
-      // Iterate through each game ID and make get request for each game to get game data
-      for (var game in searchResults) {
-        let gameId = searchResults[game].id
-        this.http.get(this.IDGB_API_GAME_ID_SEARCH_ENDPOINT + gameId).subscribe((res) => {
+      for(let game in searchResults){
+        let gameId = searchResults[game]['id'];
+        let gameName = searchResults[game]['name'];
 
-          let title = res[0].name;
-          let cover: String;
+        this.http.get(this.IGDB_API_COVER_SEARCH_ENDPOINT + gameId).subscribe(res => {
+          console.log(res);
+          let gameCoverUrl = res[0]['url'].replace('t_thumb', 't_cover_big');
 
-          if (res[0].cover) {
-            cover = '//images.igdb.com/igdb/image/upload/t_cover_big/' + res[0]['cover']['cloudinary_id'];
-          } else {
-            cover = '/assets/square-placeholder.jpg';
-          }
-
-          // Prep data to populate searchResults array
           let game = {
-            title: title,
-            cover: cover
+            title: gameName,
+            cover: gameCoverUrl,
+            id: gameId
           }
+
           this.searchResults.push(game);
+          console.log(game);
         });
       }
     });

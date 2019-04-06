@@ -1,6 +1,6 @@
 const Game = require('../models/game');
 const request = require('request');
-const IGDB_USER_KEY = '09f049c49c43481b21812a91f6559298';
+const IGDB_USER_KEY = '9786dd72438c7d688bcf086f44694145';
 
 module.exports = (router) => {
 
@@ -16,26 +16,43 @@ module.exports = (router) => {
       });
   });
 
-  router.get('/igdb_keyword_search/*', function(req, res, next){
+  router.get('/igdb_keyword_search/*', function(req, res){
     let params = req.params['0'];
     let options = {
-        uri:'https://api-endpoint.igdb.com/games/?search=' + params,
+        uri:'https://api-v3.igdb.com/games/',
+        method: 'post',
         headers: {
             'Accept': 'application/json',
             'user-key': IGDB_USER_KEY
-        }
+        },
+        body: `fields name, involved_companies; search " ${params}";`
     }
     request(options).pipe(res);
 });
 
-router.get('/igdb_game_id_search/*', function(req, res, next){
+router.get('/igdb_cover_search/*', function(req, res) {
     let params = req.params['0'];
+
     let options = {
-        uri:'https://api-endpoint.igdb.com/games/' + params,
+        url: 'https://api-v3.igdb.com/covers/',
         headers: {
             'Accept': 'application/json',
             'user-key': IGDB_USER_KEY
-        }
+        },
+        body : `fields *; where game=${params};`
+    }
+    request(options).pipe(res);
+});
+
+router.get('/igdb_game_id_search/*', function(req, res){
+    let params = req.params['0'];
+    let options = {
+        uri:'https://api-v3.igdb.com/games/',
+        headers: {
+            'Accept': 'application/json',
+            'user-key': IGDB_USER_KEY
+        },
+        body: "fields *; where id = " + params + ";"
     }
     request(options).pipe(res);
 });
